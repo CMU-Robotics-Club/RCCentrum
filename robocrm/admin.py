@@ -1,4 +1,3 @@
-import string
 from robocrm.models import Machine, Event, Project, RoboResource
 from django.core.mail import send_mail
 from django.forms import ModelForm, ValidationError
@@ -31,7 +30,7 @@ def subscribe_to_list(first_name, last_name, email, listname):
   if email == '':
     return
 
-  name = string.strip(first_name + ' ' + last_name)
+  name = first_name + ' ' + last_name
   if name == '':
     from_addr = email
   else:
@@ -39,7 +38,8 @@ def subscribe_to_list(first_name, last_name, email, listname):
 
   to_addr = listname + '-subscribe@lists.andrew.cmu.edu'
 
-  send_mail('', '', from_addr, [to_addr])
+  #TODO: uncomment production
+  #send_mail('', '', from_addr, [to_addr])
 
 class RoboUserCreationForm(ModelForm):
   # This is modelled directly after django.contrib.auth.forms.UserCreationForm 
@@ -75,10 +75,15 @@ class RoboUserAdmin(UserAdmin):
   list_display = ('username', 'email', 'first_name', 'last_name')
   search_fields = ['username', 'email', 'first_name', 'last_name']
 
+class ProjectAdmin(admin.ModelAdmin):
+  #list_display = ('name', 'project_image', 'image', 'blurb', 'description', 'website')
+  fields = ('name', 'current_image', 'image', 'blurb', 'description', 'website', 'leaders')
+  readonly_fields = ['current_image']
+  #list_display = ('thumb', 'rentitem', 'is_avatar', 'description')
 
 admin.site.unregister(User)
 admin.site.register(User, RoboUserAdmin)
 admin.site.register(Machine)
 admin.site.register(Event)
-admin.site.register(Project)
+admin.site.register(Project, ProjectAdmin)
 admin.site.register(RoboResource)

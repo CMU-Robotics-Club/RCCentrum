@@ -64,7 +64,6 @@ def add_card_event(request):
       succ=succ,
       imgurl=imgurl,
       machine=machine,
-      project=None,
       matuse='')
 
   ev.save()

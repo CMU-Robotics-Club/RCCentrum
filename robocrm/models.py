@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib import admin
 from django.db.models.signals import post_save
+from django.conf import settings
 
 # Machine Model
 class Machine(models.Model):
@@ -11,8 +12,9 @@ class Machine(models.Model):
   dstart = models.DateTimeField(blank=True, null=True)
   dend = models.DateTimeField(blank=True, null=True)
   
-  def __unicode__(self):
+  def __str__(self):
     return u'%s %s' % (self.type, self.id)
+
 
 # User Model
 class RoboUser(models.Model):
@@ -88,9 +90,11 @@ class RoboUser(models.Model):
   shop_status = models.CharField(max_length=2,
                                  choices=STATUS_CHOICES,
                                  default=GOOD)
-  def __unicode__(self):
+  def __str__(self):
     return self.user.username
 
+
+# TODO: move to Tooltron
 # Event Model
 class Event(models.Model):
   type = models.CharField(max_length=30)
@@ -100,21 +104,42 @@ class Event(models.Model):
   succ = models.BooleanField(default=False)
   imgurl = models.URLField()
   machine = models.ForeignKey('Machine')
-  project = models.ForeignKey('Project', null=True)
   matuse = models.TextField()
   
-  def __unicode__(self):
+  def __str__(self):
     return u'%s %s %s'%(self.type, 
       self.user.user.username if self.user else 'unknown', self.succ)
 
-# Project Model
+
+# TODO: move to seperate project app
 class Project(models.Model):
   name = models.CharField(max_length=30)
-  primuser = models.ForeignKey('RoboUser', related_name='pri+')
-  users = models.ManyToManyField('RoboUser', related_name='u+')
-  charge = models.BooleanField(default=False)
-  def __unicode__(self):
+
+  def image_upload_to(instance, filename):
+    print(filename)
+    #TODO: name file project name
+    #return "projects/{}".format(instance.name)
+    return "projects/{}".format(filename)
+
+  image = models.ImageField(upload_to=image_upload_to, null=True)
+
+  # What is displayed on project overview page
+  blurb = models.TextField(null=True)
+  # Full description
+  description = models.TextField(null=True)
+
+  website = models.URLField(null=True)
+
+  leaders = models.ManyToManyField('RoboUser', related_name='u+')
+
+  # To show image in admin interface
+  def current_image(self):
+    return '<img src="{}{}" width="100px height=100px"/>'.format(settings.MEDIA_URL, self.image)
+  current_image.allow_tags = True
+
+  def __str__(self):
     return self.name
+
 
 # Roboclub Resources Model
 class RoboResource(models.Model):
@@ -125,6 +150,7 @@ class RoboResource(models.Model):
   time_out = models.DateTimeField(blank=True,null=True)
   time_due = models.DateTimeField(blank=True,null=True)
   officer = models.ForeignKey('RoboUser', related_name='o+', blank=True)
-  def __unicode__(self):
+  
+  def __str__(self):
     return u'%s %s %s' (self.type, self.id, self.checked_out)
 
