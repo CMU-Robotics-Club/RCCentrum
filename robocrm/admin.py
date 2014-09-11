@@ -6,6 +6,9 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from robocrm.models import RoboUser
+from django import forms
+from django.contrib.flatpages.models import FlatPage
+from tinymce.widgets import TinyMCE
 
 class UserProfileInline(admin.StackedInline):
   model = RoboUser
@@ -81,6 +84,18 @@ class ProjectAdmin(admin.ModelAdmin):
   readonly_fields = ['current_image']
   #list_display = ('thumb', 'rentitem', 'is_avatar', 'description')
 
+class FlatPageForm(forms.ModelForm):
+  content = forms.CharField(widget=TinyMCE(attrs={'cols': 160, 'rows': 60}))
+
+  class Meta:
+    model = FlatPage
+
+class FlatPageAdmin(admin.ModelAdmin):
+  fields = ['url', 'title', 'content']
+  form = FlatPageForm
+
+admin.site.unregister(FlatPage)
+admin.site.register(FlatPage, FlatPageAdmin)
 admin.site.unregister(User)
 admin.site.register(User, RoboUserAdmin)
 admin.site.register(Machine)

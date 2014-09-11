@@ -10,7 +10,7 @@
                 span.icon-bar
                 span.icon-bar
                 span.icon-bar
-            a.navbar-brand(href="#")
+            a.navbar-brand(href="/")
                 img(src="{% static 'images/logo.png' %}", width="20px", height="20px")
                 |   Carnegie Mellon Robotics Club
 
@@ -18,7 +18,7 @@
           ul.nav.navbar-nav
             for page in flatpages|slice:"1:"
                 li
-                    a(href="##{page.url}") {{page.title}}
+                    a(href="{{page.url}}") {{page.title}}
             
             li
                 a(href="/projects") Projects

@@ -129,9 +129,18 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'robocrm',
     'django.contrib.admin',
+    'tinymce',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
+
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table,spellchecker,paste,searchreplace",
+    'theme': "advanced",
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+    'theme_advanced_buttons3_add': 'code',
+}
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
