@@ -9,6 +9,7 @@ from robocrm.models import RoboUser
 from django import forms
 from django.contrib.flatpages.models import FlatPage
 from tinymce.widgets import TinyMCE
+from django.contrib.flatpages.admin import FlatPageAdmin, FlatpageForm
 
 class UserProfileInline(admin.StackedInline):
   model = RoboUser
@@ -89,9 +90,10 @@ class FlatPageForm(forms.ModelForm):
 
   class Meta:
     model = FlatPage
+    exclude = ('template_name', 'registration_required', 'enable_comments','sites', )
+
 
 class FlatPageAdmin(admin.ModelAdmin):
-  fields = ['url', 'title', 'content']
   form = FlatPageForm
 
 admin.site.unregister(FlatPage)
