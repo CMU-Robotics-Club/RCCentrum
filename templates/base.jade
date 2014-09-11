@@ -8,10 +8,14 @@ html(lang="en")
         meta(name="viewport" content="width=device-width, initial-scale=1.0")
 
         title
-            {% block title %}
-            CMU Robotics Club
-            {% endblock %}
-            | roboticsclub.org
+            if flatpage.title
+                {{ flatpage.title }}
+            elif title
+                {{ title }}
+            else
+                | CMU Robotics Club
+
+            || roboticsclub.org
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
         <!--[if lt IE 9]>
@@ -37,17 +41,14 @@ html(lang="en")
 
         .container
             .row
-                {% if sidebar %}
-                .col-md-3
-                    .well.sidebar-nav
-                        {% include sidebar %}
-                .col-md-9.
-                {% else %}
                 col-md-12.
-                {% endif %}
 
-                {% block content %}
-                {% endblock %}
+                if flatpage.content
+                    {{ flatpage.content }}
+                elif content
+                    {{ content }}
+                else
+                    | NEED CONTENT
 
             {% include "footer.html" %}
 
