@@ -15,7 +15,8 @@ admin.autodiscover()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ('password', )
+        fields = ('username', 'first_name', 'last_name', 'email', 'date_joined', )
+        #exclude = ('password', )
 
 class RoboUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -31,12 +32,16 @@ class RoboUserSerializer(serializers.ModelSerializer):
         p_serializer = UserSerializer(obj.user, context=self.context)
         p_ret = p_serializer.to_native(obj.user)
 
-        del p_ret['id']
+        # If user ID exists, delete it from dictionary
+        # because only interested in RoboUser id
+        if 'id' in p_ret:
+            del p_ret['id']
 
         for key in p_ret:
             ret[key] = p_ret[key]
 
-        del ret['user']
+        if 'user' in p_ret:
+            del ret['user']
 
         return ret
 
@@ -44,9 +49,7 @@ class RoboUserSerializer(serializers.ModelSerializer):
         model = RoboUser
         depth = 2
 
-        #fields = (
-        #   ('user', 'UserSerializer'),
-        #)
+        fields = ('id', 'club_rank', )
 
 class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
     model = RoboUser
