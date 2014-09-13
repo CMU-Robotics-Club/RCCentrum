@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import robocrm.models
+import projects.models
 
 
 class Migration(migrations.Migration):
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='project',
             name='image',
-            field=models.ImageField(upload_to=robocrm.models.Project.image_upload_to, null=True),
+            field=models.ImageField(upload_to=projects.models.Project.image_upload_to, null=True),
             preserve_default=True,
         ),
         migrations.AddField(

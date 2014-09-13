@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
     'robocrm',
+    'projects',
     'django.contrib.admin',
     'tinymce',
     'rest_framework',

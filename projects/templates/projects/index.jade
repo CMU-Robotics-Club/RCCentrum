@@ -1,0 +1,24 @@
+extends 'base.jade'
+
+block title
+  | Projects 
+
+block content
+  for project in projects
+    .well
+      .container
+        .row
+          .col-md-12
+            a(href="{{ project.id }}")
+              h3
+                | {{ project.name }}
+        .row
+          .col-md-4
+            | {{ project.current_image | safe }}
+
+          .col-md-6
+            | {{ project.blurb }}
+
+          .col-md-2
+            a(href="{{ project.website }}")
+              | {{ project.website }}

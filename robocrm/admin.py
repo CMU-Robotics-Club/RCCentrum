@@ -1,4 +1,4 @@
-from robocrm.models import Machine, Event, Project, RoboResource
+from robocrm.models import Machine, Event, RoboResource
 from django.core.mail import send_mail
 from django.forms import ModelForm, ValidationError
 from django.contrib import admin
@@ -79,12 +79,6 @@ class RoboUserAdmin(UserAdmin):
   list_display = ('username', 'email', 'first_name', 'last_name')
   search_fields = ['username', 'email', 'first_name', 'last_name']
 
-class ProjectAdmin(admin.ModelAdmin):
-  #list_display = ('name', 'project_image', 'image', 'blurb', 'description', 'website')
-  fields = ('name', 'current_image', 'image', 'blurb', 'description', 'website', 'leaders')
-  readonly_fields = ['current_image']
-  #list_display = ('thumb', 'rentitem', 'is_avatar', 'description')
-
 class FlatPageForm(forms.ModelForm):
   content = forms.CharField(widget=TinyMCE(attrs={'cols': 160, 'rows': 60}))
 
@@ -102,5 +96,4 @@ admin.site.unregister(User)
 admin.site.register(User, RoboUserAdmin)
 admin.site.register(Machine)
 admin.site.register(Event)
-admin.site.register(Project, ProjectAdmin)
 admin.site.register(RoboResource)

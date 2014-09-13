@@ -1,0 +1,22 @@
+extends 'base.jade'
+
+block title
+  | {{ project.name }} 
+
+block content
+  .well
+    .container
+      .row
+        .col-md-12
+          h3
+            | {{ project.name }}
+      .row
+        .col-md-4
+          | {{ project.current_image | safe }}
+
+        .col-md-6
+          | {{ project.description }}
+
+        .col-md-2
+          a(href="{{ project.website }}")
+            | {{ project.website }}
