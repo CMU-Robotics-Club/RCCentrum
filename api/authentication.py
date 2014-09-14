@@ -8,10 +8,6 @@ class RCAuthentication(authentication.BaseAuthentication):
     project_id = request.META.get('HTTP_X_PROJECT_ID')
     project_name = request.META.get('HTTP_X_PROJECT_NAME')
 
-    print(request.META)
-    print(project_id)
-    print(project_name)
-
     if not project_id or not project_name:
       return None
 
@@ -23,6 +19,7 @@ class RCAuthentication(authentication.BaseAuthentication):
     if project.name != project_name:
       return None
 
+    # Hacky solution so django-rest-framework does not through exception
     project.is_authenticated = lambda : True
 
     return (project, None)

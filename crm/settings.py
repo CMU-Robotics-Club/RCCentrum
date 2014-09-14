@@ -117,6 +117,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 TEMPLATE_DIRS = (
     TEMPLATE_DIR,
     os.path.join(TEMPLATE_DIR, "flatpages"),
+    os.path.join(TEMPLATE_DIR, "api/templates/"),
 )
 
 INSTALLED_APPS = (
@@ -135,6 +136,7 @@ INSTALLED_APPS = (
     'tinymce',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_swagger',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
