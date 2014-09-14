@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'robocrm',
     'officers',
     'projects',
+    'api',
     'django.contrib.admin',
     'tinymce',
     'rest_framework',
