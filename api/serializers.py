@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from robocrm.models import RoboUser
+from projects.models import Project
+from officers.models import Officer
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'date_joined', )
-        #exclude = ('password', )
 
 class RoboUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -40,3 +41,13 @@ class RoboUserSerializer(serializers.ModelSerializer):
         depth = 2
 
         fields = ('id', 'club_rank', )
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ('id', 'name', 'image', 'blurb', 'description', 'website', 'display', 'leaders', )
+
+class OfficerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Officer
+        fields = ('id', 'position', 'user', 'image', 'description', )
