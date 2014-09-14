@@ -1,0 +1,28 @@
+from rest_framework import authentication
+from rest_framework import exceptions
+from projects.models import Project
+
+class RCAuthentication(authentication.BaseAuthentication):
+
+  def authenticate(self, request):
+    project_id = request.META.get('HTTP_X_PROJECT_ID')
+    project_name = request.META.get('HTTP_X_PROJECT_NAME')
+
+    print(request.META)
+    print(project_id)
+    print(project_name)
+
+    if not project_id or not project_name:
+      return None
+
+    try:
+      project = Project.objects.get(id=project_id)
+    except Project.DoesNotExist:
+      raise exceptions.AuthenticationFailed('No such project')
+
+    if project.name != project_name:
+      return None
+
+    project.is_authenticated = lambda : True
+
+    return (project, None)
