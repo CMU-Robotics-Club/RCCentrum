@@ -21,6 +21,9 @@ class Project(models.Model):
 
   leaders = models.ManyToManyField('robocrm.RoboUser', related_name='u+')
 
+  # Display on website
+  display = models.BooleanField(default=False)
+
   # To show image in admin interface
   def current_image(self):
     return '<img src="{}{}" width="100px height=100px"/>'.format(settings.MEDIA_URL, self.image)
