@@ -1,0 +1,12 @@
+extends 'base.jade'
+
+block title
+  | {{ officer.position }} 
+
+block content
+  .well
+    .container
+      .row
+        .col-md-12
+          h3
+            | {{ officer.user.user.first_name }} {{ officer.user.user.last_name }}

@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-# TODO: move to seperate project app
 class Project(models.Model):
   name = models.CharField(max_length=30)
 

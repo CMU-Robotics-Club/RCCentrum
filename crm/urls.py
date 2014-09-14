@@ -68,6 +68,7 @@ urlpatterns = patterns('',
     url(r'^roboauth/(?P<rfid_tag>[0-9A-Fa-f]+)/', 'robocrm.views.roboauthall'),
     url(r'^add_card_event/', 'robocrm.views.add_card_event'),
 
+    url(r'^officers/', include('officers.urls')),
     url(r'^projects/', include('projects.urls')),
     url(r'^api/v1/', include(router.urls)),
 
