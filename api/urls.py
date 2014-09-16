@@ -1,5 +1,5 @@
 from rest_framework import routers, serializers, viewsets
-from .views import datetime_view, DateTimeViewSet, RoboUserViewSet, ProjectViewSet, OfficerViewSet
+from .views import DateTimeViewSet, RoboUserViewSet, ProjectViewSet, OfficerViewSet
 from django.conf.urls import include, patterns, url
 
 router = routers.DefaultRouter()
