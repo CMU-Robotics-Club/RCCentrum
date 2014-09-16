@@ -1,6 +1,7 @@
 from rest_framework import authentication
 from rest_framework import exceptions
 from projects.models import Project
+from django.utils import timezone
 
 class RCAuthentication(authentication.BaseAuthentication):
 
@@ -21,5 +22,7 @@ class RCAuthentication(authentication.BaseAuthentication):
 
     # Hacky solution so django-rest-framework does not through exception
     project.is_authenticated = lambda : True
+    project.last_api_activity = timezone.now()
+    project.save()
 
     return (project, None)

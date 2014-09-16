@@ -24,6 +24,8 @@ class Project(models.Model):
   # Display on website
   display = models.BooleanField(default=False)
 
+  last_api_activity = models.DateTimeField(null=True)
+
   # To show image in admin interface
   def current_image(self):
     return '<img src="{}{}" width="100px height=100px"/>'.format(settings.MEDIA_URL, self.image)

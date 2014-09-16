@@ -4,13 +4,26 @@ from projects.models import Project
 from officers.models import Officer
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
-#from rest_framework.decorators import detail_route
+#from rest_framework.decorators import detail_route, list_route
 from .serializers import RoboUserSerializer, ProjectSerializer, OfficerSerializer
+from django.utils import timezone
+from datetime import timedelta
 
+# TODO: figure out why import detail_route and list_route does not work
 def detail_route(methods=['get'], **kwargs):
   def decorator(func):
     func.bind_to_methods = methods
+    func.list = False
     func.detail = True
+    func.kwargs = kwargs
+    return func
+  return decorator
+
+def list_route(methods=['get'], **kwargs):
+  def decorator(func):
+    func.bind_to_methods = methods
+    func.detail = False
+    func.list = True
     func.kwargs = kwargs
     return func
   return decorator
@@ -29,6 +42,17 @@ messages = {}
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
   model = Project
   serializer_class = ProjectSerializer
+
+  @list_route()
+  def active(self, request):
+    time_threshold = timezone.now() - timedelta(minutes=5)
+    active_projects = Project.objects.filter(last_api_activity__gte=time_threshold)
+
+    active_project_ids = [project.id for project in active_projects]
+
+    return Response({
+      "project_ids": active_project_ids
+    })
 
   @detail_route(methods=['get', 'post'])
   def messages(self, request, pk):

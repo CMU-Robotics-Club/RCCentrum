@@ -45,7 +45,7 @@ class RoboUserSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'name', 'image', 'blurb', 'description', 'website', 'display', 'leaders', )
+        fields = ('id', 'name', 'image', 'blurb', 'description', 'website', 'display', 'leaders', 'last_api_activity', )
 
 class OfficerSerializer(serializers.ModelSerializer):
     class Meta:
