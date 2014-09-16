@@ -8,6 +8,7 @@ from rest_framework.parsers import JSONParser
 from .serializers import RoboUserSerializer, ProjectSerializer, OfficerSerializer
 from django.utils import timezone
 from datetime import timedelta
+from rest_framework.decorators import api_view
 
 # TODO: figure out why import detail_route and list_route does not work
 def detail_route(methods=['get'], **kwargs):
@@ -28,11 +29,21 @@ def list_route(methods=['get'], **kwargs):
     return func
   return decorator
 
+
+
+class DateTimeViewSet(viewsets.ViewSet):
+
+  def list(self, request):
+    return Response(timezone.now())
+
+
 class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
+
   model = RoboUser
   serializer_class = RoboUserSerializer
 
 class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
+
   model = Officer
   serializer_class = OfficerSerializer
 
@@ -40,6 +51,7 @@ class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
 messages = {}
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
+  
   model = Project
   serializer_class = ProjectSerializer
 
