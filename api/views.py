@@ -62,9 +62,7 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
 
     active_project_ids = [project.id for project in active_projects]
 
-    return Response({
-      "project_ids": active_project_ids
-    })
+    return Response(active_project_ids)
 
   @detail_route(methods=['get', 'post'])
   def messages(self, request, pk):
