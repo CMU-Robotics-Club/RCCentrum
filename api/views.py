@@ -2,10 +2,11 @@ from rest_framework import viewsets
 from robocrm.models import RoboUser
 from projects.models import Project
 from officers.models import Officer
+from webcams.models import Webcam
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 #from rest_framework.decorators import detail_route, list_route
-from .serializers import RoboUserSerializer, ProjectSerializer, OfficerSerializer
+from .serializers import WebcamSerializer, RoboUserSerializer, ProjectSerializer, OfficerSerializer
 from django.utils import timezone
 from datetime import timedelta
 from rest_framework.decorators import api_view
@@ -30,6 +31,11 @@ def list_route(methods=['get'], **kwargs):
   return decorator
 
 
+
+class WebcamViewSet(viewsets.ReadOnlyModelViewSet):
+
+  model = Webcam
+  serializer_class = WebcamSerializer
 
 class DateTimeViewSet(viewsets.ViewSet):
 

@@ -3,6 +3,12 @@ from django.contrib.auth.models import User
 from robocrm.models import RoboUser
 from projects.models import Project
 from officers.models import Officer
+from webcams.models import Webcam
+
+class WebcamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Webcam
+        fields = ('id', 'name', 'url', )
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

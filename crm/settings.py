@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'officers',
     'projects',
     'api',
+    'webcams',
     'django.contrib.admin',
     'tinymce',
     'rest_framework',
