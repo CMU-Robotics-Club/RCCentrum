@@ -133,11 +133,11 @@ INSTALLED_APPS = (
     'projects',
     'api',
     'webcams',
-    'django.contrib.admin',
     'tinymce',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
+    'django.contrib.admin',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',

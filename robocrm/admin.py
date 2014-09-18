@@ -25,9 +25,8 @@ class UserProfileInline(admin.StackedInline):
       # add user form
       return (
           (None, {'fields':
-            ('cell', 'class_level', 'grad_year', 'major', 'sec_major_one',
-              'sec_major_two', 'club_rank', 'dues_paid', 'tshirt_rec',
-              'bench_status', 'shop_status')
+            ('class_level', 'grad_year', 'major', 'dues_paid',
+            )
           }),)
 
 def subscribe_to_list(first_name, last_name, email, listname):
@@ -42,8 +41,7 @@ def subscribe_to_list(first_name, last_name, email, listname):
 
   to_addr = listname + '-subscribe@lists.andrew.cmu.edu'
 
-  #TODO: uncomment production
-  #send_mail('', '', from_addr, [to_addr])
+  send_mail('', '', from_addr, [to_addr])
 
 class RoboUserCreationForm(ModelForm):
   # This is modelled directly after django.contrib.auth.forms.UserCreationForm 
@@ -68,6 +66,14 @@ class RoboUserCreationForm(ModelForm):
     subscribe_to_list(user.first_name, user.last_name, user.email, 'roboclub-gb')
     return user
 
+  class Media:
+    js = (
+      'jquery-1.11.1.min.js',
+      'robocrm/js/cmu.js',
+      'robocrm/js/cmu_directory.js',
+    )
+
+
 class RoboUserAdmin(UserAdmin):
   inlines = (UserProfileInline, )
   add_fieldsets = (
@@ -78,6 +84,7 @@ class RoboUserAdmin(UserAdmin):
   add_form = RoboUserCreationForm
   list_display = ('username', 'email', 'first_name', 'last_name')
   search_fields = ['username', 'email', 'first_name', 'last_name']
+
 
 class FlatPageForm(forms.ModelForm):
   content = forms.CharField(widget=TinyMCE(attrs={'cols': 160, 'rows': 60}))
