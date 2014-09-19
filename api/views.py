@@ -10,6 +10,9 @@ from .serializers import WebcamSerializer, RoboUserSerializer, ProjectSerializer
 from django.utils import timezone
 from datetime import timedelta
 from rest_framework.decorators import api_view
+from django.contrib.auth import authenticate
+from rest_framework.exceptions import ParseError, NotAuthenticated
+from .errno import *
 
 # TODO: figure out why import detail_route and list_route does not work
 def detail_route(methods=['get'], **kwargs):
@@ -49,6 +52,23 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
   model = RoboUser
   serializer_class = RoboUserSerializer
   filter_fields = ('club_rank', )
+
+  @list_route(methods=['post'])
+  def login(self, request):
+    data = JSONParser().parse(request)
+    username = data.get('username', None)
+    password = data.get('password', None)
+
+    if username is None or password is None:
+      # TODO: return something not 200
+      error = ParseError(detail="Username and Password must be provided")
+      error.errno = USERNAME_OR_PASSWORD_NONE
+      raise error
+
+    user = authenticate(username=username, password=password)
+
+    valid = user is not None
+    return Response(valid)
 
 class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
 
@@ -91,50 +111,41 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
         if type(project).__name__ == 'Project' and project.id == pk:
           messages[pk] = []
 
-      return Response({
-        "messages": message_response
-      })
+      return Response(message_response)
 
     # Post
     else:
       project = request._user
 
       if type(project).__name__ != 'Project':
-        return Response({
-          "status": "error",
-          "code": 100,
-          "detail": "Can only create messages as a project"
-        })
+        error = NotAuthenticated(detail="Can only create messages as a project")
+        error.errno = NOT_AUTHENTICATED_AS_PROJECT
+        raise error
       elif project.id != pk:
-        return Response({
-          "status": "error",
-          "code": 101,
-          "detail": "You are not this project"
-        })
+        error = NotAuthenticated(detail="You are not this project")
+        error.errno = NOT_AUTHENTICATED_AS_THIS_PROJECT
+        raise error
       else:
         # Authenticated
 
         data = JSONParser().parse(request)
 
-        to_project_id = data.get('to_project_id', None)
+        to_project_id = data.get('to', None)
         message = data.get('message', None)
 
         if to_project_id is None or message is None:
-          return Response({
-            "status": "error",
-            "code": 102,
-            "detail": "Invalid message"
-          })
+          error = ParseError(detail="Invalid message")
+          error.errno = INVALID_MESSAGE_STRUCTURE
+          raise error
 
         try:
           to_project = Project.objects.get(id=to_project_id)
         except Project.DoesNotExist:
-          return Response({
-            "status": "error",
-            "code": 103,
-            "detail": "Invalid to Project ID"
-          })
+          error = ParseError(detail="Invalid to project ID")
+          error.errno = INVALID_PROJECT_ID
+          raise error
 
+        global message_id
         m_id = message_id
         message_id += 1
 
@@ -149,13 +160,11 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
         else:
           messages[to_project_id] = [new_message]
 
-        return Response({
-          "status": "okay",
-          "id": m_id,
-        })
+        return Response(m_id)
 
   @detail_route(methods=['get', 'post'])
   def datastore(self, request, pk):
+    # TODO: implement
     pk = int(pk)
 
     return Response()

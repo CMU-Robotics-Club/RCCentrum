@@ -162,6 +162,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework.filters.DjangoFilterBackend',
     ),
+    'EXCEPTION_HANDLER': 'api.exception_handler.api_exception_handler'
 }
 
 # A sample logging configuration. The only tangible logging
