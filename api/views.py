@@ -58,6 +58,7 @@ class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 messages = {}
+message_id = 0
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
   
@@ -101,11 +102,13 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
       if type(project).__name__ != 'Project':
         return Response({
           "status": "error",
+          "code": 100,
           "detail": "Can only create messages as a project"
         })
       elif project.id != pk:
         return Response({
           "status": "error",
+          "code": 101,
           "detail": "You are not this project"
         })
       else:
@@ -119,6 +122,7 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
         if to_project_id is None or message is None:
           return Response({
             "status": "error",
+            "code": 102,
             "detail": "Invalid message"
           })
 
@@ -127,11 +131,16 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
         except Project.DoesNotExist:
           return Response({
             "status": "error",
+            "code": 103,
             "detail": "Invalid to Project ID"
           })
 
+        m_id = message_id
+        message_id += 1
+
         new_message = {
           "from": pk,
+          "id": m_id,
           "message": message
         }
 
@@ -140,8 +149,13 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
         else:
           messages[to_project_id] = [new_message]
 
-        print(messages)
-
         return Response({
-          "status": "sent"
+          "status": "okay",
+          "id": m_id,
         })
+
+  @detail_route(methods=['get', 'post'])
+  def datastore(self, request, pk):
+    pk = int(pk)
+
+    return Response()
