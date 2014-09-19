@@ -4,6 +4,7 @@ from django.forms import ModelForm, ValidationError
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.contrib.auth.forms import UserCreationForm
 from robocrm.models import RoboUser
 from django import forms
@@ -87,15 +88,17 @@ class RoboUserAdmin(UserAdmin):
 
 
 class FlatPageForm(forms.ModelForm):
+  
   content = forms.CharField(widget=TinyMCE(attrs={'cols': 160, 'rows': 60}))
 
   class Meta:
     model = FlatPage
-    exclude = ('template_name', 'registration_required', 'enable_comments','sites', )
+    exclude = ('template_name', 'registration_required', 'enable_comments', )
 
 
 class FlatPageAdmin(admin.ModelAdmin):
   form = FlatPageForm
+
 
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, FlatPageAdmin)
