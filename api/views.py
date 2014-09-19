@@ -36,6 +36,7 @@ class WebcamViewSet(viewsets.ReadOnlyModelViewSet):
 
   model = Webcam
   serializer_class = WebcamSerializer
+  filter_fields = ('name', )
 
 class DateTimeViewSet(viewsets.ViewSet):
 
@@ -47,11 +48,13 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
 
   model = RoboUser
   serializer_class = RoboUserSerializer
+  filter_fields = ('club_rank', )
 
 class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
 
   model = Officer
   serializer_class = OfficerSerializer
+  filter_fields = ('position', 'user', )
 
 
 messages = {}
@@ -60,6 +63,7 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
   
   model = Project
   serializer_class = ProjectSerializer
+  filter_fields = ('name', 'display', 'leaders', )
 
   @list_route()
   def active(self, request):

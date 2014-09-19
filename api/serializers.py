@@ -16,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'first_name', 'last_name', 'email', 'date_joined', )
 
 class RoboUserSerializer(serializers.ModelSerializer):
+    
     user = UserSerializer()
 
     # TODO: find better way to do this
