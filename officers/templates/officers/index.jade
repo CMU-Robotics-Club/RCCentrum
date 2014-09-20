@@ -5,18 +5,18 @@ block title
 
 block content
   .container-fluid
-    .row-fluid
+    .row
       for officer in officers
-        .col-md-3
+        .col-md-6
           .well
-            .container
-              .row
-                .col-md-12
-                  a(href="{{ officer.id }}")
-                    | {{ officer.current_image | safe }}
-              .row
-                .col-md-12
-                  | {{ officer.position }}
-              .row
-                .col-md-12
-                  | {{ officer.user.user.first_name }} {{ officer.user.user.last_name }}
+            .row
+              .col-md-6
+                a.pull-left(href="{{ officer.id }}")
+                  img.img-thumbnail(src="/media/{{ officer.image }}" style="width:200px; height:200px;")
+              .col-md-6
+                .caption
+                  h3
+                    | {{ officer.position }}
+
+                  p
+                    | {{ officer.user.user.first_name }} {{ officer.user.user.last_name }}
