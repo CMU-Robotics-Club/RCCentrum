@@ -4,7 +4,7 @@ from ordered_model.models import OrderedModel
 
 class Officer(OrderedModel):
 
-  position = models.CharField(max_length=20)
+  position = models.CharField(max_length=30)
 
   user = models.ForeignKey('robocrm.RoboUser')
 
