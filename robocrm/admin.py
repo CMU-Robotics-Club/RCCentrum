@@ -9,7 +9,6 @@ from django.contrib.auth.forms import UserCreationForm
 from robocrm.models import RoboUser
 from django import forms
 from django.contrib.flatpages.models import FlatPage
-from tinymce.widgets import TinyMCE
 from django.contrib.flatpages.admin import FlatPageAdmin, FlatpageForm
 
 class UserProfileInline(admin.StackedInline):
@@ -87,21 +86,6 @@ class RoboUserAdmin(UserAdmin):
   search_fields = ['username', 'email', 'first_name', 'last_name']
 
 
-class FlatPageForm(forms.ModelForm):
-  
-  content = forms.CharField(widget=TinyMCE(attrs={'cols': 160, 'rows': 60}))
-
-  class Meta:
-    model = FlatPage
-    exclude = ('template_name', 'registration_required', 'enable_comments', )
-
-
-class FlatPageAdmin(admin.ModelAdmin):
-  form = FlatPageForm
-
-
-admin.site.unregister(FlatPage)
-admin.site.register(FlatPage, FlatPageAdmin)
 admin.site.unregister(User)
 admin.site.register(User, RoboUserAdmin)
 admin.site.register(Machine)

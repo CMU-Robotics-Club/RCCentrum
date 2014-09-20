@@ -133,6 +133,7 @@ INSTALLED_APPS = (
     'projects',
     'api',
     'webcams',
+    'ordered_flatpages',
     'tinymce',
     'rest_framework',
     'ordered_model',
