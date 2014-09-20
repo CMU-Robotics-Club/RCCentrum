@@ -1,7 +1,8 @@
 from django.db import models
 from django.conf import settings
+from ordered_model.models import OrderedModel
 
-class Officer(models.Model):
+class Officer(OrderedModel):
 
   position = models.CharField(max_length=20)
 
@@ -16,6 +17,9 @@ class Officer(models.Model):
   image = models.ImageField(upload_to=image_upload_to, null=True)
 
   description = models.TextField(null=True)
+
+  class Meta(OrderedModel.Meta):
+    pass
 
   # To show image in admin interface
   def current_image(self, width=100, height=100):

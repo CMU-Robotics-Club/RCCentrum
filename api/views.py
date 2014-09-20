@@ -74,7 +74,7 @@ class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
 
   model = Officer
   serializer_class = OfficerSerializer
-  filter_fields = ('position', 'user', )
+  filter_fields = ('position', 'user', 'order', )
 
 
 messages = {}

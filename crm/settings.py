@@ -135,7 +135,7 @@ INSTALLED_APPS = (
     'webcams',
     'tinymce',
     'rest_framework',
-    'rest_framework_swagger',
+    'ordered_model',
     'django.contrib.admin',
 
     # Uncomment the next line to enable admin documentation:

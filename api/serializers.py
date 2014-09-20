@@ -60,4 +60,4 @@ class ProjectSerializer(serializers.ModelSerializer):
 class OfficerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Officer
-        fields = ('id', 'position', 'user', 'image', 'description', )
+        fields = ('id', 'position', 'user', 'image', 'description', 'order', )
