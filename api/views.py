@@ -34,6 +34,28 @@ def list_route(methods=['get'], **kwargs):
   return decorator
 
 
+class LoginViewSet(viewsets.ViewSet):
+
+  def list(self, request):
+    if request._method != "POST":
+      error = ParseError(detail="Username and Password must be provided")
+      error.errno = USERNAME_OR_PASSWORD_NONE
+      raise error
+
+    data = JSONParser().parse(request)
+    username = data.get('username', None)
+    password = data.get('password', None)
+
+    if username is None or password is None:
+      error = ParseError(detail="Username and Password must be provided")
+      error.errno = USERNAME_OR_PASSWORD_NONE
+      raise error
+
+    user = authenticate(username=username, password=password)
+
+    valid = user is not None
+    return Response(valid)
+    
 
 class WebcamViewSet(viewsets.ReadOnlyModelViewSet):
 
@@ -53,22 +75,6 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = RoboUserSerializer
   filter_fields = ('club_rank', )
 
-  @list_route(methods=['post'])
-  def login(self, request):
-    data = JSONParser().parse(request)
-    username = data.get('username', None)
-    password = data.get('password', None)
-
-    if username is None or password is None:
-      # TODO: return something not 200
-      error = ParseError(detail="Username and Password must be provided")
-      error.errno = USERNAME_OR_PASSWORD_NONE
-      raise error
-
-    user = authenticate(username=username, password=password)
-
-    valid = user is not None
-    return Response(valid)
 
 class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
 
