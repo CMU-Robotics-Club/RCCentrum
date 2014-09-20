@@ -90,6 +90,10 @@ class RoboUser(models.Model):
   shop_status = models.CharField(max_length=2,
                                  choices=STATUS_CHOICES,
                                  default=GOOD)
+
+  class Meta:
+    ordering = ['user__username']
+
   def __str__(self):
     return self.user.username
 

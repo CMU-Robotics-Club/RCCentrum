@@ -7,6 +7,6 @@ class APIImageField(serializers.ImageField):
   def to_native(self, obj):
     parent = super(APIImageField, self).to_native(obj)
     site = Site.objects.get_current()
-    url = "{}{}/{}".format(site.domain, settings.MEDIA_URL, parent)
+    url = "{}{}{}".format(site.domain, settings.MEDIA_URL, parent)
     return url
     
