@@ -4,21 +4,26 @@ block title
   | Projects 
 
 block content
-  for project in projects
-    .well
-      .container
-        .row
-          .col-md-12
-            a(href="{{ project.id }}")
-              h3
-                | {{ project.name }}
-        .row
-          .col-md-4
-            | {{ project.current_image | safe }}
+  .container-fluid
+    .row
+      for project in projects
+        .col-md-12
+          .well
+            .row
+              .col-md-6
+                a.pull-left(href="{{ project.name | slugify }}")
+                  img.img-thumbnail(src="/media/{{ project.image }}" style="width:50%; height:50%;")
+              .col-md-6
+                .caption
+                  h3
+                    | {{ project.name }}
 
-          .col-md-6
-            | {{ project.blurb }}
+                  h4
+                  for leader in project.leaders.all
+                    {{ leader.user.first_name }} {{ leader.user.last_name }} - {{ leader.user.email }}
 
-          .col-md-2
-            a(href="{{ project.website }}")
-              | {{ project.website }}
+
+                  hr
+
+                  p
+                    | {{ project.blurb }}

@@ -8,15 +8,21 @@ block content
     .container
       .row
         .col-md-12
-          h3
-            | {{ project.name }}
-      .row
-        .col-md-4
-          | {{ project.current_image | safe }}
+          .pull-left
+            h2
+              u
+                | {{ project.name }}
+            h4
+              for leader in project.leaders.all
+                {{ leader.user.first_name }} {{ leader.user.last_name }} - {{ leader.user.email }}
+            h4
+              a(href="{{ project.website }}" target="_blank")
+                {{ project.website }}
 
+            hr
+            
+      .row
+        .col-md-6
+          img.img-thumbnail(src="/media/{{ project.image }}" style="width:80%; height:80%;")
         .col-md-6
           | {{ project.description }}
-
-        .col-md-2
-          a(href="{{ project.website }}")
-            | {{ project.website }}
