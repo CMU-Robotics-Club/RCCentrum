@@ -14,6 +14,7 @@ urlpatterns = patterns('',
 
     url(r'^officers/', include('officers.urls')),
     url(r'^projects/', include('projects.urls')),
+    url(r'^webcams/', include('webcams.urls')),
     url(r'^api/', include('api.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
