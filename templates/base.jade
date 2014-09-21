@@ -22,8 +22,8 @@ html(lang="en")
         <![endif]-->
 
         link(href="{% static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet")
-        link(href="{% static 'css/default.css' %}" rel="stylesheet")
         link(href="{% static 'bootstrap/css/bootstrap.min.css' %}", rel="stylesheet", media="screen")
+        link(href="{% static 'css/default.css' %}" rel="stylesheet")
 
         <!-- Google Anasslytics -->
         script
@@ -45,7 +45,7 @@ html(lang="en")
 
                 .jumbotron
                     if flatpage.content
-                        {{ flatpage.content }}
+                        {{ flatpage.content | cut:"// <![CDATA[" | cut:"// ]]>" }}
                     else
                         block content
                     

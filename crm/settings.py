@@ -149,6 +149,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'cleanup_on_startup': True,
     'custom_undo_redo_levels': 10,
     'theme_advanced_buttons3_add': 'code',
+    'valid_elements': '*[*]',
 }
 
 REST_FRAMEWORK = {
