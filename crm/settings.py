@@ -1,4 +1,5 @@
 import os
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -137,6 +138,7 @@ INSTALLED_APPS = (
     'tinymce',
     'rest_framework',
     'ordered_model',
+    'suit',
     'django.contrib.admin',
 
     # Uncomment the next line to enable admin documentation:
@@ -165,6 +167,10 @@ REST_FRAMEWORK = {
     ),
     'EXCEPTION_HANDLER': 'api.exception_handler.api_exception_handler'
 }
+
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.core.context_processors.request',
+)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
