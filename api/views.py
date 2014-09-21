@@ -11,7 +11,7 @@ from django.utils import timezone
 from datetime import timedelta
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate
-from rest_framework.exceptions import ParseError, NotAuthenticated
+from rest_framework.exceptions import ParseError, NotAuthenticated, AuthenticationFailed, PermissionDenied
 from .errno import *
 
 # TODO: figure out why import detail_route and list_route does not work
@@ -101,72 +101,21 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
 
     return Response(active_project_ids)
 
-  @detail_route(methods=['get', 'post'])
+  @detail_route()
   def messages(self, request, pk):
+    """
+    View messages of project without consuming even
+    if correct project for consumption.
+    """
+
     pk = int(pk)
 
-    if request.method == 'GET':
-      message_response = []
+    message_response = []
 
-      if pk in messages:
-        message_response = messages[pk]
+    if pk in messages:
+      message_response = messages[pk]
 
-        # If project sees its own messages, clear them
-        project = request._user
-
-        if type(project).__name__ == 'Project' and project.id == pk:
-          messages[pk] = []
-
-      return Response(message_response)
-
-    # Post
-    else:
-      project = request._user
-
-      if type(project).__name__ != 'Project':
-        error = NotAuthenticated(detail="Can only create messages as a project")
-        error.errno = NOT_AUTHENTICATED_AS_PROJECT
-        raise error
-      elif project.id != pk:
-        error = NotAuthenticated(detail="You are not this project")
-        error.errno = NOT_AUTHENTICATED_AS_THIS_PROJECT
-        raise error
-      else:
-        # Authenticated
-
-        data = JSONParser().parse(request)
-
-        to_project_id = data.get('to', None)
-        message = data.get('message', None)
-
-        if to_project_id is None or message is None:
-          error = ParseError(detail="Invalid message")
-          error.errno = INVALID_MESSAGE_STRUCTURE
-          raise error
-
-        try:
-          to_project = Project.objects.get(id=to_project_id)
-        except Project.DoesNotExist:
-          error = ParseError(detail="Invalid to project ID")
-          error.errno = INVALID_PROJECT_ID
-          raise error
-
-        global message_id
-        m_id = message_id
-        message_id += 1
-
-        new_message = {
-          "from": pk,
-          "id": m_id,
-          "message": message
-        }
-
-        if to_project_id in messages:
-          messages[to_project_id].append(new_message)
-        else:
-          messages[to_project_id] = [new_message]
-
-        return Response(m_id)
+    return Response(message_response)
 
   @detail_route(methods=['get', 'post'])
   def datastore(self, request, pk):
@@ -174,3 +123,67 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
     pk = int(pk)
 
     return Response()
+
+
+class MessageViewSet(viewsets.ViewSet):
+
+  def list(self, request):
+    user = request._user
+
+    if type(user).__name__ != 'Project':
+      error = PermissionDenied(detail="Not authenticated as a project")
+      error.errno = NOT_AUTHENTICATED_AS_PROJECT
+      raise error
+    else:
+      # Get messages for this project and consume them
+      # if any exist
+
+      m = []
+
+      if user.id in messages:
+        m = messages[user.id]
+        messages[user.id] = []
+      
+      return Response(m)
+
+  def create(self, request):
+    user = request._user
+
+    if type(user).__name__ != 'Project':
+      error = PermissionDenied(detail="Not authenticated as a project")
+      error.errno = NOT_AUTHENTICATED_AS_PROJECT
+      raise error
+    else:
+      data = JSONParser().parse(request)
+
+      to_id = data.get('to_id', None)
+      message = data.get('message', None)
+
+      if to_id is None or message is None:
+        error = ParseError(detail="Invalid message")
+        error.errno = INVALID_MESSAGE_STRUCTURE
+        raise error
+
+      try:
+        to_project = Project.objects.get(id=to_id)
+      except Project.DoesNotExist:
+        error = ParseError(detail="Invalid to project ID")
+        error.errno = INVALID_PROJECT_ID
+        raise error
+
+      global message_id
+      m_id = message_id
+      message_id += 1
+
+      new_message = {
+        "from": user.id,
+        "id": m_id,
+        "message": message
+      }
+
+      if to_id in messages:
+        messages[to_id].append(new_message)
+      else:
+        messages[to_id] = [new_message]
+
+      return Response(m_id)
