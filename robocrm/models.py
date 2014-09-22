@@ -13,7 +13,7 @@ class Machine(models.Model):
   dend = models.DateTimeField(blank=True, null=True)
   
   def __str__(self):
-    return u'%s %s' % (self.type, self.id)
+    return "{} {}".format(self.type, self.id)
 
 
 # User Model
@@ -111,7 +111,7 @@ class Event(models.Model):
   matuse = models.TextField()
   
   def __str__(self):
-    return u'%s %s %s'%(self.type, 
+    return "{} {} {}".format(self.type, 
       self.user.user.username if self.user else 'unknown', self.succ)
 
 # Roboclub Resources Model
@@ -125,5 +125,4 @@ class RoboResource(models.Model):
   officer = models.ForeignKey('RoboUser', related_name='o+', blank=True)
   
   def __str__(self):
-    return u'%s %s %s' (self.type, self.id, self.checked_out)
-
+    return "{} {} {}".format(self.type, self.id, self.checked_out)
