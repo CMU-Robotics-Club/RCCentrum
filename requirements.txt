@@ -1,0 +1,9 @@
+django
+pymysql
+pyjade
+django-tinymce
+djangorestframework
+markdown
+django-filter
+django-ordered-model
+django-suit
