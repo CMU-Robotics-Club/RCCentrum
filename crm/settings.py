@@ -165,7 +165,12 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework.filters.DjangoFilterBackend',
     ),
-    'EXCEPTION_HANDLER': 'api.exception_handler.api_exception_handler'
+    'EXCEPTION_HANDLER': 'api.exception_handler.api_exception_handler',
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework_csv.renderers.CSVRenderer',
+    ),
 }
 
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
