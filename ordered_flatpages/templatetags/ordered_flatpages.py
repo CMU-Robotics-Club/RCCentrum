@@ -1,6 +1,6 @@
 from django import template
 from django.conf import settings
-from ordered_flatpages.models import OrderedFlatPage
+from ..models import OrderedFlatPage
 from django.contrib.sites.shortcuts import get_current_site
 
 
