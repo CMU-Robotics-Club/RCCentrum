@@ -21,10 +21,10 @@
                     a(href="{{page.url}}") {{page.title}}
             
             li
-                a(href="/officers") Officers
+                a(href="{% url 'officers:index' %}") Officers
 
             li
-                a(href="/projects") Projects
+                a(href="{% url 'projects:index' %}") Projects
 
             li
-                a(href="/webcams") Webcam
+                a(href="{% url 'webcams:index' %}") Webcam

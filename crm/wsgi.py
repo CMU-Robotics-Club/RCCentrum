@@ -15,9 +15,11 @@ framework.
 """
 import os
 import site
+import sys
 
-site.addsitedir('/var/www/env')
-site.addsitedir('/var/www/crm')
+sys.path.append('/var/www/env/crm')
+sys.path.append('/var/www/crm')
+sys.path.append('/var/www/env/crm/lib/python3.4/site-packages/')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "crm.settings")
 

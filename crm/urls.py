@@ -12,9 +12,9 @@ urlpatterns = patterns('',
     url(r'^roboauth/(?P<rfid_tag>[0-9A-Fa-f]+)/', 'robocrm.views.roboauthall'),
     url(r'^add_card_event/', 'robocrm.views.add_card_event'),
 
-    url(r'^officers/', include('officers.urls')),
-    url(r'^projects/', include('projects.urls')),
-    url(r'^webcams/', include('webcams.urls')),
+    url(r'^officers/', include('officers.urls', namespace='officers')),
+    url(r'^projects/', include('projects.urls', namespace='projects')),
+    url(r'^webcams/', include('webcams.urls', namespace='webcams')),
     url(r'^api/', include('api.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
