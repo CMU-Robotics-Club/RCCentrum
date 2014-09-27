@@ -12,7 +12,7 @@ block content
           .pull-left
             h3
               u
-                | {{ officer.position }} - {{ officer.user.user.first_name }} {{ officer.user.user.last_name }}
+                | {{ officer.user.user.get_full_name }}
 
       .row
         .col-md-6

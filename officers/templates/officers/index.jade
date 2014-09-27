@@ -20,4 +20,4 @@ block content
                     | {{ officer.position }}
 
                   p
-                    | {{ officer.user.user.first_name }} {{ officer.user.user.last_name }}
+                    | {{ officer.user.user.get_full_name }}

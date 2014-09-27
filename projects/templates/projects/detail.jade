@@ -10,12 +10,10 @@ block content
       .row
         .col-md-12
           .pull-left
-            h2
-              u
-                | {{ project.name }}
             h4
               for leader in project.leaders.all
-                {{ leader.user.first_name }} {{ leader.user.last_name }} - {{ leader.user.email }}
+                {{ leader.user.get_full_name }} - {{ leader.user.email }}
+                br
             h4
               a(href="{{ project.website }}" target="_blank")
                 {{ project.website }}

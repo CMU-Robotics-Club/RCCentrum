@@ -22,8 +22,8 @@ block content
 
                   h4
                   for leader in project.leaders.all
-                    {{ leader.user.first_name }} {{ leader.user.last_name }} - {{ leader.user.email }}
-
+                    {{ leader.user.get_full_name }} - {{ leader.user.email }}
+                    br
 
                   hr
 
