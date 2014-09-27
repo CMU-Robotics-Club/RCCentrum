@@ -1,5 +1,7 @@
 extends 'base.jade'
 
+{% load static %}
+
 block title
   | Projects 
 
@@ -12,7 +14,7 @@ block content
             .row
               .col-md-6
                 a.pull-left(href="{{ project.name | slugify }}")
-                  img.img-thumbnail(src="/media/{{ project.image }}" style="width:50%; height:50%;")
+                  img.img-thumbnail(src="{% get_media_prefix %}{{ project.image }}" style="width:50%; height:50%;")
               .col-md-6
                 .caption
                   h3

@@ -1,25 +1,20 @@
 foooter.footer.navbar.navbar-default.navbar-fixed-bottom
     hr
     .col-md-4
-        a(href="/redmine/")
+        a(href="http://www.roboticsclub.org/redmine/", target="_blank")
             i.fa.fa-
 
             | Redmine
         |
-        a(href="/api/")
+        a(href="{% url 'api-root' %}")
             i.fa.fa-
 
             | API
         |
-        a(href="/admin/")
+        a(href="{% url 'admin:index' %}")
             i.fa.fa-
 
             | Admin
-        |
-        a(href="/constitution/")
-            i.fa.fa-
-
-            | Constitution
 
     .col-md-4
         a(href="https://twitter.com/roboclub" target="_blank")

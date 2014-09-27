@@ -1,6 +1,7 @@
 {% load staticfiles %}
 {% load ordered_flatpages %}
 {% get_ordered_flatpages as flatpages %}
+{% get_ordered_flatpages '/' as home_pages %}
 
 .header.navbar.navbar-default(role="navigation")
     .container.pull-left
@@ -10,7 +11,7 @@
                 span.icon-bar
                 span.icon-bar
                 span.icon-bar
-            a.navbar-brand(href="/")
+            a.navbar-brand(href="{{home_pages.0.url}}")
                 img(src="{% static 'images/logo.png' %}", width="20px", height="20px")
                 |   Carnegie Mellon Robotics Club
 

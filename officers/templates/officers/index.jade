@@ -1,4 +1,5 @@
 extends 'base.jade'
+{% load static %}
 
 block title
   | Officers 
@@ -12,7 +13,7 @@ block content
             .row
               .col-md-6
                 a.pull-left(href="{{ officer.user }}")
-                  img.img-thumbnail(src="/media/{{ officer.image }}" style="width:200px; height:200px;")
+                  img.img-thumbnail(src="{% get_media_prefix %}{{ officer.image }}" style="width:200px; height:200px;")
               .col-md-6
                 .caption
                   h3
