@@ -85,6 +85,10 @@ class RoboUserAdmin(UserAdmin):
   list_display = ('username', 'email', 'first_name', 'last_name')
   search_fields = ['username', 'email', 'first_name', 'last_name']
 
+  def save_model(self, request, obj, form, change):
+    obj.is_staff = True
+    obj.save()
+
 
 admin.site.unregister(User)
 admin.site.register(User, RoboUserAdmin)
