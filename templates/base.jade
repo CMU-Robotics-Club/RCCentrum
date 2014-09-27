@@ -1,5 +1,8 @@
 {% load staticfiles %}
 
+mixin title
+    block title
+
 !!! 5
 html(lang="en")
     head
@@ -13,7 +16,7 @@ html(lang="en")
             if flatpage.title
                 {{ flatpage.title }}
             else
-                block title
+                +title
             || CMU Robotics Club
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
@@ -45,8 +48,14 @@ html(lang="en")
 
                 .jumbotron
                     if flatpage.content
+                        h2
+                            | {{ flatpage.title }}
+                        hr
                         {{ flatpage.content | cut:"// <![CDATA[" | cut:"// ]]>" }}
                     else
+                        h2
+                            +title
+                        hr
                         block content
                     
             {% include "footer.jade" %}
