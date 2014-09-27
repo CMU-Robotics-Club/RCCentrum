@@ -1,14 +1,13 @@
 from django.db import models
 from django.conf import settings
+import os
 
 class Project(models.Model):
   name = models.CharField(max_length=30)
 
   def image_upload_to(instance, filename):
-    print(filename)
-    #TODO: name file project name
-    #return "projects/{}".format(instance.name)
-    return "projects/{}".format(filename)
+    name, extension = os.path.splitext(filename)
+    return "projects/{}{}".format(instance.name.lower(), extension)
 
   image = models.ImageField(upload_to=image_upload_to, null=True)
 

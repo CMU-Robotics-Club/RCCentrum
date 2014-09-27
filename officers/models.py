@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from ordered_model.models import OrderedModel
+import os
 
 class Officer(OrderedModel):
 
@@ -9,10 +10,9 @@ class Officer(OrderedModel):
   user = models.ForeignKey('robocrm.RoboUser')
 
   def image_upload_to(instance, filename):
-    print(filename)
-    #TODO: name file project name
-    #return "projects/{}".format(instance.name)
-    return "officers/{}".format(filename)
+    name, extension = os.path.splitext(filename)
+    username = instance.user.user.username
+    return "officers/{}{}".format(username, extension)
 
   image = models.ImageField(upload_to=image_upload_to, null=True)
 
