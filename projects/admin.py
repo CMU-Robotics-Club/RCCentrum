@@ -12,7 +12,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
     # If not an superuser/officer only
     # let Robouser admin projects a leader of
-    if not user.is_superuser or not user.groups.filter('officers').exists():
+    if not user.is_superuser and not user.groups.filter(name='officers').exists():
       # Get the robouser so the IDs match up
       robouser = user.robouser
       qs = qs.filter(leaders=robouser.id)
