@@ -3,7 +3,7 @@ from django.core.mail import send_mail
 from django.forms import ModelForm, ValidationError
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission, Group
 from django.contrib.sites.models import Site
 from django.contrib.auth.forms import UserCreationForm
 from robocrm.models import RoboUser
@@ -61,8 +61,21 @@ class RoboUserCreationForm(ModelForm):
   def save(self, commit=True):
     user = super(RoboUserCreationForm, self).save(commit=False)
     user.set_password('geek6811')
+    user.is_staff = True
+
+    # Hacky but only way to get default groups to work since
+    # original save_m2m overrides groups
+    old_save_m2m = self.save_m2m
+    def save_m2m():
+      old_save_m2m()
+      members_group = Group.objects.get_or_create(name='members')[0]
+      user.groups.clear()
+      user.groups.add(members_group)
+    self.save_m2m = save_m2m
+
     if commit:
       user.save()
+
     subscribe_to_list(user.first_name, user.last_name, user.email, 'roboclub-gb')
     return user
 
@@ -84,10 +97,6 @@ class RoboUserAdmin(UserAdmin):
   add_form = RoboUserCreationForm
   list_display = ('username', 'email', 'first_name', 'last_name')
   search_fields = ['username', 'email', 'first_name', 'last_name']
-
-  def save_model(self, request, obj, form, change):
-    obj.is_staff = True
-    obj.save()
 
 
 admin.site.unregister(User)
