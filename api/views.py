@@ -36,12 +36,15 @@ def list_route(methods=['get'], **kwargs):
 
 class LoginViewSet(viewsets.ViewSet):
 
+  # So details can easily be gotten through
+  # browsing the API
   def list(self, request):
-    if request._method != "POST":
-      error = ParseError(detail="Username and Password must be provided")
-      error.errno = USERNAME_OR_PASSWORD_NONE
-      raise error
+    error = ParseError(detail="Username and Password must be provided")
+    error.errno = USERNAME_OR_PASSWORD_NONE
+    raise error
 
+  # Actual action
+  def create(self, request):
     data = JSONParser().parse(request)
     username = data.get('username', None)
     password = data.get('password', None)
