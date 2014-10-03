@@ -10,3 +10,4 @@ pillow
 djangorestframework
 djangorestframework-csv
 python-dateutil
+requests

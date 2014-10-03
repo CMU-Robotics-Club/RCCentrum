@@ -15,6 +15,8 @@ from rest_framework.exceptions import ParseError, NotAuthenticated, Authenticati
 from .errno import *
 from .google_api import get_calendar_events
 import dateutil.parser
+from django.conf import settings
+import requests
 
 # TODO: figure out why import detail_route and list_route does not work
 def detail_route(methods=['get'], **kwargs):
@@ -206,3 +208,19 @@ class CalendarViewSet(viewsets.ViewSet):
 
     events = get_calendar_events(dt)
     return Response(events)
+
+
+class LookupCardViewSet(viewsets.ViewSet):
+
+  def create(self, request):
+    card_id = request.DATA.dict()
+    
+    url = "{}?card_id={}".format(settings.LOOKUP_CARD_URL, card_id)
+    response = requests.get(url)
+
+    if response.status_code != requests.codes.OK:
+      response = ''
+    else:
+      response = response.json()
+
+    return Response(response)

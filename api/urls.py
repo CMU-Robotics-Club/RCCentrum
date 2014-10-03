@@ -1,5 +1,5 @@
 from rest_framework import routers, serializers, viewsets
-from .views import LoginViewSet, WebcamViewSet, DateTimeViewSet, RoboUserViewSet, ProjectViewSet, OfficerViewSet, MessageViewSet, CalendarViewSet
+from .views import LoginViewSet, WebcamViewSet, DateTimeViewSet, RoboUserViewSet, ProjectViewSet, OfficerViewSet, MessageViewSet, CalendarViewSet, LookupCardViewSet
 from django.conf.urls import include, patterns, url
 
 router = routers.DefaultRouter()
@@ -12,6 +12,8 @@ router.register(r'officers', OfficerViewSet)
 router.register(r'projects', ProjectViewSet)
 router.register(r'messages', MessageViewSet, base_name="messages")
 router.register(r'calendar', CalendarViewSet, base_name="calendar")
+
+router.register(r'lookup/card', LookupCardViewSet, base_name="lookup_card")
 
 router.register(r'projects/active', MessageViewSet, base_name="active")
 #router.register(r'projects/message', MessageViewSet, base_name="message")

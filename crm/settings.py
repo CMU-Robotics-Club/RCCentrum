@@ -3,6 +3,18 @@ from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+# Override These
+# =========================
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = ''
+
+GOOGLE_API_KEY = ''
+
+LOOKUP_CARD_URL = ''
+
+# ==========================
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -28,7 +40,6 @@ DATABASES = {
 }
 
 GOOGLE_CALENDAR_ID = "85bf0h78fidsgkkgmkktrqasm8%40group.calendar.google.com"
-GOOGLE_API_KEY = ""
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -84,9 +95,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = ''
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
