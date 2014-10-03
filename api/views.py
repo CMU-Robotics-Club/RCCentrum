@@ -13,6 +13,8 @@ from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import ParseError, NotAuthenticated, AuthenticationFailed, PermissionDenied
 from .errno import *
+from .google_api import get_calendar_events
+import dateutil.parser
 
 # TODO: figure out why import detail_route and list_route does not work
 def detail_route(methods=['get'], **kwargs):
@@ -70,7 +72,6 @@ class DateTimeViewSet(viewsets.ViewSet):
 
   def list(self, request):
     return Response(timezone.now())
-
 
 class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
 
@@ -190,3 +191,18 @@ class MessageViewSet(viewsets.ViewSet):
         messages[to_id] = [new_message]
 
       return Response(m_id)
+
+
+class CalendarViewSet(viewsets.ViewSet):
+
+  def list(self, request):
+    dt = self.request.QUERY_PARAMS.get('dt', None)
+
+    if not dt:
+      # If no datetime specified use now
+      dt = timezone.now()
+    else:
+        dt = dateutil.parser.parse(dt)
+
+    events = get_calendar_events(dt)
+    return Response(events)

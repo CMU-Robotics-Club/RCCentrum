@@ -9,3 +9,4 @@ django-suit
 pillow
 djangorestframework
 djangorestframework-csv
+python-dateutil
