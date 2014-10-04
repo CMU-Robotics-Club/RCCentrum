@@ -11,3 +11,4 @@ djangorestframework
 djangorestframework-csv
 python-dateutil
 requests
+django-password-reset

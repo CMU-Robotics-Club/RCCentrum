@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from password_reset import views as password_reset_views
 
 admin.autodiscover()
 
@@ -25,4 +26,13 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+
+    # Declare this url before password_reset.urls does so Django Suit
+    # picks up the right URL name and add a 'Reset my password' link
+    # in the login form.  If we do our own password reset instead of the app
+    # we would not need to do this, but this is easier.
+    url(r'^recover/$', password_reset_views.recover, name='admin_password_reset'),
+
+    url(r'^', include('password_reset.urls')),
+
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

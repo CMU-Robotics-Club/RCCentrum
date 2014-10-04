@@ -152,6 +152,7 @@ INSTALLED_APPS = (
     'ordered_model',
     'suit',
     'django.contrib.admin',
+    'password_reset',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
@@ -216,6 +217,14 @@ LOGGING = {
             'propagate': True,
         },
     }
+}
+
+PASSWORD_MIN_LENGTH = 6
+
+PASSWORD_COMPLEXITY = {
+    "UPPER": 1,
+    "DIGITS": 1,
+    "NON ASCII": 1,
 }
 
 try:
