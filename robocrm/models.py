@@ -113,16 +113,3 @@ class Event(models.Model):
   def __str__(self):
     return "{} {} {}".format(self.type, 
       self.user.user.username if self.user else 'unknown', self.succ)
-
-# Roboclub Resources Model
-class RoboResource(models.Model):
-  type = models.CharField(max_length=30)
-  id = models.CharField(max_length=20, primary_key=True)
-  checked_out = models.BooleanField(default=False)
-  user = models.ForeignKey('RoboUser', related_name='u+', blank=True)
-  time_out = models.DateTimeField(blank=True,null=True)
-  time_due = models.DateTimeField(blank=True,null=True)
-  officer = models.ForeignKey('RoboUser', related_name='o+', blank=True)
-  
-  def __str__(self):
-    return "{} {} {}".format(self.type, self.id, self.checked_out)

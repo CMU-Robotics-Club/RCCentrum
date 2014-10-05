@@ -1,4 +1,4 @@
-from robocrm.models import Machine, Event, RoboResource
+from robocrm.models import Machine, Event
 from django.core.mail import send_mail
 from django.forms import ModelForm, ValidationError
 from django.contrib import admin
@@ -103,4 +103,3 @@ admin.site.unregister(User)
 admin.site.register(User, RoboUserAdmin)
 admin.site.register(Machine)
 admin.site.register(Event)
-admin.site.register(RoboResource)

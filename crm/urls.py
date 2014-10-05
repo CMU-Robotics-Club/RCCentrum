@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from password_reset import views as password_reset_views
 
-admin.autodiscover()
+#admin.autodiscover()
 
 urlpatterns = patterns('',
     # url(r'^$', 'crm.views.home', name='home'),
