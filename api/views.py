@@ -16,6 +16,7 @@ from .errno import *
 from .google_api import get_calendar_events
 import dateutil.parser
 from django.conf import settings
+from django.utils import timezone
 import requests
 
 # TODO: figure out why import detail_route and list_route does not work
