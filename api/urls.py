@@ -16,7 +16,7 @@ router.register(r'sponsors', SponsorViewSet)
 router.register(r'socialmedia', SocialMediaViewSet)
 
 router.register(r'magnetic', MagneticViewSet, base_name="magnetic")
-router.register(r'lookup/card', LookupCardViewSet, base_name="lookup_card")
+router.register(r'rfid', RFIDViewSet, base_name="rfid")
 
 #router.register(r'projects/message', MessageViewSet, base_name="message")
 #router.register(r'projects/datastore', MessageViewSet, base_name="datastore")

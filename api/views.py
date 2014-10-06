@@ -40,6 +40,10 @@ def list_route(methods=['get'], **kwargs):
 
 
 class LoginViewSet(viewsets.ViewSet):
+  """
+  Return True if the fields 'username' and 'password'
+  in a POST request are valid user credentials.
+  """
 
   # So details can easily be gotten through
   # browsing the API
@@ -66,17 +70,27 @@ class LoginViewSet(viewsets.ViewSet):
     
 
 class WebcamViewSet(viewsets.ReadOnlyModelViewSet):
+  """
+  The Club's Webcams.
+  """
 
   model = Webcam
   serializer_class = WebcamSerializer
   filter_fields = ('name', )
 
 class DateTimeViewSet(viewsets.ViewSet):
+  """
+  The current datetime.  Exists so that projects
+  without a realtime clock can easily get the datetime.
+  """
 
   def list(self, request):
     return Response(timezone.now())
 
 class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
+  """
+  The members of the Robotics Club.
+  """
 
   model = RoboUser
   serializer_class = RoboUserSerializer
@@ -84,6 +98,9 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
+  """
+  The officers of the Robotics Club.
+  """
 
   model = Officer
   serializer_class = OfficerSerializer
@@ -94,7 +111,10 @@ messages = {}
 message_id = 0
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
-  
+  """
+  Club Projects
+  """
+
   model = Project
   serializer_class = ProjectSerializer
   filter_fields = ('name', 'display', 'leaders', )
@@ -198,8 +218,17 @@ class SocialMediaViewSet(viewsets.ReadOnlyModelViewSet):
   filter_fields = ('name', )
 
 class CalendarViewSet(viewsets.ViewSet):
+  """
+  Returns a list of events currently occuring on the club's calendar.
+  Each event has the field 'name', 'location', 'start_time', and 'end_time'.
+  The 'current time' can be changed by setting the URL parameter 'dt' to a specified datetime.
+  """
 
   def list(self, request):
+    """
+    List the calendar events.
+    """
+
     dt = self.request.QUERY_PARAMS.get('dt', None)
 
     if not dt:
@@ -211,25 +240,16 @@ class CalendarViewSet(viewsets.ViewSet):
     events = get_calendar_events(dt)
     return Response(events)
 
-
-class LookupCardViewSet(viewsets.ViewSet):
-
-  def create(self, request):
-    card_id = request.DATA.dict()
-    
-    url = "{}?card_id={}".format(settings.LOOKUP_CARD_URL, card_id)
-    response = requests.get(url)
-
-    if response.status_code != requests.codes.OK:
-      response = ''
-    else:
-      response = response.json()
-
-    return Response(response)
-
 class MagneticViewSet(viewsets.ViewSet):
+  """
+  Returns the RoboUser ID associated with the specified CMU Card ID.
+  """
 
   def create(self, request):
+    """
+    Returns the RoboUser ID associated with the Card ID sent in the POST body.
+    """
+
     card_id = request.DATA
 
     if len(card_id) != 9:
@@ -251,9 +271,6 @@ class MagneticViewSet(viewsets.ViewSet):
 
       response.raise_for_status()
 
-      #if response.status_code != requests.codes.OK:
-      #  response = ''
-      #else:
       response = response.json()
       andrew_id = response['andrewid']
 
@@ -277,3 +294,14 @@ class MagneticViewSet(viewsets.ViewSet):
           error = ParseError(detail="Magnetic ID has no such member")
           error.errno = MAGNETIC_NO_MEMBER
           raise error
+
+
+class RFIDViewSet(viewsets.ViewSet):
+  """
+  Returns the RoboUser ID associated with the specified CMU RFID tag.
+  """
+
+  def create(self, request):
+    # TODO: implement
+
+    return Response()
