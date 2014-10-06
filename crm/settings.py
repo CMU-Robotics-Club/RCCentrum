@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'ordered_flatpages',
     'resources',
     'sponsors',
+    'social_media',
     'tinymce',
     'rest_framework',
     'ordered_model',

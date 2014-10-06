@@ -1,4 +1,7 @@
-foooter.footer.navbar.navbar-default.navbar-fixed-bottom
+{% load social_media %}
+{% get_social_medias as social_media %}
+
+footer.footer.navbar.navbar-default.navbar-fixed-bottom
     hr
     .col-md-4
         a(href="http://www.roboticsclub.org/redmine/", target="_blank")
@@ -22,21 +25,12 @@ foooter.footer.navbar.navbar-default.navbar-fixed-bottom
             | Admin
 
     .col-md-4
-        a(href="https://twitter.com/roboclub" target="_blank")
-            i.fa.fa-twitter
-            | Twitter 
         |
-        a(href="https://www.youtube.com/channel/UCfUVvPWpDi6XPsQTu3uR53A" target="_blank")
-            i.fa.fa-youtube
-            | Youtube 
-        |
-        a(href="https://www.facebook.com/groups/cmuroboclub/?ref=br_tf" target="_blank")
-            i.fa.fa-facebook
-            | Facebook 
-        |
-        a(href="https://github.com/CMU-Robotics-Club" target="_blank")
-            i.fa.fa-github
-            | Github 
+        for media in social_media
+            a(href="{{media.url}}" target="_blank")
+                i.fa(class="fa-{{ media.name | lower }}")
+                | {{ media.name }} 
+            |
 
     .col-md-4
         footer.pull-right
