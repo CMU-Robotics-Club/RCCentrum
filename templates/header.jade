@@ -3,7 +3,7 @@
 {% get_ordered_flatpages as flatpages %}
 {% get_ordered_flatpages '/' as home_pages %}
 
-.header.navbar.navbar-default(role="navigation")
+.header.navbar.navbar-default.navbar-fixed-top(role="navigation")
     .container.pull-left
         .navbar-header
             button.navbar-toggle(type="button", data-toggle="collapse", data-target=".navbar-collapse")
@@ -16,16 +16,38 @@
                 |   Carnegie Mellon Robotics Club
 
         .collapse.navbar-collapse
-          ul.nav.navbar-nav            
+          ul.nav.navbar-nav
+            //- Not a fan of this elseif ugliness but ternary operator appear not to work
+            //- TODO: improve this
             for page in flatpages|slice:"1:"
+                {% if request.path == page.url %}
+                li(class='active')
+                    a(href="{{page.get_absolute_url}}") {{page.title}}
+                {% else %}
                 li
                     a(href="{{page.get_absolute_url}}") {{page.title}}
+                {% endif %}
             
+            {% if request.path == '/sponsors/' %}
+            li(class='active')
+                a(href="{% url 'sponsors:index' %}") Sponsors
+            {% else %}
             li
                 a(href="{% url 'sponsors:index' %}") Sponsors
+            {% endif %}
 
+            {% if request.path == '/projects/' %}
+            li(class='active')
+                a(href="{% url 'projects:index' %}") Projects
+            {% else %}
             li
                 a(href="{% url 'projects:index' %}") Projects
+            {% endif %}
 
+            {% if request.path == '/webcams/' %}
+            li(class='active')
+                a(href="{% url 'webcams:index' %}") Webcams
+            {% else %}
             li
-                a(href="{% url 'webcams:index' %}") Webcam
+                a(href="{% url 'webcams:index' %}") Webcams
+            {% endif %}
