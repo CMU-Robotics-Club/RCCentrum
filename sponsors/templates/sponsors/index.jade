@@ -1,0 +1,35 @@
+extends 'base.jade'
+{% load static %}
+
+block title
+  | Sponsors 
+
+block content
+  .container-fluid
+    h3
+      | Current Sponsors
+    hr
+    .row
+      for sponsor in active_sponsors
+        .col-md-6
+          .well
+            .row
+              .text-center
+                .caption
+                  h3
+                    | {{ sponsor.name }}
+            .row
+              .text-center
+                img.img-thumbnail(src="{% get_media_prefix %}{{ sponsor.logo }}" style="width:50%; height:50%;")
+
+    h3
+      | Previous Sponsors
+    hr
+    .row
+        for sponsor in inactive_sponsors
+          .col-md-3
+            .well
+              .row
+                .text-center
+                  .caption
+                    | {{ sponsor.name }}

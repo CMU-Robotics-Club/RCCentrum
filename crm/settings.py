@@ -147,6 +147,7 @@ INSTALLED_APPS = (
     'webcams',
     'ordered_flatpages',
     'resources',
+    'sponsors',
     'tinymce',
     'rest_framework',
     'ordered_model',

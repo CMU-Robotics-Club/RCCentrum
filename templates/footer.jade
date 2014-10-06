@@ -2,17 +2,22 @@ foooter.footer.navbar.navbar-default.navbar-fixed-bottom
     hr
     .col-md-4
         a(href="http://www.roboticsclub.org/redmine/", target="_blank")
-            i.fa.fa-
+            i.fa.fa-adjust
 
             | Redmine
         |
+        a(href="{% url 'officers:index' %}") 
+            i.fa.fa-users
+
+            | Officers
+        |
         a(href="{% url 'api-root' %}")
-            i.fa.fa-
+            i.fa.fa-cloud
 
             | API
         |
         a(href="{% url 'admin:index' %}")
-            i.fa.fa-
+            i.fa.fa-bolt
 
             | Admin
 
@@ -33,7 +38,7 @@ foooter.footer.navbar.navbar-default.navbar-fixed-bottom
             i.fa.fa-github
             | Github 
 
-    .col-md-4"
+    .col-md-4
         footer.pull-right
             p
-                | Carnegie Mellon Robotics Club &copy;1984 - 2014
+                | Carnegie Mellon Robotics Club &copy;1984 - {% now "Y" %}

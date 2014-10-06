@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^add_card_event/', 'robocrm.views.add_card_event'),
 
     url(r'^officers/', include('officers.urls', namespace='officers')),
+    url(r'^sponsors/', include('sponsors.urls', namespace='sponsors')),
     url(r'^projects/', include('projects.urls', namespace='projects')),
     url(r'^webcams/', include('webcams.urls', namespace='webcams')),
     url(r'^api/', include('api.urls')),
