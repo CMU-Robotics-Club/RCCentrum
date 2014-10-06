@@ -15,6 +15,7 @@ router.register(r'calendar', CalendarViewSet, base_name="calendar")
 router.register(r'sponsors', SponsorViewSet)
 router.register(r'socialmedia', SocialMediaViewSet)
 
+router.register(r'magnetic', MagneticViewSet, base_name="magnetic")
 router.register(r'lookup/card', LookupCardViewSet, base_name="lookup_card")
 
 #router.register(r'projects/message', MessageViewSet, base_name="message")

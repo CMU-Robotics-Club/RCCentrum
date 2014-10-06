@@ -226,3 +226,54 @@ class LookupCardViewSet(viewsets.ViewSet):
       response = response.json()
 
     return Response(response)
+
+class MagneticViewSet(viewsets.ViewSet):
+
+  def create(self, request):
+    card_id = request.DATA.dict().popitem()[0]
+
+    if len(card_id) != 9:
+      error = ParseError(detail="Magnetic ID is an Invalid ID")
+      error.errno = MAGNETIC_INVALID_ID
+      raise error
+    
+    robouser = RoboUser.objects.filter(magnetic=card_id)
+
+    # RoboUser in local database
+    if robouser:
+      robouser = robouser[0]
+      return Response(robouser.id)
+    else:
+      # Not in local database
+      # Check if CMU knows
+      url = "{}?card_id={}".format(settings.LOOKUP_CARD_URL, card_id)
+      response = requests.get(url)
+
+      response.raise_for_status()
+
+      #if response.status_code != requests.codes.OK:
+      #  response = ''
+      #else:
+      response = response.json()
+      andrew_id = response['andrewid']
+
+      # CMU doesnt know
+      if not andrew_id:
+        error = ParseError(detail="Magnetic ID is an Invalid ID")
+        error.errno = MAGNETIC_INVALID_ID
+        raise error
+      # CMU knows who this is
+      else:        
+        robouser = RoboUser.objects.filter(user__username=andrew_id)
+
+        # Is a Roboclub Member
+        if robouser:
+          robouser = robouser[0]
+          robouser.magnetic = card_id
+          robouser.save()
+          return Response(robouser.id)
+        else:
+          # Not a member
+          error = ParseError(detail="Magnetic ID has no such member")
+          error.errno = MAGNETIC_NO_MEMBER
+          raise error

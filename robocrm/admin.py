@@ -76,6 +76,7 @@ class RoboUserCreationForm(ModelForm):
     if commit:
       user.save()
 
+    # TODO: make this mailing list a setting
     subscribe_to_list(user.first_name, user.last_name, user.email, 'roboclub-gb')
     return user
 

@@ -20,8 +20,11 @@ class RoboUser(models.Model):
   # Field is required when using profiles 
   user = models.OneToOneField(User)
 
-  # Roboclub RFID Card number
-  rfid = models.CharField(max_length=10, blank=True, null=True)
+  # Roboclub Magnetic Card Number
+  magnetic = models.CharField(max_length=9, null=True, unique=True)
+
+  # Roboclub RFID Card Number
+  rfid = models.CharField(max_length=10, null=True, unique=True)
   
   # Roboclub Shop Access Permissions
   machines = models.ManyToManyField(Machine, blank=True, null=True)
