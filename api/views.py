@@ -9,8 +9,6 @@ from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 #from rest_framework.decorators import detail_route, list_route
 from .serializers import *
-from django.utils import timezone
-from datetime import timedelta
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import ParseError, NotAuthenticated, AuthenticationFailed, PermissionDenied
@@ -100,15 +98,6 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = ProjectSerializer
   filter_fields = ('name', 'display', 'leaders', )
 
-  @list_route()
-  def active(self, request):
-    time_threshold = timezone.now() - timedelta(minutes=5)
-    active_projects = Project.objects.filter(last_api_activity__gte=time_threshold)
-
-    active_project_ids = [project.id for project in active_projects]
-
-    return Response(active_project_ids)
-
   @detail_route()
   def messages(self, request, pk):
     """
@@ -195,6 +184,7 @@ class MessageViewSet(viewsets.ViewSet):
         messages[to_id] = [new_message]
 
       return Response(m_id)
+
 
 class SponsorViewSet(viewsets.ReadOnlyModelViewSet):
   model = Sponsor

@@ -6,7 +6,7 @@ from officers.models import Officer
 from webcams.models import Webcam
 from sponsors.models import Sponsor
 from social_media.models import SocialMedia
-from .fields import APIImageField
+from .fields import APIImageField, ProjectActiveField
 
 class WebcamSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,10 +54,11 @@ class RoboUserSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     image = APIImageField(source='image')
+    active = ProjectActiveField(source='last_api_activity')
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'image', 'blurb', 'description', 'website', 'display', 'leaders', 'last_api_activity', )
+        fields = ('id', 'name', 'image', 'blurb', 'description', 'website', 'display', 'leaders', 'active', 'last_api_activity', )
 
 class OfficerSerializer(serializers.ModelSerializer):
     image = APIImageField(source='image')

@@ -17,7 +17,6 @@ router.register(r'socialmedia', SocialMediaViewSet)
 
 router.register(r'lookup/card', LookupCardViewSet, base_name="lookup_card")
 
-router.register(r'projects/active', MessageViewSet, base_name="active")
 #router.register(r'projects/message', MessageViewSet, base_name="message")
 #router.register(r'projects/datastore', MessageViewSet, base_name="datastore")
 
