@@ -2,7 +2,8 @@ from django.contrib import admin
 from projects.models import Project
 
 class ProjectAdmin(admin.ModelAdmin):
-  fields = ('name', 'current_image', 'image', 'blurb', 'description', 'website', 'leaders', 'display', 'last_api_activity')
+  fields = ('name', 'current_image', 'image', 'blurb', 'description', 'website', 'leaders', 'display', 'private_key', 'last_api_activity')
+  filter_horizontal = ('leaders',)
   readonly_fields = ['current_image', 'last_api_activity']
 
   def get_queryset(self, request):

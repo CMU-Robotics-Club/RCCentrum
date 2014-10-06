@@ -30,5 +30,7 @@ class Project(models.Model):
     return '<img src="{}{}" width="100px height=100px"/>'.format(settings.MEDIA_URL, self.image)
   current_image.allow_tags = True
 
+  private_key = models.CharField(max_length=50)
+
   def __str__(self):
     return self.name

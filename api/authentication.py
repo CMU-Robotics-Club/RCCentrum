@@ -7,22 +7,22 @@ from .errno import *
 class RCAuthentication(authentication.BaseAuthentication):
 
   def authenticate(self, request):
-    project_id = request.META.get('HTTP_X_PROJECT_ID')
-    project_name = request.META.get('HTTP_X_PROJECT_NAME')
+    public = request.META.get('HTTP_PUBLIC_KEY')
+    private = request.META.get('HTTP_PRIVATE_KEY')
 
-    if not project_id or not project_name:
+    if not public or not private:
       e = exceptions.AuthenticationFailed(detail='Invalid authentication credentials')
       e.errno = INVALID_PROJECT_AUTHENTICATION
       raise e
 
     try:
-      project = Project.objects.get(id=project_id)
+      project = Project.objects.get(id=public)
     except Project.DoesNotExist:
       e = exceptions.AuthenticationFailed(detail='Invalid authentication credentials')
       e.errno = INVALID_PROJECT_AUTHENTICATION
       raise e
 
-    if project.name != project_name:
+    if project.private_key != private:
       e = exceptions.AuthenticationFailed(detail='Invalid authentication credentials')
       e.errno = INVALID_PROJECT_AUTHENTICATION
       raise e
