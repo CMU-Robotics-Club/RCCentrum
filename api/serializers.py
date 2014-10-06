@@ -50,7 +50,7 @@ class RoboUserSerializer(serializers.ModelSerializer):
         model = RoboUser
         depth = 2
 
-        fields = ('id', 'club_rank', )
+        fields = ('id', )
 
 class ProjectSerializer(serializers.ModelSerializer):
     image = APIImageField(source='image')

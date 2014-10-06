@@ -94,7 +94,7 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
 
   model = RoboUser
   serializer_class = RoboUserSerializer
-  filter_fields = ('club_rank', )
+  #filter_fields = (, )
 
 
 class OfficerViewSet(viewsets.ReadOnlyModelViewSet):

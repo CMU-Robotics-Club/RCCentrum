@@ -55,19 +55,6 @@ class RoboUser(models.Model):
   major = models.CharField(max_length=20)
   sec_major_one = models.CharField(max_length=20, blank=True, null=True)
   sec_major_two = models.CharField(max_length=20, blank=True, null=True)
-
-  #Club Rank
-  JUNIOR_MEM = 'JM'
-  SENIOR_MEM = 'SM'
-  OFFICER = 'OM'
-  CLUB_RANK_CHOICES = (
-      (JUNIOR_MEM, 'Junior Member'),
-      (SENIOR_MEM, 'Senior Member'),
-      (OFFICER, 'Officer'),
-  )
-  club_rank = models.CharField(max_length=2, 
-                               choices=CLUB_RANK_CHOICES,
-                               default=JUNIOR_MEM)
   
   # Roboclub Transaction Info
   dues_paid = models.DateField(blank=True, null=True)
