@@ -230,7 +230,7 @@ class LookupCardViewSet(viewsets.ViewSet):
 class MagneticViewSet(viewsets.ViewSet):
 
   def create(self, request):
-    card_id = request.DATA.dict().popitem()[0]
+    card_id = request.DATA
 
     if len(card_id) != 9:
       error = ParseError(detail="Magnetic ID is an Invalid ID")
