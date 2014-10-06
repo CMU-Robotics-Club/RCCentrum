@@ -16,7 +16,6 @@ class Machine(models.Model):
     return "{} {}".format(self.type, self.id)
 
 
-# User Model
 class RoboUser(models.Model):
   # Field is required when using profiles 
   user = models.OneToOneField(User)

@@ -60,7 +60,7 @@ class RoboUserCreationForm(ModelForm):
 
   def save(self, commit=True):
     user = super(RoboUserCreationForm, self).save(commit=False)
-    user.set_password('geek6811')
+    user.set_password(User.objects.make_random_password())
     user.is_staff = True
 
     # Hacky but only way to get default groups to work since
