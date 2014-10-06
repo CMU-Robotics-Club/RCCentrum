@@ -4,6 +4,8 @@ from robocrm.models import RoboUser
 from projects.models import Project
 from officers.models import Officer
 from webcams.models import Webcam
+from sponsors.models import Sponsor
+from social_media.models import SocialMedia
 from .fields import APIImageField
 
 class WebcamSerializer(serializers.ModelSerializer):
@@ -63,3 +65,16 @@ class OfficerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Officer
         fields = ('id', 'position', 'user', 'image', 'description', 'order', )
+
+class SponsorSerializer(serializers.ModelSerializer):
+    logo = APIImageField(source='logo')
+
+    class Meta:
+        model = Sponsor
+        fields = ('id', 'name', 'logo', 'website', 'active', 'order', )
+
+class SocialMediaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SocialMedia
+        fields = ('id', 'name', 'url', 'order', )

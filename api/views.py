@@ -3,10 +3,12 @@ from robocrm.models import RoboUser
 from projects.models import Project
 from officers.models import Officer
 from webcams.models import Webcam
+from social_media.models import SocialMedia
+from sponsors.models import Sponsor
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 #from rest_framework.decorators import detail_route, list_route
-from .serializers import WebcamSerializer, RoboUserSerializer, ProjectSerializer, OfficerSerializer
+from .serializers import *
 from django.utils import timezone
 from datetime import timedelta
 from rest_framework.decorators import api_view
@@ -194,6 +196,15 @@ class MessageViewSet(viewsets.ViewSet):
 
       return Response(m_id)
 
+class SponsorViewSet(viewsets.ReadOnlyModelViewSet):
+  model = Sponsor
+  serializer_class = SponsorSerializer
+  filter_fields = ('name', 'active', )
+
+class SocialMediaViewSet(viewsets.ReadOnlyModelViewSet):
+  model = SocialMedia
+  serializer_class = SocialMediaSerializer
+  filter_fields = ('name', )
 
 class CalendarViewSet(viewsets.ViewSet):
 
