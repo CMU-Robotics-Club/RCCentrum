@@ -2,20 +2,12 @@ extends 'base.jade'
 {% load static %}
 
 block title
-  | {{ officer.position }} 
+  | {{ officer.position }} {{ officer.user.user.get_full_name }}
 
 block content
-  .well
-    .container
-      .row
-        .col-md-12
-          .pull-left
-            h3
-              u
-                | {{ officer.user.user.get_full_name }}
-
-      .row
-        .col-md-6
-          img(src="{% get_media_prefix %}{{ officer.image }}" style="width:300px; height:300px;")
-        .col-md-6
-          | {{ officer.description }}
+  .container
+    .row
+      .col-md-6
+        img.img-thumbnail(src="{% get_media_prefix %}{{ officer.image }}" style="width:300px; height:300px;")
+      .col-md-6
+        | {{ officer.description }}

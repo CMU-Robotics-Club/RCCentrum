@@ -6,26 +6,25 @@ block title
   | Projects 
 
 block content
-  .container-fluid
-    .row
-      for project in projects
-        .col-md-12
-          .well
-            .row
-              .col-md-6
-                a.pull-left(href="{{ project.name | slugify }}")
-                  img.img-thumbnail(src="{% get_media_prefix %}{{ project.image }}" style="width:50%; height:50%;")
-              .col-md-6
-                .caption
-                  h3
-                    | {{ project.name }}
+  .container
+    for project in projects
+      .row
+        .col-md-6
+          a.pull-left(href="{{ project.name | slugify }}")
+            img.img-thumbnail(src="{% get_media_prefix %}{{ project.image }}" style="width:50%; height:50%;")
+        .col-md-6
+          .caption
+            h3
+              | {{ project.name }}
 
-                  h4
-                  for leader in project.leaders.all
-                    {{ leader.user.get_full_name }} - {{ leader.user.email }}
-                    br
+          h4
+            for leader in project.leaders.all
+              {{ leader.user.get_full_name }} - {{ leader.user.email }}
+              br
 
-                  hr
+          hr
 
-                  p
-                    | {{ project.blurb }}
+          p
+            | {{ project.blurb }}
+        
+      hr.hr-style
