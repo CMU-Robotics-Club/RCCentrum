@@ -169,6 +169,8 @@ TINYMCE_DEFAULT_CONFIG = {
     'custom_undo_redo_levels': 10,
     'theme_advanced_buttons3_add': 'code',
     'valid_elements': '*[*]',
+    'convert_urls' : False,
+    'relative_urls' : False,
 }
 
 REST_FRAMEWORK = {
