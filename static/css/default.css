@@ -1,14 +1,53 @@
 body {
   padding-top: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.container {
+  background-color: rgba(255, 255, 255, 1.0);
+}
+
+.footer {
+  z-index: 9999999;
+  background-color: rgba(123, 0, 0, 1.0);
+  height: 80px;
+  width: auto;
+  color: rgb(255, 255, 255);
+}
+
+.footer a {
+  color: rgb(255, 255, 255);
+  text-decoration: underline;
+}
+
+/*
+hr.hr-style {
+    height: 22px;
+    border: 0;
+    box-shadow: inset 0 15px 15px -5px rgba(123,0,0,1.0);
+}*/
+    
+hr.hr-style {
+    height: 30px;
+    border-style: solid;
+    border-color: rgb(123,0,0);
+    border-width: 1px 0 0 0;
+    border-radius: 20px;
+}
+hr.hr-style:before { /* Not really supposed to work, but does */
+    display: block;
+    content: "";
+    height: 30px;
+    margin-top: -31px;    
+    border-style: solid;
+    border-color: rgb(123,0,0);
+    border-width: 0 0 1px 0;
+    border-radius: 20px;
 }
 
 i {
   padding-left:2px;
   padding-right: 5px;
-}
-
-.footer {
-  z-index: 9999999;
 }
 
 /* Main marketing message and sign up button */

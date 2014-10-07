@@ -1,38 +1,38 @@
 {% load social_media %}
 {% get_social_medias as social_media %}
 
-footer.footer.navbar.navbar-default.navbar-fixed-bottom
+.footer
     hr
-    .col-md-4
-        a(href="http://www.roboticsclub.org/redmine/", target="_blank")
-            i.fa.fa-adjust
+    .row-fluid
+        .col-md-4
+            a(href="http://www.roboticsclub.org/redmine/", target="_blank")
+                i.fa.fa-adjust
 
-            | Redmine
-        |
-        a(href="{% url 'officers:index' %}") 
-            i.fa.fa-users
-
-            | Officers
-        |
-        a(href="{% url 'api-root' %}")
-            i.fa.fa-cloud
-
-            | API
-        |
-        a(href="{% url 'admin:index' %}")
-            i.fa.fa-bolt
-
-            | Member Login
-
-    .col-md-4
-        |
-        for media in social_media
-            a(href="{{media.url}}" target="_blank")
-                i.fa(class="fa-{{ media.name | lower }}")
-                | {{ media.name }} 
+                | Redmine
             |
+            a(href="{% url 'officers:index' %}") 
+                i.fa.fa-users
 
-    .col-md-4
-        footer.pull-right
-            p
+                | Officers
+            |
+            a(href="{% url 'api-root' %}")
+                i.fa.fa-cloud
+
+                | API
+            |
+            a(href="{% url 'admin:index' %}")
+                i.fa.fa-bolt
+
+                | Member Login
+
+        .col-md-4
+            |
+            for media in social_media
+                a(href="{{media.url}}" target="_blank")
+                    i.fa(class="fa-{{ media.name | lower }}")
+                    | {{ media.name }} 
+                |
+
+        .col-md-4
+            .pull-right
                 | Carnegie Mellon Robotics Club &copy;1984 - {% now "Y" %}

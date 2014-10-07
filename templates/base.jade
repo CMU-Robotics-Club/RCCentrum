@@ -50,14 +50,13 @@ html(lang="en")
                     if flatpage.content
                         h2
                             | {{ flatpage.title }}
-                        hr
+                        hr.hr-style
                         {{ flatpage.content | cut:"// <![CDATA[" | cut:"// ]]>" }}
                     else
                         h2
                             +title
-                        hr
-                        block content
-                    
-            {% include "footer.jade" %}
+                        hr.hr-style
+                        block content        
+                {% include "footer.jade" %}
 
         script(src="{% static 'bootstrap/js/bootstrap.min.js' %}")
