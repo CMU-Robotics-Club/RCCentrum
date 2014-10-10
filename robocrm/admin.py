@@ -1,5 +1,4 @@
 from robocrm.models import Machine, Event
-from django.core.mail import send_mail
 from django.forms import ModelForm, ValidationError
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
@@ -10,6 +9,7 @@ from robocrm.models import RoboUser
 from django import forms
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.flatpages.admin import FlatPageAdmin, FlatpageForm
+from .util import subscribe_to_list
 
 class UserProfileInline(admin.StackedInline):
   model = RoboUser
@@ -28,20 +28,6 @@ class UserProfileInline(admin.StackedInline):
             ('class_level', 'grad_year', 'major', 'dues_paid',
             )
           }),)
-
-def subscribe_to_list(first_name, last_name, email, listname):
-  if email == '':
-    return
-
-  name = first_name + ' ' + last_name
-  if name == '':
-    from_addr = email
-  else:
-    from_addr = '"' + name + '" <' + email + '>'
-
-  to_addr = listname + '-subscribe@lists.andrew.cmu.edu'
-
-  send_mail('', '', from_addr, [to_addr])
 
 class RoboUserCreationForm(ModelForm):
   # This is modelled directly after django.contrib.auth.forms.UserCreationForm 
@@ -91,9 +77,7 @@ class RoboUserCreationForm(ModelForm):
 class RoboUserAdmin(UserAdmin):
   inlines = (UserProfileInline, )
   add_fieldsets = (
-      (None, {'fields': ('username',)}),
-      ('Personal info', {
-          'fields': ('first_name', 'last_name', 'email')}),
+    (None, {'fields': ('username', 'first_name', 'last_name', 'email')}),
   )
   add_form = RoboUserCreationForm
   list_display = ('username', 'email', 'first_name', 'last_name')
