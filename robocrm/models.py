@@ -21,10 +21,10 @@ class RoboUser(models.Model):
   user = models.OneToOneField(User)
 
   # Roboclub Magnetic Card Number
-  magnetic = models.CharField(max_length=9, null=True, unique=True)
+  magnetic = models.CharField(max_length=9, null=True, unique=True, blank=True)
 
   # Roboclub RFID Card Number
-  rfid = models.CharField(max_length=10, null=True, unique=True)
+  rfid = models.CharField(max_length=10, null=True, unique=True, blank=True)
   
   # Roboclub Shop Access Permissions
   machines = models.ManyToManyField(Machine, blank=True, null=True)
