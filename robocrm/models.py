@@ -58,26 +58,6 @@ class RoboUser(models.Model):
   
   # Roboclub Transaction Info
   dues_paid = models.DateField(blank=True, null=True)
-  
-  # Shop and E-Bench Status
-  GOOD = 'GD'
-  FIRST_WARN = 'FS'
-  SECOND_WARN = 'SD'
-  SEM_BAN = 'SB'
-  CLUB_BAN = 'CB'
-  STATUS_CHOICES = (
-      (GOOD, 'Good Standing'),
-      (FIRST_WARN, 'First Warning Recieved'),
-      (SECOND_WARN, 'Second Warning Recieved'),
-      (SEM_BAN, 'Semester Ban'),
-      (CLUB_BAN, 'Club Ban')
-  )
-  bench_status = models.CharField(max_length=2,
-                                  choices=STATUS_CHOICES,
-                                  default=GOOD)
-  shop_status = models.CharField(max_length=2,
-                                 choices=STATUS_CHOICES,
-                                 default=GOOD)
 
   class Meta:
     ordering = ['user__username']
