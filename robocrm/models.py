@@ -58,7 +58,6 @@ class RoboUser(models.Model):
   
   # Roboclub Transaction Info
   dues_paid = models.DateField(blank=True, null=True)
-  tshirt_rec = models.BooleanField(default=False)
   
   # Shop and E-Bench Status
   GOOD = 'GD'
