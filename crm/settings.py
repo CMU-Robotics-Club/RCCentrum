@@ -13,6 +13,9 @@ GOOGLE_API_KEY = ''
 
 LOOKUP_CARD_URL = ''
 
+# The Project ID's who have permission to set a user's RFID tag
+RFID_POST_PROJECT_IDS = []
+
 # ==========================
 
 DEBUG = True

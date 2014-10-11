@@ -8,6 +8,7 @@ from sponsors.models import Sponsor
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 #from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import *
 from .serializers import *
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate
@@ -96,6 +97,32 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = RoboUserSerializer
   #filter_fields = (, )
 
+  @detail_route(methods=['POST'])
+  def rfid(self, request, pk):
+    user = request._user
+
+    if type(user).__name__ != 'Project':
+      error = PermissionDenied(detail="Not authenticated as a project")
+      error.errno = NOT_AUTHENTICATED_AS_PROJECT
+      raise error
+    elif user.id not in settings.RFID_POST_PROJECT_IDS:
+      error = PermissionDenied(detail="This project is not authenticated to perform this operation")
+      error.errno = INSUFFICIENT_PROJECT_PERMISSIONS
+      raise error
+    else:
+      u = RoboUser.objects.filter(pk=pk)[0]
+
+      rfid = request.DATA
+
+      if not rfid:
+        error = ParseError(detail="Empty RFID #")
+        error.errno = EMPTY_POST
+        raise error
+      else:
+        u.rfid = rfid
+        u.save()
+
+        return Response(True)
 
 class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
   """
@@ -141,7 +168,6 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
     pk = int(pk)
 
     return Response()
-
 
 class MessageViewSet(viewsets.ViewSet):
 

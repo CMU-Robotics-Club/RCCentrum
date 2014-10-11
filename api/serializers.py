@@ -29,6 +29,9 @@ class RoboUserSerializer(serializers.ModelSerializer):
         eliminating nested fields.
         """
 
+        if obj is None:
+            return {}
+
         ret = super(RoboUserSerializer, self).to_native(obj)
         p_serializer = UserSerializer(obj.user, context=self.context)
         p_ret = p_serializer.to_native(obj.user)
