@@ -1,11 +1,7 @@
-# Create your views here.
 from django.http import HttpResponse, Http404
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth import authenticate, login
 from robocrm.models import *
-
-def index(request):
-  return HttpResponse("Hello again, world!")
 
 def roboauth(request, rfid_tag, mach_num):
   r = RoboUser.objects.filter(rfid=rfid_tag)
@@ -47,7 +43,6 @@ def add_card_event(request):
   tend = request.POST['tend']
   user_id = request.POST['user_id']
   succ = request.POST['succ'] == '1'
-  imgurl = '' # TODO find url based on tstart
   machine_id = int(request.POST['machine_id'])
 
   try:
@@ -62,9 +57,7 @@ def add_card_event(request):
       tend=tend,
       user=robouser,
       succ=succ,
-      imgurl=imgurl,
-      machine=machine,
-      matuse='')
+      machine=machine)
 
   ev.save()
 

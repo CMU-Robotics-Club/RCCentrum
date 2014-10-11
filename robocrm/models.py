@@ -9,8 +9,6 @@ class Machine(models.Model):
   type = models.CharField(max_length=20)
   id = models.CharField(max_length=10, primary_key=True)
   maint = models.BooleanField(default=False)
-  dstart = models.DateTimeField(blank=True, null=True)
-  dend = models.DateTimeField(blank=True, null=True)
   
   def __str__(self):
     return "{} {}".format(self.type, self.id)
@@ -67,16 +65,13 @@ class RoboUser(models.Model):
 
 
 # TODO: move to Tooltron
-# Event Model
 class Event(models.Model):
   type = models.CharField(max_length=30)
   tstart = models.DateTimeField()
   tend = models.DateTimeField()
   user = models.ForeignKey('RoboUser', null=True)
   succ = models.BooleanField(default=False)
-  imgurl = models.URLField()
   machine = models.ForeignKey('Machine')
-  matuse = models.TextField()
   
   def __str__(self):
     return "{} {} {}".format(self.type, 
