@@ -23,6 +23,17 @@ class RoboUser(models.Model):
 
   # Roboclub RFID Card Number
   rfid = models.CharField(max_length=10, null=True, unique=True, blank=True)
+
+  def magnetic_set(self):
+    return bool(self.magnetic)
+
+  @property
+  def is_magnetic_set(self):
+    return bool(self.magnetic)
+
+  @property
+  def is_rfid_set(self):
+    return bool(self.rfid)
   
   # Roboclub Shop Access Permissions
   machines = models.ManyToManyField(Machine, blank=True, null=True)

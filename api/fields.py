@@ -17,8 +17,6 @@ class ProjectActiveField(serializers.BooleanField):
 
   def to_native(self, obj):
     time_threshold = timezone.now() - timedelta(seconds=settings.PROJECT_ACTIVE_SECONDS)
-    print(self.__dict__)
-    print(obj)
 
     if obj is None:
       return False

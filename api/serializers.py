@@ -13,14 +13,19 @@ class WebcamSerializer(serializers.ModelSerializer):
         model = Webcam
         fields = ('id', 'name', 'url', )
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'date_joined', )
+        fields = ('username', 'first_name', 'last_name', 'email', 'date_joined', 'last_login', 'is_active',)
+
 
 class RoboUserSerializer(serializers.ModelSerializer):
     
     user = UserSerializer()
+
+    magnetic = serializers.Field(source='is_magnetic_set')
+    rfid = serializers.Field(source='is_rfid_set')
 
     # TODO: find better way to do this
     def to_native(self, obj):
@@ -53,7 +58,8 @@ class RoboUserSerializer(serializers.ModelSerializer):
         model = RoboUser
         depth = 2
 
-        fields = ('id', )
+        fields = ('id', 'magnetic', 'rfid')
+
 
 class ProjectSerializer(serializers.ModelSerializer):
     image = APIImageField(source='image')
@@ -63,6 +69,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ('id', 'name', 'image', 'blurb', 'description', 'website', 'display', 'leaders', 'active', 'last_api_activity', )
 
+
 class OfficerSerializer(serializers.ModelSerializer):
     image = APIImageField(source='image')
 
@@ -70,12 +77,14 @@ class OfficerSerializer(serializers.ModelSerializer):
         model = Officer
         fields = ('id', 'position', 'user', 'image', 'description', 'order', )
 
+
 class SponsorSerializer(serializers.ModelSerializer):
     logo = APIImageField(source='logo')
 
     class Meta:
         model = Sponsor
         fields = ('id', 'name', 'logo', 'website', 'active', 'order', )
+
 
 class SocialMediaSerializer(serializers.ModelSerializer):
 

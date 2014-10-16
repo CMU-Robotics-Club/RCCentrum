@@ -19,6 +19,7 @@ import dateutil.parser
 from django.conf import settings
 from django.utils import timezone
 import requests
+from .filters import RoboUserFilter
 
 # TODO: figure out why import detail_route and list_route does not work
 def detail_route(methods=['get'], **kwargs):
@@ -95,7 +96,7 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
 
   model = RoboUser
   serializer_class = RoboUserSerializer
-  #filter_fields = (, )
+  filter_class = RoboUserFilter
 
   @detail_route(methods=['POST'])
   def rfid(self, request, pk):
