@@ -7,7 +7,7 @@
     .masthead
         h3.text-muted
             img(src="{% static 'images/logo.png' %}", width="40px", height="40px")
-            | CMU Robotics Club
+            | Carnegie Mellon Robotics Club
         ul.nav.nav-justified
             for page in flatpages
                 {% if page.url != '/' and page.url in request.path or page.url == '/' and page.url == request.path %}
