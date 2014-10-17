@@ -6,16 +6,19 @@
 .container
     .masthead
         h3.text-muted
-            img(src="{% static 'images/logo.png' %}", width="40px", height="40px")
-            | Carnegie Mellon Robotics Club
+            a(href='/')
+                img(src="{% static 'images/logo.png' %}", width="40px", height="40px")
+                | Carnegie Mellon Robotics Club
         ul.nav.nav-justified
             for page in flatpages
-                {% if page.url != '/' and page.url in request.path or page.url == '/' and page.url == request.path %}
+                {% if page.url != '/' %}
+                {% if page.url in request.path %}
                 li(class='active')
                     a(href="{{page.get_absolute_url}}") {{page.title}}
                 {% else %}
                 li
                     a(href="{{page.get_absolute_url}}") {{page.title}}
+                {% endif %}
                 {% endif %}
             
             {% if '/sponsors/' in request.path %}
