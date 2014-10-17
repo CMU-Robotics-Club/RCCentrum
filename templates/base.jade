@@ -48,9 +48,10 @@ html(lang="en")
 
                 .jumbotron
                     if flatpage.content
-                        h2
-                            | {{ flatpage.title }}
-                        hr.hr-style
+                        if flatpage.title != "Welcome"
+                            h2
+                                | {{ flatpage.title }}
+                            hr.hr-style
                         {{ flatpage.content | cut:"// <![CDATA[" | cut:"// ]]>" }}
                     else
                         h2
