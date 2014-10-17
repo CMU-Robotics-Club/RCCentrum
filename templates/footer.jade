@@ -5,27 +5,24 @@
     hr
     .row-fluid
         .col-md-4
-            a(href="http://www.roboticsclub.org/redmine/", target="_blank")
-                | Redmine
-            |
-            a(href="{% url 'officers:index' %}") 
-                | Officers
-            |
-            a(href="{% url 'api-root' %}")
-                | API
-            |
-            a(href="{% url 'admin:index' %}")
-                | Member Login
-
+            .text-left-md
+                a(href="http://www.roboticsclub.org/redmine/", target="_blank")
+                    | Redmine
+                |
+                a(href="{% url 'officers:index' %}") 
+                    | Officers
+                |
+                a(href="{% url 'api-root' %}")
+                    | API
+                |
+                a(href="{% url 'admin:index' %}")
+                    | Member Login
         .col-md-4
-            each media, index in social_media
+            for media, index in social_media
+                if index != 0
+                    |  | 
                 a(href="{{media.url}}" target="_blank")
-                    i.fa(class="fa-{{ media.name | lower }}")
-                    | {{ media.name }} 
-                {% if index != (social_media.length - 1) %}
-                    |
-                {% endif %}
-
+                   | {{ media.name }}
         .col-md-4
-            .pull-right
+            .text-right-md
                 | Carnegie Mellon Robotics Club &copy;1984 - {% now "Y" %}

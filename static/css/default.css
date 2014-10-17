@@ -13,6 +13,7 @@ body {
   height: 80px;
   width: auto;
   color: rgb(255, 255, 255);
+  text-align: center;
 }
 
 .footer a {
@@ -87,6 +88,16 @@ i {
 .nav-justified > li:last-child > a {
   border-bottom: 0;
   border-radius: 0 0 5px 5px;
+}
+
+/* Responsive: Medium screens */
+@media (min-width: 992px) {
+  .text-right-md {
+    text-align: right;
+  }
+  .text-left-md {
+    text-align: left;
+  }
 }
 
 @media (min-width: 768px) {
