@@ -133,8 +133,6 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
 TEMPLATE_DIRS = (
     TEMPLATE_DIR,
-    os.path.join(TEMPLATE_DIR, "flatpages"),
-    os.path.join(TEMPLATE_DIR, "api/templates/"),
 )
 
 INSTALLED_APPS = (
@@ -181,7 +179,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'api.authentication.RCAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': (
@@ -228,6 +226,7 @@ LOGGING = {
     }
 }
 
+# NOTE: dead code, not used anywhere
 PASSWORD_MIN_LENGTH = 6
 
 PASSWORD_COMPLEXITY = {
