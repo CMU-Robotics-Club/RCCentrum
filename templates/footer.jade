@@ -6,32 +6,25 @@
     .row-fluid
         .col-md-4
             a(href="http://www.roboticsclub.org/redmine/", target="_blank")
-                i.fa.fa-adjust
-
                 | Redmine
             |
             a(href="{% url 'officers:index' %}") 
-                i.fa.fa-users
-
                 | Officers
             |
             a(href="{% url 'api-root' %}")
-                i.fa.fa-cloud
-
                 | API
             |
             a(href="{% url 'admin:index' %}")
-                i.fa.fa-bolt
-
                 | Member Login
 
         .col-md-4
-            |
-            for media in social_media
+            each media, index in social_media
                 a(href="{{media.url}}" target="_blank")
                     i.fa(class="fa-{{ media.name | lower }}")
                     | {{ media.name }} 
-                |
+                {% if index != (social_media.length - 1) %}
+                     |
+                {% endif %}
 
         .col-md-4
             .pull-right
