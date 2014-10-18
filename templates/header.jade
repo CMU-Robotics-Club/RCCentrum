@@ -5,18 +5,21 @@
 
 div.navbar.navbar-default.navbar-fixed-top
     div.container
+
+        // Elements that appear when collapses
+        button.navbar-toggle.collapsed(data-toggle='collapse', data-target='.navbar-collapse')
+            span.sr-only
+                | Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+
+        // Elements that appear when not collapsed
         div.navbar-header
             h3.text-muted.navbar-brand
                 a(href='/')
                     img(src="{% static 'images/logo.png' %}", width="40px", height="40px")
                     | Carnegie Mellon Robotics Club
-            button.navbar-toggle.collapsed(data-toggle='collapse', data-target='.navbar-collapse')
-                span.sr-only
-                    | Toggle navigation
-                span.icon-bar
-                span.icon-bar
-                span.icon-bar
-          </button>
         div.navbar-collapse.collapse
             ul.nav.navbar-nav
                 for page in flatpages
