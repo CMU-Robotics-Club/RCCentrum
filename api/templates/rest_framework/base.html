@@ -36,9 +36,9 @@
                         <div class="container-fluid">
                             <span>
                                 {% block branding %}
-                                    <a class='brand' rel="nofollow" href='http://www.django-rest-framework.org'>
-                                        Django REST framework <span class="version">{{ version }}</span>
-                                    </a>
+                                    <div class='brand'>
+                                        Robotics Club API
+                                    </div>
                                 {% endblock %}
                             </span>
                             <ul class="nav pull-right">
@@ -131,13 +131,6 @@
                 </div>
             </div>
             <!-- END Content -->
-
-            <footer>
-                {% block footer %}
-                    <p>Sponsored by <a href="http://dabapps.com/">DabApps</a>.</p>
-                {% endblock %}
-            </footer>
-
         </div><!-- ./wrapper -->
 
         {% block script %}
