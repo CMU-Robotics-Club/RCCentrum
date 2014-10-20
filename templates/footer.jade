@@ -1,22 +1,18 @@
 {% load social_media %}
 {% get_social_medias as social_media %}
+{% load link %}
+{% get_links as links %}
 
 .footer
     hr
     .row-fluid
         .col-md-4
             .text-left-md
-                a(href="http://www.roboticsclub.org/redmine/", target="_blank")
-                    | Redmine
-                |
-                a(href="{% url 'officers:index' %}") 
-                    | Officers
-                |
-                a(href="{% url 'api-root' %}")
-                    | API
-                |
-                a(href="{% url 'admin:index' %}")
-                    | Member Login
+                for link, index in links
+                    if index != 0
+                        |  | 
+                    a(href="{{link.url}}")
+                        | {{ link.name }}
         .col-md-4
             for media, index in social_media
                 if index != 0
