@@ -80,11 +80,22 @@ class RoboUserAdmin(UserAdmin):
     (None, {'fields': ('username', 'first_name', 'last_name', 'email')}),
   )
   add_form = RoboUserCreationForm
-  list_display = ('username', 'email', 'first_name', 'last_name')
-  search_fields = ['username', 'email', 'first_name', 'last_name']
+  list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', 'dues_paid')
+  search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'dues_paid']
 
+  def dues_paid(self, obj):
+    return obj.robouser.dues_paid
+
+
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('type', 'tstart', 'tend', 'user', 'succ', 'machine', )
+    readonly_fields = ('type', 'tstart', 'tend', 'user', 'succ', 'machine', )
+
+class MachineAdmin(admin.ModelAdmin):
+   list_display = ('type', 'maint', )
+   readonly_fields = ('id', 'type', 'maint', )
 
 admin.site.unregister(User)
 admin.site.register(User, RoboUserAdmin)
-admin.site.register(Machine)
-admin.site.register(Event)
+admin.site.register(Machine, MachineAdmin)
+admin.site.register(Event, EventAdmin)

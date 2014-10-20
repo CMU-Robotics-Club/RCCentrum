@@ -6,6 +6,7 @@ class ProjectAdmin(admin.ModelAdmin):
   fields = ('name', 'current_image', 'image', 'blurb', 'description', 'website', 'leaders', 'display', 'private_key', 'last_api_activity')
   filter_horizontal = ('leaders',)
   readonly_fields = ['current_image', 'last_api_activity']
+  list_display = ('name', 'current_image', 'website', 'display', 'blurb', 'last_api_activity')
 
   # TODO: find be a better way to do this function
   def get_form(self, request, obj=None, **kwargs):
