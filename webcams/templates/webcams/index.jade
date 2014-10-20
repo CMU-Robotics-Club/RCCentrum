@@ -25,16 +25,14 @@ block content
     });
 
   .row
-    .col-md-9.col-md-push-3
-      each webcam, i in webcams
-        if i == 0
-          .col-md-12
-            .text-center
-              img.img-thumbnail(src="{{ webcam.url }}", id="camera-{{ i }}")
-          hr
-        else
-          .col-md-6
-            .text-center
-              img.img-thumbnail(src="{{ webcam.url }}" style="height:200px", id="camera-{{ i }}")
-    .col-md-3.col-md-pull-9
-      iframe(src="http://www.google.com/calendar/embed?showTitle=0&amp;showNav=0&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA&amp;height=500&amp;wkst=1&amp;bgcolor=%23ffffff&amp;src=85bf0h78fidsgkkgmkktrqasm8%40group.calendar.google.com&amp;color=%23ffffff&amp;ctz=America%2FNew_York", style=" border-width:0; height:600px;")
+    .col-md-12
+      .text-center
+        - var cam0 = webcams[0].url
+        img.img-thumbnail(src="{{ cam0 }}", id="camera-0")
+  .row(style="height:26px")
+  .row
+    each webcam, i in webcams
+      if i != 0
+        .col-md-6
+          .text-center
+            img.img-thumbnail(src="{{ webcam.url }}", style="width:100%", id="camera-{{ i }}")

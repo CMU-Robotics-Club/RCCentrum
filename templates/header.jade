@@ -3,42 +3,57 @@
 {% get_ordered_flatpages as flatpages %}
 {% get_ordered_flatpages '/' as home_pages %}
 
-.container
-    .masthead
-        h3.text-muted
-            img(src="{% static 'images/logo.png' %}", width="40px", height="40px")
-            | CMU Robotics Club
-        ul.nav.nav-justified
-            for page in flatpages
-                {% if page.url != '/' and page.url in request.path or page.url == '/' and page.url == request.path %}
+div.navbar.navbar-default.navbar-fixed-top
+    div.container
+
+        // Elements that appear when collapses
+        button.navbar-toggle.collapsed(data-toggle='collapse', data-target='.navbar-collapse')
+            span.sr-only
+                | Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+
+        // Elements that appear when not collapsed
+        div.navbar-header
+            h3.text-muted.navbar-brand
+                a(href='/')
+                    img(src="{% static 'images/logo.png' %}", width="40px", height="40px")
+                    | Carnegie Mellon Robotics Club
+        div.navbar-collapse.collapse
+            ul.nav.navbar-nav
+                for page in flatpages
+                    {% if page.url != '/' %}
+                    {% if page.url in request.path %}
+                    li(class='active')
+                        a(href="{{page.get_absolute_url}}") {{page.title}}
+                    {% else %}
+                    li
+                        a(href="{{page.get_absolute_url}}") {{page.title}}
+                    {% endif %}
+                    {% endif %}
+                
+                {% if '/sponsors/' in request.path %}
                 li(class='active')
-                    a(href="{{page.get_absolute_url}}") {{page.title}}
+                    a(href="{% url 'sponsors:index' %}") Sponsors
                 {% else %}
                 li
-                    a(href="{{page.get_absolute_url}}") {{page.title}}
+                    a(href="{% url 'sponsors:index' %}") Sponsors
                 {% endif %}
-            
-            {% if '/sponsors/' in request.path %}
-            li(class='active')
-                a(href="{% url 'sponsors:index' %}") Sponsors
-            {% else %}
-            li
-                a(href="{% url 'sponsors:index' %}") Sponsors
-            {% endif %}
 
-            {% if '/projects/' in request.path %}
-            li(class='active')
-                a(href="{% url 'projects:index' %}") Projects
-            {% else %}
-            li
-                a(href="{% url 'projects:index' %}") Projects
-            {% endif %}
+                {% if '/projects/' in request.path %}
+                li(class='active')
+                    a(href="{% url 'projects:index' %}") Projects
+                {% else %}
+                li
+                    a(href="{% url 'projects:index' %}") Projects
+                {% endif %}
 
-            {% if '/webcams/' in request.path %}
-            li(class='active')
-                a(href="{% url 'webcams:index' %}") Webcams
-            {% else %}
-            li
-                a(href="{% url 'webcams:index' %}") Webcams
-            {% endif %}
+                {% if '/webcams/' in request.path %}
+                li(class='active')
+                    a(href="{% url 'webcams:index' %}") Webcams
+                {% else %}
+                li
+                    a(href="{% url 'webcams:index' %}") Webcams
+                {% endif %}
 

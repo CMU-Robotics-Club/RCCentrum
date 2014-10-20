@@ -1,10 +1,24 @@
 body {
-  padding-top: 20px;
+  padding-top: 65px;
   background-color: rgba(0, 0, 0, 0.5);
 }
 
 .container {
   background-color: rgba(255, 255, 255, 1.0);
+}
+
+.navbar-brand {
+  margin-top: -10px;
+  margin-right: 5px;
+}
+
+.navbar-brand a {
+  color: #777;
+}
+
+.navbar-brand a:hover {
+  text-decoration: none;
+  color: #333;
 }
 
 .footer {
@@ -13,11 +27,18 @@ body {
   height: 80px;
   width: auto;
   color: rgb(255, 255, 255);
+  text-align: center;
 }
 
 .footer a {
   color: rgb(255, 255, 255);
   text-decoration: underline;
+}
+
+.banner {
+  border-bottom: 1px solid rgb(189, 189, 189);
+  max-width: 100%;
+  max-height: 100%;
 }
 
 /*
@@ -31,18 +52,7 @@ hr.hr-style {
     height: 30px;
     border-style: solid;
     border-color: rgb(123,0,0);
-    border-width: 1px 0 0 0;
-    border-radius: 20px;
-}
-hr.hr-style:before { /* Not really supposed to work, but does */
-    display: block;
-    content: "";
-    height: 30px;
-    margin-top: -31px;    
-    border-style: solid;
-    border-color: rgb(123,0,0);
-    border-width: 0 0 1px 0;
-    border-radius: 20px;
+    border-width: 2px 0 0 0;
 }
 
 i {
@@ -100,6 +110,16 @@ i {
   border-radius: 0 0 5px 5px;
 }
 
+/* Responsive: Medium screens */
+@media (min-width: 992px) {
+  .text-right-md {
+    text-align: right;
+  }
+  .text-left-md {
+    text-align: left;
+  }
+}
+
 @media (min-width: 768px) {
   .nav-justified {
     max-height: 52px;
@@ -127,4 +147,38 @@ i {
     padding-right: 0;
     padding-left: 0;
   }
+}
+
+@media (max-width: 991px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    /* since 3.1.0 */
+    .navbar-collapse.collapse.in { 
+        display: block!important;
+    }
+    .collapsing {
+        overflow: hidden!important;
+    }
 }

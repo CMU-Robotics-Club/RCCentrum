@@ -43,14 +43,17 @@ html(lang="en")
         {% include "header.jade" %}
 
         .container
-            .row
-                col-md-12.
-
+            <!-- TODO there is a better way to handle the main page -->
+            if flatpage.title == "Welcome"
+                .row
+                    img.banner(src='/crm/media/uploads/banner.jpg') 
+            .row    
                 .jumbotron
                     if flatpage.content
-                        h2
-                            | {{ flatpage.title }}
-                        hr.hr-style
+                        if flatpage.title != "Welcome"
+                            h2
+                                | {{ flatpage.title }}
+                            hr.hr-style
                         {{ flatpage.content | cut:"// <![CDATA[" | cut:"// ]]>" }}
                     else
                         h2
