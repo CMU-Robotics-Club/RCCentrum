@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.db.models.signals import post_save
 from django.conf import settings
 
-# Machine Model
+
 class Machine(models.Model):
   type = models.CharField(max_length=20)
   id = models.CharField(max_length=10, primary_key=True)

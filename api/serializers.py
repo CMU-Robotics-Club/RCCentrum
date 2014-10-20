@@ -6,6 +6,7 @@ from officers.models import Officer
 from webcams.models import Webcam
 from sponsors.models import Sponsor
 from social_media.models import SocialMedia
+from channels.models import Channel
 from .fields import APIImageField, ProjectActiveField
 
 class WebcamSerializer(serializers.ModelSerializer):
@@ -76,6 +77,13 @@ class OfficerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Officer
         fields = ('id', 'position', 'user', 'image', 'description', 'order', )
+
+class ChannelSerializer(serializers.ModelSerializer):
+    active = serializers.Field(source='active')
+
+    class Meta:
+        model = Channel
+        fields = ('id', 'name', 'value', 'created', 'updated', 'active', )
 
 
 class SponsorSerializer(serializers.ModelSerializer):

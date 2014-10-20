@@ -32,5 +32,7 @@ class Project(models.Model):
 
   private_key = models.CharField(max_length=50)
 
+  # TODO: add is_api_active here with timedelta not in API
+
   def __str__(self):
     return self.name

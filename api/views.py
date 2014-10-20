@@ -6,6 +6,7 @@ from webcams.models import Webcam
 from social_media.models import SocialMedia
 from sponsors.models import Sponsor
 from rest_framework.response import Response
+from channels.models import Channel
 from rest_framework.parsers import JSONParser
 #from rest_framework.decorators import detail_route, list_route
 from rest_framework.decorators import *
@@ -19,7 +20,8 @@ import dateutil.parser
 from django.conf import settings
 from django.utils import timezone
 import requests
-from .filters import RoboUserFilter
+from .filters import RoboUserFilter, ChannelFilter
+from rest_framework.viewsets import GenericViewSet
 
 # TODO: figure out why import detail_route and list_route does not work
 def detail_route(methods=['get'], **kwargs):
@@ -234,6 +236,12 @@ class MessageViewSet(viewsets.ViewSet):
       return Response(m_id)
 
 
+class ChannelViewSet(viewsets.ModelViewSet):
+
+  model = Channel
+  serializer_class = ChannelSerializer
+  filter_class = ChannelFilter
+
 class SponsorViewSet(viewsets.ReadOnlyModelViewSet):
   model = Sponsor
   serializer_class = SponsorSerializer
@@ -279,6 +287,8 @@ class MagneticViewSet(viewsets.ViewSet):
 
     card_id = request.DATA
 
+    # TODO: move this all to a helper function
+
     if len(card_id) != 9:
       error = ParseError(detail="Magnetic ID is an Invalid ID")
       error.errno = MAGNETIC_INVALID_ID
@@ -301,7 +311,7 @@ class MagneticViewSet(viewsets.ViewSet):
       response = response.json()
       andrew_id = response['andrewid']
 
-      # CMU doesnt know
+      # CMU doesnt know who this is
       if not andrew_id:
         error = ParseError(detail="Magnetic ID is an Invalid ID")
         error.errno = MAGNETIC_INVALID_ID

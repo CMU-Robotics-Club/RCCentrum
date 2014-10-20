@@ -1,6 +1,6 @@
 import django_filters
 from robocrm.models import RoboUser
-from .serializers import RoboUserSerializer
+from channels.models import Channel
 from rest_framework import generics
 
 # TODO: clean this class up
@@ -34,3 +34,20 @@ class RoboUserFilter(django_filters.FilterSet):
     
   class Meta:
     model = RoboUser
+
+
+class ChannelFilter(django_filters.FilterSet):
+
+  # TODO: make static method
+  def active_filter(qs, value):
+    o = qs.all()
+    for c in o:
+      if c.active != value:
+        qs = qs.exclude(id=c.id)
+    return qs
+
+  active = django_filters.BooleanFilter(action=active_filter)
+    
+  class Meta:
+    model = Channel
+    fields = ('name', 'created', 'updated', 'active')

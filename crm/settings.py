@@ -1,5 +1,6 @@
 import os
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -45,6 +46,8 @@ DATABASES = {
 GOOGLE_CALENDAR_ID = "85bf0h78fidsgkkgmkktrqasm8%40group.calendar.google.com"
 
 PROJECT_ACTIVE_SECONDS = 10
+
+CHANNEL_ACTIVE_TIME_DELTA = timedelta(minutes=5)
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -148,6 +151,7 @@ INSTALLED_APPS = (
     'projects',
     'api',
     'webcams',
+    'channels',
     'ordered_flatpages',
     'resources',
     'sponsors',
