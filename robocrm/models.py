@@ -18,11 +18,12 @@ class RoboUser(models.Model):
   # Field is required when using profiles 
   user = models.OneToOneField(User)
 
+  # TODO: make these unique once null allowed char field is implemented
   # Roboclub Magnetic Card Number
-  magnetic = models.CharField(max_length=9, null=True, unique=True, blank=True)
+  magnetic = models.CharField(max_length=9, null=True, blank=True)
 
   # Roboclub RFID Card Number
-  rfid = models.CharField(max_length=10, null=True, unique=True, blank=True)
+  rfid = models.CharField(max_length=10, null=True, blank=True)
 
   def magnetic_set(self):
     return bool(self.magnetic)

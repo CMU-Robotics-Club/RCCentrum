@@ -43,13 +43,25 @@ html(lang="en")
     body
         {% include "header.jade" %}
 
-        .container
+        .container            
             <!-- TODO there is a better way to handle the main page -->
             if flatpage.url == '/'
                 .row
                     img.banner(src='{% get_media_prefix %}uploads/banner.jpg') 
-            .row    
+            .row  
                 .jumbotron
+                    
+                    div.alert.alert-info.alert-dismissible(role='alert')
+                        button.close(type='button', data-dismiss='alert')
+                            span(aria-hidden='true')
+                                | &times;
+                            span.sr-only
+                                | Close
+                        strong
+                            | Hackathon!
+                            hr
+                        | Signup up for our mid-semester break Hackathon.
+
                     if flatpage.content
                         if flatpage.url != '/'
                             h2

@@ -177,6 +177,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'valid_elements': '*[*]',
     'convert_urls' : False,
     'relative_urls' : False,
+    'forced_root_block' : False,
 }
 
 REST_FRAMEWORK = {

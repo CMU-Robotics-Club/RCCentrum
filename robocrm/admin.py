@@ -81,7 +81,7 @@ class RoboUserAdmin(UserAdmin):
   )
   add_form = RoboUserCreationForm
   list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', 'dues_paid')
-  search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'dues_paid']
+  search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'robouser__dues_paid']
 
   def dues_paid(self, obj):
     return obj.robouser.dues_paid
