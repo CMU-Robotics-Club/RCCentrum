@@ -50,18 +50,6 @@ html(lang="en")
                     img.banner(src='{% get_media_prefix %}uploads/banner.jpg') 
             .row  
                 .jumbotron
-                    
-                    div.alert.alert-info.alert-dismissible(role='alert')
-                        button.close(type='button', data-dismiss='alert')
-                            span(aria-hidden='true')
-                                | &times;
-                            span.sr-only
-                                | Close
-                        strong
-                            | Hackathon!
-                            hr
-                        | Signup up for our mid-semester break Hackathon.
-
                     if flatpage.content
                         if flatpage.url != '/'
                             h2
