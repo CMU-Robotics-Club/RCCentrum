@@ -136,10 +136,6 @@ class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = OfficerSerializer
   filter_fields = ('position', 'user', 'order', )
 
-
-messages = {}
-message_id = 0
-
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
   """
   Club Projects
@@ -149,92 +145,12 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = ProjectSerializer
   filter_fields = ('name', 'display', 'leaders', )
 
-  @detail_route()
-  def messages(self, request, pk):
-    """
-    View messages of project without consuming even
-    if correct project for consumption.
-    """
-
-    pk = int(pk)
-
-    message_response = []
-
-    if pk in messages:
-      message_response = messages[pk]
-
-    return Response(message_response)
-
   @detail_route(methods=['get', 'post'])
   def datastore(self, request, pk):
     # TODO: implement
     pk = int(pk)
 
-    return Response()
-
-class MessageViewSet(viewsets.ViewSet):
-
-  def list(self, request):
-    user = request._user
-
-    if type(user).__name__ != 'Project':
-      error = PermissionDenied(detail="Not authenticated as a project")
-      error.errno = NOT_AUTHENTICATED_AS_PROJECT
-      raise error
-    else:
-      # Get messages for this project and consume them
-      # if any exist
-
-      m = []
-
-      if user.id in messages:
-        m = messages[user.id]
-        messages[user.id] = []
-      
-      return Response(m)
-
-  def create(self, request):
-    user = request._user
-
-    if type(user).__name__ != 'Project':
-      error = PermissionDenied(detail="Not authenticated as a project")
-      error.errno = NOT_AUTHENTICATED_AS_PROJECT
-      raise error
-    else:
-      data = JSONParser().parse(request)
-
-      to_id = data.get('to_id', None)
-      message = data.get('message', None)
-
-      if to_id is None or message is None:
-        error = ParseError(detail="Invalid message")
-        error.errno = INVALID_MESSAGE_STRUCTURE
-        raise error
-
-      try:
-        to_project = Project.objects.get(id=to_id)
-      except Project.DoesNotExist:
-        error = ParseError(detail="Invalid to project ID")
-        error.errno = INVALID_PROJECT_ID
-        raise error
-
-      global message_id
-      m_id = message_id
-      message_id += 1
-
-      new_message = {
-        "from": user.id,
-        "id": m_id,
-        "message": message
-      }
-
-      if to_id in messages:
-        messages[to_id].append(new_message)
-      else:
-        messages[to_id] = [new_message]
-
-      return Response(m_id)
-
+    return Response()  
 
 class ChannelViewSet(viewsets.ModelViewSet):
 
