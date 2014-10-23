@@ -34,6 +34,7 @@ class RoboUserFilter(django_filters.FilterSet):
     
   class Meta:
     model = RoboUser
+    fields = ('id', )
 
 
 class ChannelFilter(django_filters.FilterSet):
@@ -50,4 +51,4 @@ class ChannelFilter(django_filters.FilterSet):
     
   class Meta:
     model = Channel
-    fields = ('name', 'created', 'updated', 'active')
+    fields = ('id', 'name', 'created', 'updated', 'active')

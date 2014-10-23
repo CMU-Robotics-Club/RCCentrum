@@ -80,7 +80,7 @@ class WebcamViewSet(viewsets.ReadOnlyModelViewSet):
 
   model = Webcam
   serializer_class = WebcamSerializer
-  filter_fields = ('name', )
+  filter_fields = ('id', 'name', )
 
 class DateTimeViewSet(viewsets.ViewSet):
   """
@@ -134,7 +134,7 @@ class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
 
   model = Officer
   serializer_class = OfficerSerializer
-  filter_fields = ('position', 'user', 'order', )
+  filter_fields = ('id', 'position', 'user', 'order', )
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
   """
@@ -143,7 +143,7 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
 
   model = Project
   serializer_class = ProjectSerializer
-  filter_fields = ('name', 'display', 'leaders', )
+  filter_fields = ('id', 'name', 'display', 'leaders', )
 
   @detail_route(methods=['get', 'post'])
   def datastore(self, request, pk):
@@ -161,12 +161,12 @@ class ChannelViewSet(viewsets.ModelViewSet):
 class SponsorViewSet(viewsets.ReadOnlyModelViewSet):
   model = Sponsor
   serializer_class = SponsorSerializer
-  filter_fields = ('name', 'active', )
+  filter_fields = ('id', 'name', 'active', )
 
 class SocialMediaViewSet(viewsets.ReadOnlyModelViewSet):
   model = SocialMedia
   serializer_class = SocialMediaSerializer
-  filter_fields = ('name', )
+  filter_fields = ('id', 'name', )
 
 class CalendarViewSet(viewsets.ViewSet):
   """
