@@ -4,15 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from password_reset import views as password_reset_views
 
-#admin.autodiscover()
-
 urlpatterns = patterns('',
-    # url(r'^$', 'crm.views.home', name='home'),
-    # url(r'^crm/', include('crm.foo.urls')),
-    url(r'^roboauth/(?P<rfid_tag>[0-9A-Fa-f]+)/(?P<mach_num>\d+)/', 'robocrm.views.roboauth'),
-    url(r'^roboauth/(?P<rfid_tag>[0-9A-Fa-f]+)/', 'robocrm.views.roboauthall'),
-    url(r'^add_card_event/', 'robocrm.views.add_card_event'),
-
     url(r'^officers/', include('officers.urls', namespace='officers')),
     url(r'^sponsors/', include('sponsors.urls', namespace='sponsors')),
     url(r'^projects/', include('projects.urls', namespace='projects')),
@@ -35,5 +27,5 @@ urlpatterns = patterns('',
     url(r'^recover/$', password_reset_views.recover, name='admin_password_reset'),
 
     url(r'^', include('password_reset.urls')),
-
+    url(r'^', include('robocrm.urls')),   
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
