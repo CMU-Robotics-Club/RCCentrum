@@ -255,6 +255,15 @@ class RFIDViewSet(viewsets.ViewSet):
   """
 
   def create(self, request):
-    # TODO: implement
+    rfid = request.DATA
 
-    return Response()
+    robouser = RoboUser.objects.filter(rfid=rfid)
+
+    # RoboUser in local database
+    if robouser:
+      robouser = robouser[0]
+      return Response(robouser.id)
+    else:
+      error = ParseError(detail="RFID has no such member")
+      error.errno = RFID_NO_MEMBER
+      raise error
