@@ -13,15 +13,15 @@ from rest_framework.decorators import *
 from .serializers import *
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate
-from rest_framework.exceptions import ParseError, NotAuthenticated, AuthenticationFailed, PermissionDenied
+from rest_framework.exceptions import APIException, ParseError, NotAuthenticated, AuthenticationFailed, PermissionDenied
 from .errno import *
 from .google_api import get_calendar_events
 import dateutil.parser
 from django.conf import settings
 from django.utils import timezone
-import requests
 from .filters import RoboUserFilter, ChannelFilter
 from rest_framework.viewsets import GenericViewSet
+
 
 # TODO: figure out why import detail_route and list_route does not work
 def detail_route(methods=['get'], **kwargs):
@@ -203,51 +203,13 @@ class MagneticViewSet(viewsets.ViewSet):
 
     card_id = request.DATA
 
-    # TODO: move this all to a helper function
-
-    if len(card_id) != 9:
-      error = ParseError(detail="Magnetic ID is an Invalid ID")
-      error.errno = MAGNETIC_INVALID_ID
-      raise error
-    
-    robouser = RoboUser.objects.filter(magnetic=card_id)
-
-    # RoboUser in local database
-    if robouser:
-      robouser = robouser[0]
+    try:
+      robouser = RoboUser.objects.get(magnetic=card_id)
       return Response(robouser.id)
-    else:
-      # Not in local database
-      # Check if CMU knows
-      url = "{}?card_id={}".format(settings.LOOKUP_CARD_URL, card_id)
-      response = requests.get(url)
-
-      response.raise_for_status()
-
-      response = response.json()
-      andrew_id = response['andrewid']
-
-      # CMU doesnt know who this is
-      if not andrew_id:
-        error = ParseError(detail="Magnetic ID is an Invalid ID")
-        error.errno = MAGNETIC_INVALID_ID
-        raise error
-      # CMU knows who this is
-      else:        
-        robouser = RoboUser.objects.filter(user__username=andrew_id)
-
-        # Is a Roboclub Member
-        if robouser:
-          robouser = robouser[0]
-          robouser.magnetic = card_id
-          robouser.save()
-          return Response(robouser.id)
-        else:
-          # Not a member
-          error = ParseError(detail="Magnetic ID has no such member")
-          error.errno = MAGNETIC_NO_MEMBER
-          raise error
-
+    except RoboUser.DoesNotExist:
+      error = APIException(detail="Magnetic ID has no such member")
+      error.errno = MAGNETIC_NO_MEMBER
+      raise error
 
 class RFIDViewSet(viewsets.ViewSet):
   """
@@ -257,13 +219,10 @@ class RFIDViewSet(viewsets.ViewSet):
   def create(self, request):
     rfid = request.DATA
 
-    robouser = RoboUser.objects.filter(rfid=rfid)
-
-    # RoboUser in local database
-    if robouser:
-      robouser = robouser[0]
+    try:
+      robouser = RoboUser.objects.get(rfid=rfid)
       return Response(robouser.id)
-    else:
-      error = ParseError(detail="RFID has no such member")
+    except RoboUser.DoesNotExist:
+      error = APIException(detail="RFID has no such member")
       error.errno = RFID_NO_MEMBER
       raise error
