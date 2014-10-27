@@ -16,6 +16,17 @@ class RoboUserInline(admin.StackedInline):
   can_delete = False
   filter_horizontal = ('machines', )
 
+  def get_readonly_fields(self, request, obj=None):
+    if obj:
+      user = request.user
+
+      if not user.is_superuser and not user.groups.filter(name='officers').exists():
+        return ['machines', ]
+      else:
+        return []
+    else:
+      return super().get_readonly_fields(request, obj)
+
   def get_fieldsets(self, request, obj=None):
     if obj:
       user = request.user
@@ -23,7 +34,7 @@ class RoboUserInline(admin.StackedInline):
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
         return (
           (None, {'fields':
-            ('magnetic', 'cell', ) 
+            ('magnetic', 'cell', 'machines', ) 
           }),
         )
       else:
@@ -83,7 +94,7 @@ class UserCreationForm(ModelForm):
 class RoboUserAdmin(admin.ModelAdmin):
   inlines = (RoboUserInline, )
   list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', 'dues_paid')
-  search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', 'dues_paid']
+  search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined',]
   exclude = ['password', 'user_permissions', 'is_staff', ]
   filter_horizontal = ('groups',)
   #fields = ('username', 'first_name', 'last_name', 'email', 'groups', 'is_active', 'is_superuser', 'last_login', 'date_joined', )
