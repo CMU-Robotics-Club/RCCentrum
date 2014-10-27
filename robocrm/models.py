@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import admin
 from django.db.models.signals import post_save
 from django.conf import settings
-
+from .fields import CharNullField
 
 class Machine(models.Model):
   type = models.CharField(max_length=20)
@@ -20,10 +20,10 @@ class RoboUser(models.Model):
 
   # TODO: make these unique once null allowed char field is implemented
   # Roboclub Magnetic Card Number
-  magnetic = models.CharField(max_length=9, null=True, blank=True, help_text="9 Character Magnetic Card ID(found on Student ID)")
+  magnetic = CharNullField(max_length=9, null=True, blank=True, unique=True, help_text="9 Character Magnetic Card ID(found on Student ID)")
 
   # Roboclub RFID Card Number
-  rfid = models.CharField(max_length=10, null=True, blank=True)
+  rfid = CharNullField(max_length=10, null=True, blank=True, unique=True)
 
   def magnetic_set(self):
     return bool(self.magnetic)
