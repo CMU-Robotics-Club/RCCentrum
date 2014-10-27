@@ -11,16 +11,23 @@ from django.contrib.flatpages.models import FlatPage
 from django.contrib.flatpages.admin import FlatPageAdmin, FlatpageForm
 from .util import subscribe_to_list
 
-class UserProfileInline(admin.StackedInline):
+class RoboUserInline(admin.StackedInline):
   model = RoboUser
   can_delete = False
-  verbose_name_plural = 'profile'
-  filter_horizontal = ('machines',)
+  filter_horizontal = ('machines', )
 
   def get_fieldsets(self, request, obj=None):
     if obj:
-      # change user form
-      return super(UserProfileInline, self).get_fieldsets(request, obj)
+      user = request.user
+
+      if not user.is_superuser and not user.groups.filter(name='officers').exists():
+        return (
+          (None, {'fields':
+            ('magnetic', 'cell', ) 
+          }),
+        )
+      else:
+        return super().get_fieldsets(request, obj)
     else:
       # add user form
       return (
@@ -29,12 +36,7 @@ class UserProfileInline(admin.StackedInline):
             )
           }),)
 
-class RoboUserCreationForm(ModelForm):
-  # This is modelled directly after django.contrib.auth.forms.UserCreationForm 
-
-  error_messages = UserCreationForm.error_messages
-  username = UserCreationForm.declared_fields['username']
-  Meta = UserCreationForm.Meta
+class UserCreationForm(ModelForm):
 
   def clean_username(self):
     username = self.cleaned_data['username']
@@ -42,10 +44,10 @@ class RoboUserCreationForm(ModelForm):
       User.objects.get(username=username)
     except User.DoesNotExist:
       return username
-    raise ValidationError(self.error_messages['duplicate_username'])
+    raise ValidationError('Username already exists')
 
   def save(self, commit=True):
-    user = super(RoboUserCreationForm, self).save(commit=False)
+    user = super().save(commit=False)
     user.set_password(User.objects.make_random_password())
     user.is_staff = True
 
@@ -66,6 +68,10 @@ class RoboUserCreationForm(ModelForm):
     subscribe_to_list(user.first_name, user.last_name, user.email, 'roboclub-gb')
     return user
 
+  class Meta:
+    model = User
+    fields = ('username', 'first_name', 'last_name', 'email', )
+
   class Media:
     js = (
       'jquery-1.11.1.min.js',
@@ -74,18 +80,62 @@ class RoboUserCreationForm(ModelForm):
     )
 
 
-class RoboUserAdmin(UserAdmin):
-  inlines = (UserProfileInline, )
-  add_fieldsets = (
-    (None, {'fields': ('username', 'first_name', 'last_name', 'email')}),
-  )
-  add_form = RoboUserCreationForm
+class RoboUserAdmin(admin.ModelAdmin):
+  inlines = (RoboUserInline, )
   list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', 'dues_paid')
-  search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'robouser__dues_paid']
+  search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', 'dues_paid']
+  exclude = ['password', 'user_permissions', 'is_staff', ]
+  filter_horizontal = ('groups',)
+  #fields = ('username', 'first_name', 'last_name', 'email', 'groups', 'is_active', 'is_superuser', 'last_login', 'date_joined', )
 
   def dues_paid(self, obj):
     return obj.robouser.dues_paid
 
+  def get_readonly_fields(self, request, obj=None):
+    if obj:
+      return ['last_login', 'date_joined', 'username', 'first_name', 'last_name', 'email', ]
+    else:
+      return []
+
+  def get_form(self, request, obj=None, **kwargs):
+    if obj:
+      return super().get_form(request, obj, **kwargs)
+    else:
+      return UserCreationForm
+
+  def get_fieldsets(self, request, obj=None):
+    if obj:
+      user = request.user
+  
+      if not user.is_superuser and not user.groups.filter(name='officers').exists():
+        return (
+          (None, {'fields':
+            ()
+          }),
+        )
+      else:
+        return super().get_fieldsets(request, obj)
+    else:
+      #return (None, {'fields':
+      #  ('username', 'first_name', 'last_name', 'email', )
+      #}),
+      return super().get_fieldsets(request, obj)
+
+  def get_queryset(self, request):
+    qs = super().get_queryset(request)
+
+    user = request.user
+
+    # If not an superuser/officer only
+    # let User only edit own information
+    if not user.is_superuser and not user.groups.filter(name='officers').exists():
+      qs = qs.filter(id=user.id)
+
+    return qs
+
+  class Meta:
+    ordering = ['username']
+    order_with_respect_to = 'username'
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ('type', 'tstart', 'tend', 'user', 'succ', 'machine', )

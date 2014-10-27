@@ -20,7 +20,7 @@ class RoboUser(models.Model):
 
   # TODO: make these unique once null allowed char field is implemented
   # Roboclub Magnetic Card Number
-  magnetic = models.CharField(max_length=9, null=True, blank=True)
+  magnetic = models.CharField(max_length=9, null=True, blank=True, help_text="9 Character Magnetic Card ID(found on Student ID)")
 
   # Roboclub RFID Card Number
   rfid = models.CharField(max_length=10, null=True, blank=True)
@@ -40,7 +40,7 @@ class RoboUser(models.Model):
   machines = models.ManyToManyField(Machine, blank=True, null=True)
 
   # Cell Phone
-  cell = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+  cell = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True, help_text="Cell Phone # if you wish to provide it to Officers")
 
   # Class Level
   UNDERGRAD = 'UG'
