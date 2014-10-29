@@ -194,6 +194,7 @@ class CalendarViewSet(viewsets.ViewSet):
 class MagneticViewSet(viewsets.ViewSet):
   """
   Returns the RoboUser ID associated with the specified CMU Card ID.
+  If no such user exists returns a HTTP status code of 400.
   """
 
   def create(self, request):
@@ -209,11 +210,13 @@ class MagneticViewSet(viewsets.ViewSet):
     except RoboUser.DoesNotExist:
       error = APIException(detail="Magnetic ID has no such member")
       error.errno = MAGNETIC_NO_MEMBER
+      error.status_code = 400
       raise error
 
 class RFIDViewSet(viewsets.ViewSet):
   """
   Returns the RoboUser ID associated with the specified CMU RFID tag.
+  If no such user exists returns a HTTP Status code of 400.
   """
 
   def create(self, request):
@@ -225,4 +228,5 @@ class RFIDViewSet(viewsets.ViewSet):
     except RoboUser.DoesNotExist:
       error = APIException(detail="RFID has no such member")
       error.errno = RFID_NO_MEMBER
+      error.status_code = 400
       raise error
