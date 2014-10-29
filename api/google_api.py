@@ -2,6 +2,7 @@ import requests
 import json
 import datetime
 import dateutil.parser
+import collections
 
 from django.conf import settings
 
@@ -46,12 +47,12 @@ def get_calendar_events(dt):
       end = end.replace(tzinfo=dt.tzinfo)
 
     if start <= dt < end:
-      event = {
-        'name': name,
-        'location': location,
-        'start': start,
-        'end': end
-      }
+      event = collections.OrderedDict([
+        ('name', name),
+        ('location', location),
+        ('start', start),
+        ('end', end),
+      ])
 
       events.append(event)
 
