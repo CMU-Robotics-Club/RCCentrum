@@ -16,12 +16,28 @@ class RoboUserInline(admin.StackedInline):
   can_delete = False
   filter_horizontal = ('machines', )
 
+  # TODO: find a way to make Django not abbreviate the result
+  # of 'Machine.objects.exclude(robouser=obj)' so the string
+  # does not manually need to be constructed.
+  # Displays '[,,,,,,]' if string not manually constructed)
+  def machines_not_authorized(self, obj):
+    machines = Machine.objects.exclude(robouser=obj)
+    field = ""
+
+    for i, machine in enumerate(machines):
+      if i != 0:
+        field += ', '
+
+      field += str(machine)
+
+    return field
+
   def get_readonly_fields(self, request, obj=None):
     if obj:
       user = request.user
 
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
-        return ['machines', ]
+        return ['machines', 'machines_not_authorized', 'rfid', 'dues_paid']
       else:
         return []
     else:
@@ -34,7 +50,7 @@ class RoboUserInline(admin.StackedInline):
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
         return (
           (None, {'fields':
-            ('magnetic', 'cell', 'machines', ) 
+            ('cell', 'machines', 'machines_not_authorized', 'magnetic', 'rfid', 'class_level', 'major', 'grad_year', 'dues_paid') 
           }),
         )
       else:
@@ -93,11 +109,28 @@ class UserCreationForm(ModelForm):
 
 class RoboUserAdmin(admin.ModelAdmin):
   inlines = (RoboUserInline, )
-  list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', 'dues_paid')
-  search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined',]
+  list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', 'dues_paid', 'is_magnetic_set', 'is_rfid_set', 'class_level', 'major', 'grad_year', )
+  search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', ]
   exclude = ['password', 'user_permissions', 'is_staff', ]
   filter_horizontal = ('groups',)
   #fields = ('username', 'first_name', 'last_name', 'email', 'groups', 'is_active', 'is_superuser', 'last_login', 'date_joined', )
+
+  def is_magnetic_set(self, obj):
+    return obj.robouser.is_magnetic_set
+  is_magnetic_set.boolean = True
+
+  def is_rfid_set(self, obj):
+    return obj.robouser.is_rfid_set
+  is_rfid_set.boolean = True
+
+  def class_level(self, obj):
+    return obj.robouser.class_level
+
+  def major(self, obj):
+    return obj.robouser.major
+
+  def grad_year(self, obj):
+    return obj.robouser.grad_year
 
   def dues_paid(self, obj):
     return obj.robouser.dues_paid
@@ -121,7 +154,7 @@ class RoboUserAdmin(admin.ModelAdmin):
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
         return (
           (None, {'fields':
-            ()
+            ('username', 'first_name', 'last_name', 'email', 'last_login', 'date_joined', )
           }),
         )
       else:

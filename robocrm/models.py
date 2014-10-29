@@ -11,14 +11,13 @@ class Machine(models.Model):
   maint = models.BooleanField(default=False)
   
   def __str__(self):
-    return "{} {}".format(self.type, self.id)
+    return self.type
 
 
 class RoboUser(models.Model):
   # Field is required when using profiles 
   user = models.OneToOneField(User)
 
-  # TODO: make these unique once null allowed char field is implemented
   # Roboclub Magnetic Card Number
   magnetic = CharNullField(max_length=9, null=True, blank=True, unique=True, help_text="9 Character Magnetic Card ID(found on Student ID)")
 
