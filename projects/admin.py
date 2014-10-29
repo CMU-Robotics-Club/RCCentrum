@@ -1,5 +1,9 @@
 from django.contrib import admin
 from projects.models import Project
+from robocrm.models import RoboUser
+from django.forms import ModelForm
+
+# TODO: new project page auto fill leader
 
 class ProjectAdmin(admin.ModelAdmin):
 
@@ -19,7 +23,23 @@ class ProjectAdmin(admin.ModelAdmin):
       if 'display' in self.readonly_fields:
         self.readonly_fields.remove('display')
 
-    return super().get_form(request, obj, **kwargs)
+    if obj:
+      return super().get_form(request, obj, **kwargs)
+    else:
+      form = ProjectCreationForm
+      form.user = request.user
+      return form
+
+  def get_fieldsets(self, request, obj=None):
+    if obj:
+      return super().get_fieldsets(request, obj)
+    else:
+      # add user form
+      return (
+          (None, {'fields':
+            ('name', 'image', 'blurb', 'description', 'website',
+            )
+          }),)
 
   def get_queryset(self, request):
     qs = super().get_queryset(request)
@@ -34,5 +54,31 @@ class ProjectAdmin(admin.ModelAdmin):
       qs = qs.filter(leaders=robouser.id)
 
     return qs
+
+
+class ProjectCreationForm(ModelForm):
+
+  def save(self, commit=True):
+    project = super().save(commit=False)
+
+    # Hacky but only way to get default leaders to work since
+    # original save_m2m overrides groups
+    old_save_m2m = self.save_m2m
+    def save_m2m():
+      old_save_m2m()
+      project.leaders.clear()
+
+      if hasattr(self.user, 'robouser'):
+        project.leaders.add(self.user.robouser)
+    self.save_m2m = save_m2m
+
+    if commit:
+      project.save()
+
+    return project
+
+  class Meta:
+    model = Project
+    fields = ('name', 'image', 'blurb', 'description', 'website', )
 
 admin.site.register(Project, ProjectAdmin)
