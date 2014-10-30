@@ -175,6 +175,7 @@ class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = OfficerSerializer
   filter_fields = ('id', 'position', 'user', 'order', )
 
+
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
   """
   Club Projects
@@ -184,12 +185,6 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = ProjectSerializer
   filter_fields = ('id', 'name', 'display', 'leaders', )
 
-  @detail_route(methods=['get', 'post'])
-  def datastore(self, request, pk):
-    # TODO: implement
-    pk = int(pk)
-
-    return Response()  
 
 class ChannelViewSet(viewsets.ModelViewSet):
 
@@ -197,15 +192,18 @@ class ChannelViewSet(viewsets.ModelViewSet):
   serializer_class = ChannelSerializer
   filter_class = ChannelFilter
 
+
 class SponsorViewSet(viewsets.ReadOnlyModelViewSet):
   model = Sponsor
   serializer_class = SponsorSerializer
   filter_fields = ('id', 'name', 'active', )
 
+
 class SocialMediaViewSet(viewsets.ReadOnlyModelViewSet):
   model = SocialMedia
   serializer_class = SocialMediaSerializer
   filter_fields = ('id', 'name', )
+
 
 class CalendarViewSet(viewsets.ViewSet):
   """
