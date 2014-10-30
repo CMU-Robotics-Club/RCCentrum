@@ -205,30 +205,109 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
 )
 
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
+    'formatters': {
+        'default': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
     },
     'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
+        'django_file': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': '{}/logs/django_log.log'.format(BASE_DIR),
+            'maxBytes': 1024*1024*50, # 50 MB
+            'backupCount': 5,
+            'formatter':'default',
+        },
+        'api_file': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': '{}/logs/api_log.log'.format(BASE_DIR),
+            'maxBytes': 1024*1024*50, # 50 MB
+            'backupCount': 5,
+            'formatter':'default',
+        },
+        'apps_file': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': '{}/logs/apps_log.log'.format(BASE_DIR),
+            'maxBytes': 1024*1024*50, # 50 MB
+            'backupCount': 5,
+            'formatter':'default',
+        },   
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'default'
+        },
     },
     'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
+        'django': {
+            'handlers': ['django_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'api': {
+            'handlers': ['api_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'channels': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'crm': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'links': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'officers': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'ordered_flatpages': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'projects': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'resources': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'robocrm': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'social_media': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'sponsors': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'webcams': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
             'propagate': True,
         },
     }
