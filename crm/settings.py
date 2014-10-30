@@ -15,6 +15,10 @@ GOOGLE_API_KEY = ''
 # The Project ID's who have permission to set a user's RFID tag
 RFID_POST_PROJECT_IDS = []
 
+# The Project ID's who have permission to send emails as well as an array of robouser IDs project can send to(None all IDs, [] no IDs)
+#EMAIL_POST_PROJECT_IDS = {1:[2, 40, 52]}
+EMAIL_POST_PROJECT_IDS = {}
+
 # ==========================
 
 DEBUG = True
@@ -228,15 +232,6 @@ LOGGING = {
             'propagate': True,
         },
     }
-}
-
-# NOTE: dead code, not used anywhere
-PASSWORD_MIN_LENGTH = 6
-
-PASSWORD_COMPLEXITY = {
-    "UPPER": 1,
-    "DIGITS": 1,
-    "NON ASCII": 1,
 }
 
 try:

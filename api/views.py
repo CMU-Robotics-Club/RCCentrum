@@ -21,6 +21,7 @@ from django.conf import settings
 from django.utils import timezone
 from .filters import RoboUserFilter, ChannelFilter
 from rest_framework.viewsets import GenericViewSet
+from django.core.mail import send_mail
 
 
 # TODO: figure out why import detail_route and list_route does not work
@@ -94,6 +95,7 @@ class DateTimeViewSet(viewsets.ViewSet):
 class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
   """
   The members of the Robotics Club.
+  Has '/rfid' and '/email' endpoints.
   """
 
   model = RoboUser
@@ -125,7 +127,44 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
         u.rfid = rfid
         u.save()
 
+        # TODO: return something other than just True
         return Response(True)
+
+  @detail_route(methods=['POST'])
+  def email(self, request, pk):
+    project = request._user
+
+    if type(project).__name__ != 'Project':
+      error = PermissionDenied(detail="Not authenticated as a project")
+      error.errno = NOT_AUTHENTICATED_AS_PROJECT
+      raise error
+    elif project.id not in settings.EMAIL_POST_PROJECT_IDS:
+      error = PermissionDenied(detail="This project is not authenticated to perform this operation")
+      error.errno = INSUFFICIENT_PROJECT_PERMISSIONS
+      raise error
+    else:
+
+      # Check if project can send to this user
+      user = RoboUser.objects.filter(pk=pk)[0]
+
+      allowed_users = settings.EMAIL_POST_PROJECT_IDS[project.id]
+
+      if allowed_users is None or user.id in allowed_users:
+
+        from_address = "{}@roboticsclub.org".format(project.name)
+
+        data = JSONParser().parse(request)
+        subject = data.get('subject', None)
+        body = data.get('body', None)
+
+        send_mail(subject, body, from_address, [user.user.email])
+
+        return Response(True)
+      else:
+        # Possibly make this case a unique errno
+        error = PermissionDenied(detail="This project is not authenticated to perform this operation")
+        error.errno = INSUFFICIENT_PROJECT_PERMISSIONS
+        raise error
 
 class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
   """
