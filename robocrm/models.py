@@ -7,7 +7,10 @@ from .fields import CharNullField
 
 class Machine(models.Model):
   type = models.CharField(max_length=20)
+
+  # TODO: remove ID
   id = models.CharField(max_length=10, primary_key=True)
+  
   maint = models.BooleanField(default=False)
   
   def __str__(self):

@@ -185,9 +185,12 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('type', 'tstart', 'tend', 'user', 'succ', 'machine', )
     readonly_fields = ('type', 'tstart', 'tend', 'user', 'succ', 'machine', )
 
+    def has_add_permission(self, request):
+      return False
+
 class MachineAdmin(admin.ModelAdmin):
    list_display = ('type', 'maint', )
-   readonly_fields = ('id', 'type', 'maint', )
+   readonly_fields = ('id', )
 
 admin.site.unregister(User)
 admin.site.register(User, RoboUserAdmin)

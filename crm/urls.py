@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from password_reset import views as password_reset_views
+from django.http import HttpResponseRedirect
 
 urlpatterns = patterns('',
     url(r'^officers/', include('officers.urls', namespace='officers')),
@@ -11,6 +12,8 @@ urlpatterns = patterns('',
     url(r'^webcams/', include('webcams.urls', namespace='webcams')),
     url(r'^api/', include('api.urls')),
 
+    url(r'^admin/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
+    
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     
@@ -27,5 +30,5 @@ urlpatterns = patterns('',
     url(r'^recover/$', password_reset_views.recover, name='admin_password_reset'),
 
     url(r'^', include('password_reset.urls')),
-    url(r'^', include('robocrm.urls')),   
+    url(r'^', include('robocrm.urls')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
