@@ -102,6 +102,7 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = RoboUserSerializer
   filter_class = RoboUserFilter
 
+  # TODO: make UPDATE
   @detail_route(methods=['POST'])
   def rfid(self, request, pk):
     user = request._user
@@ -267,3 +268,12 @@ class RFIDViewSet(viewsets.ViewSet):
       error.errno = RFID_NO_MEMBER
       error.status_code = 400
       raise error
+
+
+# TODO: move to machines app
+from robocrm.models import Machine
+
+class MachineViewSet(viewsets.ReadOnlyModelViewSet):
+  model = Machine
+  serializer_class = MachineSerializer
+  filter_fields = ('id', 'type', )

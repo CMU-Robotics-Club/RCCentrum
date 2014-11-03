@@ -27,6 +27,7 @@ class RoboUserSerializer(serializers.ModelSerializer):
 
     magnetic = serializers.Field(source='is_magnetic_set')
     rfid = serializers.Field(source='is_rfid_set')
+    machines = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     # TODO: find better way to do this
     def to_native(self, obj):
@@ -59,7 +60,7 @@ class RoboUserSerializer(serializers.ModelSerializer):
         model = RoboUser
         depth = 2
 
-        fields = ('id', 'magnetic', 'rfid')
+        fields = ('id', 'magnetic', 'rfid', 'machines', )
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -99,3 +100,13 @@ class SocialMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = SocialMedia
         fields = ('id', 'name', 'url', 'order', )
+
+
+# TODO: move to machines app
+from robocrm.models import Machine
+
+class MachineSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Machine
+        fields = ('id', 'type', )
