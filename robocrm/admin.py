@@ -1,7 +1,7 @@
 from robocrm.models import Machine, Event
 from django.forms import ModelForm, ValidationError
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.auth.models import User, Permission, Group
 from django.contrib.sites.models import Site
 from django.contrib.auth.forms import UserCreationForm
@@ -10,6 +10,8 @@ from django import forms
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.flatpages.admin import FlatPageAdmin, FlatpageForm
 from .util import subscribe_to_list
+from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
 
 class RoboUserInline(admin.StackedInline):
   model = RoboUser
@@ -109,11 +111,10 @@ class UserCreationForm(ModelForm):
 
 class RoboUserAdmin(admin.ModelAdmin):
   inlines = (RoboUserInline, )
-  list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', 'dues_paid', 'is_magnetic_set', 'is_rfid_set', 'class_level', 'major', 'grad_year', )
+  list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser', 'roles', 'last_login', 'date_joined', 'dues_paid', 'is_magnetic_set', 'is_rfid_set', 'class_level', 'major', 'grad_year', )
   search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', ]
   exclude = ['password', 'user_permissions', 'is_staff', ]
   filter_horizontal = ('groups',)
-  #fields = ('username', 'first_name', 'last_name', 'email', 'groups', 'is_active', 'is_superuser', 'last_login', 'date_joined', )
 
   def is_magnetic_set(self, obj):
     return obj.robouser.is_magnetic_set
@@ -134,6 +135,15 @@ class RoboUserAdmin(admin.ModelAdmin):
 
   def dues_paid(self, obj):
     return obj.robouser.dues_paid
+
+  def roles(self, obj):
+    p = sorted([str(x) for x in obj.groups.all()])
+    if obj.user_permissions.count():
+      p += ['+']
+    value = ', '.join(p)
+    return mark_safe("<nobr>{}</nobr>".format(value))
+  roles.allow_tags = True
+  roles.short_description = 'Groups'
 
   def get_readonly_fields(self, request, obj=None):
     if obj:
@@ -192,7 +202,18 @@ class MachineAdmin(admin.ModelAdmin):
    list_display = ('type', 'maint', )
    readonly_fields = ('id', )
 
+class GroupAdmin(GroupAdmin):
+  list_display = ['name', 'members']
+  list_display_links = ['name']
+
+  def members(self, obj):
+    return ', '.join(['<a href="%s">%s</a>' % (reverse('admin:auth_user_change', args=(x.id,)), x.username) for x in obj.user_set.all().order_by('username')])
+  members.allow_tags = True
+
 admin.site.unregister(User)
 admin.site.register(User, RoboUserAdmin)
 admin.site.register(Machine, MachineAdmin)
 admin.site.register(Event, EventAdmin)
+
+admin.site.unregister(Group)
+admin.site.register(Group, GroupAdmin)
