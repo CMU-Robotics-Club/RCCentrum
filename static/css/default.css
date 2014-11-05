@@ -3,6 +3,21 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+/*
+ * Anchor divs in FAQ
+ * Need to set top so that
+ * when clicking on FAQ links on home
+ * page brough to FAQ Section with header showing
+ * and not hidden by header.
+ * http://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
+ */
+.anchor{
+  display: block;
+  position: relative;
+  top: -80px;
+  visibility: hidden;
+}
+
 .container {
   background-color: rgba(255, 255, 255, 1.0);
 }
