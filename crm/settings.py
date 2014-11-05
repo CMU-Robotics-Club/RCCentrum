@@ -160,6 +160,7 @@ INSTALLED_APPS = (
     'social_media',
     'links',
     'posters',
+    'tshirts',
     'tinymce',
     'rest_framework',
     'ordered_model',
