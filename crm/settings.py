@@ -159,6 +159,7 @@ INSTALLED_APPS = (
     'sponsors',
     'social_media',
     'links',
+    'posters',
     'tinymce',
     'rest_framework',
     'ordered_model',

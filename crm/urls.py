@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^sponsors/', include('sponsors.urls', namespace='sponsors')),
     url(r'^projects/', include('projects.urls', namespace='projects')),
     url(r'^webcams/', include('webcams.urls', namespace='webcams')),
+    url(r'^posters/', include('posters.urls', namespace='posters')),  
     url(r'^api/', include('api.urls')),
 
     url(r'^admin/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
