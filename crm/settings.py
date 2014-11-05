@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'links',
     'posters',
     'tshirts',
+    'quotetron',
     'tinymce',
     'rest_framework',
     'ordered_model',
