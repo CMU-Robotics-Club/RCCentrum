@@ -16,16 +16,17 @@ block content
     .row
       each poster, index in posters
         .col-md-12
-          a(href="#poster")
+          a(href="#poster{{ index }}")
             p
               | {{ poster.name }} - {{ poster.year }}
 
     hr.hr-style
 
     .row
-      for poster in posters
-        .col-md-12(id="poster{{ poster.id }}")
+      each poster, index in posters
+        .col-md-12
           .row
+            .anchor(id="poster{{ index }}")
             .col-md-12
                 .pull-center
                   a(href="{% get_media_prefix %}{{ poster.image }}" target="_blank")
