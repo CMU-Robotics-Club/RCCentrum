@@ -12,3 +12,4 @@ djangorestframework-csv
 python-dateutil
 requests
 django-password-reset
+easy-thumbnails

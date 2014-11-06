@@ -168,6 +168,7 @@ INSTALLED_APPS = (
     'suit',
     'django.contrib.admin',
     'password_reset',
+    'easy_thumbnails',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
