@@ -5,7 +5,7 @@ import os
 
 class Poster(OrderedModel):
 
-  name = models.CharField(max_length=100, unique=True)
+  name = models.CharField(max_length=100)
 
   year = models.PositiveIntegerField()
 
