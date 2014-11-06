@@ -49,6 +49,14 @@ div.navbar.navbar-default.navbar-fixed-top
                     a(href="{% url 'projects:index' %}") Projects
                 {% endif %}
 
+                {% if '/posters/' in request.path %}
+                li(class='active')
+                    a(href="{% url 'posters:index' %}") Posters
+                {% else %}
+                li
+                    a(href="{% url 'posters:index' %}") Posters
+                {% endif %}
+
                 {% if '/webcams/' in request.path %}
                 li(class='active')
                     a(href="{% url 'webcams:index' %}") Webcams
