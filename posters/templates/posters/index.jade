@@ -7,6 +7,13 @@ block title
 block content
   .container-fluid
     .row
+      .alert.alert-info(role="alert")
+        strong
+          | Hint
+        br
+        | Click on posters for full resolution image.
+
+    .row
       each poster, index in posters
         .col-md-12
           a(href="#poster")
@@ -21,7 +28,8 @@ block content
           .row
             .col-md-12
                 .pull-center
-                  img.img-thumbnail(src="{% get_media_prefix %}{{ poster.image }}" style="width: 75%;")
+                  a(href="{% get_media_prefix %}{{ poster.image }}" target="_blank")
+                    img.img-thumbnail(src="{% get_media_prefix %}{{ poster.image }}" style="width: 75%;")
             .col-md-12
               .caption
                 h3
