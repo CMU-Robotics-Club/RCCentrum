@@ -31,7 +31,7 @@ block content
             .col-md-12
                 .pull-center
                   a(href="{{ poster.image.url }}" target="_blank")
-                    img.img-thumbnail(src="{% thumbnail poster.image 821x500 crop %}" style="width: 75%;")
+                    img.img-thumbnail(src="{{ poster.image.poster_index.url }}" style="width: 75%;")
             .col-md-12
               .caption
                 h3

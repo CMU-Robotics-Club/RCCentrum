@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 import os
+from easy_thumbnails.fields import ThumbnailerImageField
+from easy_thumbnails.files import get_thumbnailer
 
 class Poster(models.Model):
 
@@ -13,14 +15,14 @@ class Poster(models.Model):
     name = instance.name
     return "posters/{}{}".format(name, extension)
 
-  image = models.ImageField(upload_to=image_upload_to)
+  image = ThumbnailerImageField(upload_to=image_upload_to)
 
   class Meta:
     ordering = ['year', 'name', ]
 
   # To show image in admin interface
   def current_image(self, width=100, height=100):
-    return '<a href="{0}{1}"><img src="{0}{1}" width="{2}px" height="{2}px" class="img-responsive img-thumbnail"/></a>'.format(settings.MEDIA_URL, self.image, width, height)
+    return '<a href="{}"><img src="{}" /></a>'.format(self.image.url, self.image['poster_admin'].url)
   current_image.allow_tags = True
 
   def __str__(self):

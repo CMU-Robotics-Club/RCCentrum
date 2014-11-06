@@ -209,6 +209,21 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
 )
 
+THUMBNAIL_ALIASES = {
+    '': {
+        'poster_index': {
+            # Aspect Ratio 1.6425855
+            'size': (821, 500),
+            'crop': True
+        },
+        'poster_admin': {
+            # Aspect Ratio 1.6425855
+            'size': (328, 200),
+            'crop': True
+        }
+    },
+}
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
