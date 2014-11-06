@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import Poster
-from ordered_model.admin import OrderedModelAdmin
+from django.utils.safestring import mark_safe
 
-class PosterAdmin(OrderedModelAdmin):
+class PosterAdmin(admin.ModelAdmin):
   fields = ('name', 'year', 'current_image', 'image', )
   readonly_fields = ['current_image']
-  list_display = ('name', 'current_image', 'year', 'move_up_down_links', )
+  list_display = ('name', 'current_image', 'year', )
 
 admin.site.register(Poster, PosterAdmin)
