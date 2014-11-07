@@ -11,6 +11,7 @@ from django.template import Library
 from PIL import Image, ImageDraw, ImageFont
 from os import path
 import hashlib
+import os
 
 register = Library()
 
@@ -25,6 +26,10 @@ def txt2img(text,font_size=14,bg="#ffffff",fg="#000000",font="sans-serif.ttf"):
     {{worker.email|txt2img:18|safe}}
     '''
     font_dir = settings.MEDIA_ROOT+"/txt2img/"   # Set the directory to store the images
+
+    if not os.path.exists(font_dir):
+        os.makedirs(font_dir)
+
     img_name_temp = text+"-"+bg.strip("#")+"-"+fg.strip("#")+"-"+str(font_size) # Remove hashes
     img_name="{}.jpg".format(hashlib.md5(img_name_temp.encode('utf8')).hexdigest())
 
