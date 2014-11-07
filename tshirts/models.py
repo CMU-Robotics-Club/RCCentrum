@@ -34,7 +34,7 @@ class TShirt(models.Model):
   current_back_image.allow_tags = True
 
   class Meta:
-    ordering = ['year', 'name', ]
+    ordering = ['-year', 'name', ]
 
   def __str__(self):
     return self.name
