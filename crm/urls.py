@@ -7,7 +7,6 @@ from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 
 urlpatterns = patterns('',
-    url(r'^faq2/', include('faq.urls', namespace='faq')),
     url(r'^officers/', include('officers.urls', namespace='officers')),
     url(r'^sponsors/', include('sponsors.urls', namespace='sponsors')),
     url(r'^projects/', include('projects.urls', namespace='projects')),
@@ -17,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^api/', include('api.urls')),
 
     url(r'^calendar/', TemplateView.as_view(template_name='calendar.jade'), name='calendar'),
+    url(r'^faq/', include('faq.urls', namespace='faq')),
 
     url(r'^admin/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     

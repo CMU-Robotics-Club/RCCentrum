@@ -12,6 +12,7 @@ class QAForm(forms.ModelForm):
 
   class Meta:
     model = QA
+    exclude = ()
 
 class QAAdmin(admin.TabularInline):
   model = QA
