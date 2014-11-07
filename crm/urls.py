@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from password_reset import views as password_reset_views
 from django.http import HttpResponseRedirect
+from django.views.generic import TemplateView
 
 urlpatterns = patterns('',
     url(r'^faq2/', include('faq.urls', namespace='faq')),
@@ -14,6 +15,8 @@ urlpatterns = patterns('',
     url(r'^posters/', include('posters.urls', namespace='posters')),
     url(r'^tshirts/', include('tshirts.urls', namespace='tshirts')),  
     url(r'^api/', include('api.urls')),
+
+    url(r'^calendar/', TemplateView.as_view(template_name='calendar.jade'), name='calendar'),
 
     url(r'^admin/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     

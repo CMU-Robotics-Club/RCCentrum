@@ -33,6 +33,15 @@ div.navbar.navbar-default.navbar-fixed-top
                     {% endif %}
                     {% endif %}
                 
+                {% if '/calendar/' in request.path %}
+                li(class='active')
+                    a(href="{% url 'calendar'  %}") Calendar
+                {% else %}
+                li
+                    a(href="{% url 'calendar' %}") Calendar
+                {% endif %}
+
+
                 {% if '/sponsors/' in request.path %}
                 li(class='active')
                     a(href="{% url 'sponsors:index' %}") Sponsors
