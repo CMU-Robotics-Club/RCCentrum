@@ -4,7 +4,7 @@ from ordered_model.models import OrderedModel
 class Category(OrderedModel):
   title = models.CharField(max_length=30)
 
-  class Meta:
+  class Meta(OrderedModel.Meta):
     verbose_name_plural = 'Categories'
 
 class QA(OrderedModel):
@@ -12,5 +12,5 @@ class QA(OrderedModel):
   question = models.TextField()
   answer = models.TextField()
 
-  class Meta:
+  class Meta(OrderedModel.Meta):
     verbose_name_plural = 'QAs'
