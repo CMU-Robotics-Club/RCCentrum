@@ -6,6 +6,7 @@ from password_reset import views as password_reset_views
 from django.http import HttpResponseRedirect
 
 urlpatterns = patterns('',
+    url(r'^faq2/', include('faq.urls', namespace='faq')),
     url(r'^officers/', include('officers.urls', namespace='officers')),
     url(r'^sponsors/', include('sponsors.urls', namespace='sponsors')),
     url(r'^projects/', include('projects.urls', namespace='projects')),

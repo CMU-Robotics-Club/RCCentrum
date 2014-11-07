@@ -1,0 +1,26 @@
+extends 'base.jade'
+{% load static %}
+
+block title
+  | FAQ 
+
+block content
+  .container-fluid
+    .row
+      .text-left
+        for category in categories
+          .col-md-12
+            .anchor(id="{{ category.title|slugify }}")
+            
+            h3
+              | {{ category.title }}
+
+            hr.hr-style
+
+            for qa in category.qa_set.all
+              h4
+                | {{ qa.question|safe}}
+              p
+                | {{ qa.answer|safe}}
+            
+            hr
