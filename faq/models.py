@@ -7,10 +7,12 @@ class Category(OrderedModel):
   class Meta(OrderedModel.Meta):
     verbose_name_plural = 'Categories'
 
-class QA(OrderedModel):
+class QA(models.Model):
   category = models.ForeignKey(Category)
   question = models.TextField()
   answer = models.TextField()
+  order = models.IntegerField()
 
-  class Meta(OrderedModel.Meta):
+  class Meta:
+    ordering = ['order', ]
     verbose_name_plural = 'QAs'

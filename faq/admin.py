@@ -14,9 +14,9 @@ class QAForm(forms.ModelForm):
     model = QA
     exclude = ()
 
-class QAAdmin(admin.TabularInline):
+class QAAdmin(admin.StackedInline):
   model = QA
-  fields = ('question', 'answer', )
+  fields = ('question', 'answer', 'order', )
   list_display = ('question', 'answer', )
   extra = 1
   form  = QAForm
