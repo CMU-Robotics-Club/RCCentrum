@@ -7,6 +7,16 @@ block title
 block content
   .container-fluid
     .row
+      .text-center
+        for category in categories
+          .col-md-12
+            a(href="{{ '#' }}{{ category.title|slugify }}")
+              p
+                | {{ category.title }}
+
+        hr.hr-style
+
+    .row
       .text-left
         for category in categories
           .col-md-12
