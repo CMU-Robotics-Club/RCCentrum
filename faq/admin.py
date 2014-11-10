@@ -3,7 +3,7 @@ from .models import Category, QA
 from ordered_model.admin import OrderedModelAdmin
 from django import forms
 from tinymce.widgets import TinyMCE
-
+from django.utils.text import slugify
 
 class QAForm(forms.ModelForm):
   
@@ -22,8 +22,9 @@ class QAAdmin(admin.StackedInline):
   form  = QAForm
 
 class CategoryAdmin(OrderedModelAdmin):
-  fields = ('title', )
-  list_display = ('title', 'qas', 'move_up_down_links', )
+  fields = ('title', 'anchor', )
+  readonly_fields = ['anchor', ]
+  list_display = ('title', 'anchor', 'qas', 'move_up_down_links', )
   inlines = [QAAdmin]
 
   def qas(self, obj):
@@ -37,5 +38,8 @@ class CategoryAdmin(OrderedModelAdmin):
     return r
   qas.allow_tags = True
   qas.short_description = 'QAs'
+
+  def anchor(self, obj):
+    return slugify(obj.title)
 
 admin.site.register(Category, CategoryAdmin)
