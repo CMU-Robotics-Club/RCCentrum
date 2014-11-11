@@ -4,6 +4,7 @@ from ordered_model.admin import OrderedModelAdmin
 from django import forms
 from tinymce.widgets import TinyMCE
 from django.utils.text import slugify
+from suit.admin import SortableTabularInline
 
 class QAForm(forms.ModelForm):
   
@@ -14,8 +15,9 @@ class QAForm(forms.ModelForm):
     model = QA
     exclude = ()
 
-class QAAdmin(admin.StackedInline):
+class QAAdmin(SortableTabularInline):
   model = QA
+  sortable = 'order'
   fields = ('question', 'answer', 'order', )
   list_display = ('question', 'answer', )
   extra = 1
