@@ -225,6 +225,26 @@ THUMBNAIL_ALIASES = {
     },
 }
 
+SUIT_CONFIG = {
+    'MENU_ICONS': {
+        'sites': 'icon-leaf',
+        'auth': 'icon-user',
+        'faq': 'icon-star',
+        'links': 'icon-globe',
+        'officers': 'icon-th',
+        'ordered_flatpages': 'icon-bookmark',
+        'posters': 'icon-check',
+        'projects': 'icon-random',
+        'resources': 'icon-file',
+        'robocrm': 'icon-tasks',
+        'sites': 'icon-filter',
+        'social_media': 'icon-thumbs-up',
+        'sponsors': 'icon-gift',
+        'tshirts': 'icon-tag',
+        'webcams': 'icon-facetime-video',
+    }
+}
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
