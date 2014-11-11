@@ -1,4 +1,8 @@
-{% load admin_static %}{% load suit_tags %}{% load url from future %}<!DOCTYPE html>
+{% load admin_static %}{% load suit_tags %}{% load url from future %}
+{% load ordered_flatpages %}
+{% get_ordered_flatpages '/' as home_pages %}
+
+<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,7 +39,7 @@
           <!-- Header -->
           <div id="header" class="header">
             <div id="branding">
-              <a href="{% url 'admin:index' %}"><h1 id="site-name">CMU Robotics Club</h1></a>
+              <a href="{{ home_pages.0.get_absolute_url }}"><h1 id="site-name">CMU Robotics Club</h1></a>
             </div>
 
             {% block header_time %}
