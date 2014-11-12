@@ -18,7 +18,7 @@ class Project(models.Model):
     if len(self.private_key) == 0:
       self.private_key = ''.join(random.choice(string.hexdigits) for i in range(30))
 
-    if len(self.private_key) != 30:
+    if len(self.private_key) < 30:
       raise ValidationError("PrivateKey must be at least 30 characters")
 
     super().clean()
