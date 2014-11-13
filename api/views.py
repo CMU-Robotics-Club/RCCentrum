@@ -193,6 +193,15 @@ class ChannelViewSet(viewsets.ModelViewSet):
   serializer_class = ChannelSerializer
   filter_class = ChannelFilter
 
+  def create(self, request, *args, **kwargs):
+    response = super().create(request, *args, **kwargs)
+
+    if response.status_code != 200:
+      error = ParseError(detail="Duplicate")
+      error.errno = DUPLICATE
+      raise error
+    else:
+      return response
 
 class SponsorViewSet(viewsets.ReadOnlyModelViewSet):
   model = Sponsor
