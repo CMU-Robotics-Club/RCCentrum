@@ -5,6 +5,7 @@ from officers.models import Officer
 from webcams.models import Webcam
 from social_media.models import SocialMedia
 from sponsors.models import Sponsor
+from faq.models import Category, QA
 from rest_framework.response import Response
 from channels.models import Channel
 from rest_framework.parsers import JSONParser
@@ -287,6 +288,12 @@ class RFIDViewSet(viewsets.ViewSet):
       error.errno = RFID_NO_MEMBER
       error.status_code = 400
       raise error
+
+
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+  model = Category
+  serializer_class = CategorySerializer
+  filter_fields = ('id', 'title', )
 
 
 # TODO: move to machines app

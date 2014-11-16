@@ -16,6 +16,8 @@ router.register(r'sponsors', SponsorViewSet)
 router.register(r'social_medias', SocialMediaViewSet)
 router.register(r'machines', MachineViewSet)
 
+router.register(r'faq', CategoryViewSet)
+
 router.register(r'magnetic', MagneticViewSet, base_name="magnetic")
 router.register(r'rfid', RFIDViewSet, base_name="rfid")
 

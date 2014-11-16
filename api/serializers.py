@@ -7,6 +7,7 @@ from webcams.models import Webcam
 from sponsors.models import Sponsor
 from social_media.models import SocialMedia
 from channels.models import Channel
+from faq.models import Category, QA
 from .fields import APIImageField, ProjectActiveField
 
 class WebcamSerializer(serializers.ModelSerializer):
@@ -103,6 +104,20 @@ class SocialMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = SocialMedia
         fields = ('id', 'name', 'url', 'order', )
+
+class QASerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = QA
+        fields = ('id', 'question', 'answer', )
+
+class CategorySerializer(serializers.ModelSerializer):
+    qas = QASerializer(source='qa_set', many=True)
+
+    class Meta:
+        model = Category
+        depth = 2
+        fields = ('id', 'title', 'qas')
 
 
 # TODO: move to machines app
