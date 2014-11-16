@@ -22,7 +22,9 @@ from django.utils import timezone
 from .filters import RoboUserFilter, ChannelFilter
 from rest_framework.viewsets import GenericViewSet
 from django.core.mail import send_mail
+import logging
 
+logger = logging.getLogger(__name__)
 
 # TODO: figure out why import detail_route and list_route does not work
 def detail_route(methods=['get'], **kwargs):
@@ -194,7 +196,12 @@ class ChannelViewSet(viewsets.ModelViewSet):
   filter_class = ChannelFilter
 
   def create(self, request, *args, **kwargs):
-    response = super().create(request, *args, **kwargs)
+    try:
+      response = super().create(request, *args, **kwargs)
+    except Exception as e:
+      error = ParseError(detail="Duplicate")
+      error.errno = DUPLICATE
+      raise error
 
     if response.status_code != 200:
       error = ParseError(detail="Duplicate")
@@ -268,6 +275,8 @@ class RFIDViewSet(viewsets.ViewSet):
 
   def create(self, request):
     rfid = request.DATA
+
+    logger.debug("RFID lookup {}".format(rfid))
 
     try:
       robouser = RoboUser.objects.get(rfid=rfid)
