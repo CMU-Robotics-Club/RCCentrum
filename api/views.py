@@ -196,14 +196,9 @@ class ChannelViewSet(viewsets.ModelViewSet):
   filter_class = ChannelFilter
 
   def create(self, request, *args, **kwargs):
-    try:
-      response = super().create(request, *args, **kwargs)
-    except Exception as e:
-      error = ParseError(detail="Duplicate")
-      error.errno = DUPLICATE
-      raise error
+    response = super().create(request, *args, **kwargs)
 
-    if response.status_code != 200:
+    if response.status_code != 201:
       error = ParseError(detail="Duplicate")
       error.errno = DUPLICATE
       raise error

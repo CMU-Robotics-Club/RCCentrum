@@ -81,7 +81,7 @@ class OfficerSerializer(serializers.ModelSerializer):
 
 class ChannelSerializer(serializers.ModelSerializer):
     active = serializers.Field(source='active')
-    name = serializers.DateField(source='name')
+    name = serializers.CharField(source='name')
     created = serializers.DateField(source='created', read_only=True)
     updated = serializers.DateField(source='updated', read_only=True)
 
