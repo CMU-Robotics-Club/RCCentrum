@@ -25,6 +25,7 @@ from rest_framework.viewsets import GenericViewSet
 from tshirts.models import TShirt
 from django.core.mail import send_mail
 import logging
+from posters.models import Poster
 
 logger = logging.getLogger(__name__)
 
@@ -300,6 +301,12 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 class TShirtViewSet(viewsets.ReadOnlyModelViewSet):
   model = TShirt
   serializer_class = TShirtSerializer
+  filter_fields = ('id', 'name', 'year', )
+
+
+class PosterViewSet(viewsets.ReadOnlyModelViewSet):
+  model = Poster
+  serializer_class = PosterSerializer
   filter_fields = ('id', 'name', 'year', )
 
 

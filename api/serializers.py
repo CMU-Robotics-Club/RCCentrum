@@ -9,7 +9,9 @@ from social_media.models import SocialMedia
 from channels.models import Channel
 from faq.models import Category, QA
 from tshirts.models import TShirt
+from posters.models import Poster
 from .fields import APIImageField, ProjectActiveField
+from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 
 class WebcamSerializer(serializers.ModelSerializer):
     class Meta:
@@ -128,6 +130,20 @@ class TShirtSerializer(serializers.ModelSerializer):
     class Meta:
         model = TShirt
         fields = ('id', 'name', 'year', 'front_image', 'back_image', )
+
+
+class PosterSerializer(serializers.ModelSerializer):
+
+    image_thumb = serializers.SerializerMethodField('image_thumb_url')
+    image = APIImageField(source='image')
+
+    class Meta:
+        model = Poster
+        fields = ('id', 'name', 'year', 'image_thumb', 'image', )
+
+    def image_thumb_url(self, obj):
+        url = thumbnail_url(obj.image, 'poster_index')
+        return self.context['request'].build_absolute_uri(url)
 
 
 # TODO: move to machines app
