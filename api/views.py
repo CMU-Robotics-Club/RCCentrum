@@ -22,6 +22,7 @@ from django.conf import settings
 from django.utils import timezone
 from .filters import RoboUserFilter, ChannelFilter
 from rest_framework.viewsets import GenericViewSet
+from tshirts.models import TShirt
 from django.core.mail import send_mail
 import logging
 
@@ -294,6 +295,12 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
   model = Category
   serializer_class = CategorySerializer
   filter_fields = ('id', 'title', )
+
+
+class TShirtViewSet(viewsets.ReadOnlyModelViewSet):
+  model = TShirt
+  serializer_class = TShirtSerializer
+  filter_fields = ('id', 'name', 'year', )
 
 
 # TODO: move to machines app

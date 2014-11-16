@@ -8,6 +8,7 @@ from sponsors.models import Sponsor
 from social_media.models import SocialMedia
 from channels.models import Channel
 from faq.models import Category, QA
+from tshirts.models import TShirt
 from .fields import APIImageField, ProjectActiveField
 
 class WebcamSerializer(serializers.ModelSerializer):
@@ -118,6 +119,15 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         depth = 2
         fields = ('id', 'title', 'qas')
+
+
+class TShirtSerializer(serializers.ModelSerializer):
+    front_image = APIImageField(source='front_image')
+    back_image = APIImageField(source='back_image')
+
+    class Meta:
+        model = TShirt
+        fields = ('id', 'name', 'year', 'front_image', 'back_image', )
 
 
 # TODO: move to machines app
