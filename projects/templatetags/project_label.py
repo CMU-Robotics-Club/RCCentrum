@@ -33,7 +33,7 @@ def create_label(path, project):
     font_project_w, font_project_h = font_project.getsize(project.name)
 
     w = max((font_light_w + font_bold_w) + 250, url_x)
-    h = (font_light_h + font_project_h + url_y/2)
+    h = (font_light_h + font_project_h + url_y/2 + 50)
 
     img = Image.new('RGBA', (int(w), int(1.4*h)), "#ffffff")
     draw = ImageDraw.Draw(img)
@@ -44,7 +44,7 @@ def create_label(path, project):
 
     draw.text((w/2 - font_project_w/2,h/2 - font_project_h/2), project.name, font=font_project, fill=font_project_color)
 
-    draw.text((w/2 - url_x/2, h/2 + font_project_h/2), project.website, font=font_light, fill=font_light_color)
+    draw.text((w/2 - url_x/2, h/2 + font_project_h/2 + 50), project.website, font=font_light, fill=font_light_color)
 
     img.save(path,"JPEG",quality=100)  
 
