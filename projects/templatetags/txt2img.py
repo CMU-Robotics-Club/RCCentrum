@@ -41,7 +41,7 @@ def txt2img(text,font_size=14,bg="#ffffff",fg="#000000",font="RobotoCondensed-Li
         font = ImageFont.truetype(font_path, font_size)
 
         w, h = font.getsize(text)
-        img = Image.new('RGBA', (w, h), bg)
+        img = Image.new('RGBA', (w, int(1.4*h)), bg)
         draw = ImageDraw.Draw(img)
         draw.fontmode = "0" 
         draw.text((0,0), text, font=font, fill=fg)
