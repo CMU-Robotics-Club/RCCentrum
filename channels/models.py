@@ -20,5 +20,8 @@ class Channel(models.Model):
     time_threshold = timezone.now() - settings.CHANNEL_ACTIVE_TIME_DELTA
     return (self.updated > time_threshold)
 
+  class Meta:
+    ordering = ['id', ]
+
   def __str__(self):
     return self.name

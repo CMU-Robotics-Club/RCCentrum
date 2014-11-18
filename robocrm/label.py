@@ -5,7 +5,6 @@ from os import path
 import hashlib
 import os
 from datetime import datetime
-from django.contrib.sites.models import Site
 from django.utils import formats
 from django.utils.text import slugify
 

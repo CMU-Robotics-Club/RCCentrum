@@ -3,7 +3,6 @@ from django.forms import ModelForm, ValidationError
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.auth.models import User, Permission, Group
-from django.contrib.sites.models import Site
 from django.contrib.auth.forms import UserCreationForm
 from robocrm.models import RoboUser
 from django import forms
