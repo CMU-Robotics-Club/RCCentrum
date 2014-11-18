@@ -12,6 +12,10 @@ from django.contrib.flatpages.admin import FlatPageAdmin, FlatpageForm
 from .util import subscribe_to_list
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
+from django_object_actions import DjangoObjectActions
+from django.shortcuts import redirect
+from django.conf import settings
+from robocrm.label import load_label
 
 class RoboUserInline(admin.StackedInline):
   model = RoboUser
@@ -109,12 +113,21 @@ class UserCreationForm(ModelForm):
     )
 
 
-class RoboUserAdmin(admin.ModelAdmin):
+class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   inlines = (RoboUserInline, )
   list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser', 'roles', 'last_login', 'date_joined', 'dues_paid', 'is_magnetic_set', 'is_rfid_set', 'class_level', 'major', 'grad_year', )
   search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', ]
   exclude = ['password', 'user_permissions', 'is_staff', ]
   filter_horizontal = ('groups',)
+
+  def create_label(self, request, obj):
+    label_filename, label_path = load_label(obj)
+    label_url = "{}{}/{}".format(settings.MEDIA_URL, "user_labels", label_filename)
+    return redirect(label_url)
+  create_label.label = "Create Label"
+
+  objectactions = ('create_label', )
+
 
   def is_magnetic_set(self, obj):
     return obj.robouser.is_magnetic_set
