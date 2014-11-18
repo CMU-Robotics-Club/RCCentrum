@@ -2,15 +2,25 @@ from django.contrib import admin
 from projects.models import Project
 from robocrm.models import RoboUser
 from django.forms import ModelForm
+from django_object_actions import DjangoObjectActions
+from django.shortcuts import redirect
+from django.conf import settings
+from projects.label import load_label
 
-# TODO: new project page auto fill leader
-
-class ProjectAdmin(admin.ModelAdmin):
+class ProjectAdmin(DjangoObjectActions, admin.ModelAdmin):
 
   fields = ('name', 'current_image', 'image', 'blurb', 'description', 'website', 'leaders', 'display', 'private_key', 'last_api_activity')
   filter_horizontal = ('leaders',)
   readonly_fields = ['current_image', 'last_api_activity']
   list_display = ('name', 'current_image', 'website', 'display', 'blurb', 'last_api_activity')
+
+  def create_label(self, request, obj):
+    label_filename, label_path = load_label(obj)
+    label_url = "{}{}/{}".format(settings.MEDIA_URL, "project_labels", label_filename)
+    return redirect(label_url)
+  create_label.label = "Create Label"
+
+  objectactions = ('create_label', )
 
   # TODO: find be a better way to do this function
   def get_form(self, request, obj=None, **kwargs):

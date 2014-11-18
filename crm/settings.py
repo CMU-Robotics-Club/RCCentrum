@@ -171,6 +171,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'password_reset',
     'easy_thumbnails',
+    'django_object_actions',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
@@ -238,7 +239,7 @@ SUIT_CONFIG = {
         'projects': 'icon-random',
         'resources': 'icon-file',
         'robocrm': 'icon-tasks',
-        'sites': 'icon-filter',
+        'sites': 'icon-info-sign',
         'social_media': 'icon-thumbs-up',
         'sponsors': 'icon-gift',
         'tshirts': 'icon-tag',

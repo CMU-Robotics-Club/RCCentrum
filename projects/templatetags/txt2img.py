@@ -31,8 +31,7 @@ def txt2img(text,font_size=14,bg="#ffffff",fg="#000000",font="Roboto-Light.ttf")
     if not os.path.exists(image_dir):
         os.makedirs(image_dir)
 
-    img_name_temp = text+"-"+bg.strip("#")+"-"+fg.strip("#")+"-"+str(font_size) # Remove hashes
-    img_name="{}.jpg".format(hashlib.md5(img_name_temp.encode('utf8')).hexdigest())
+    img_name="{}.jpg".format(hashlib.md5(text.encode('utf8')).hexdigest())
 
     if path.exists(image_dir+img_name): # Make sure img doesn't exist already
         pass
@@ -43,7 +42,6 @@ def txt2img(text,font_size=14,bg="#ffffff",fg="#000000",font="Roboto-Light.ttf")
         w, h = font.getsize(text)
         img = Image.new('RGBA', (w, int(1.2*h)), bg)
         draw = ImageDraw.Draw(img)
-        draw.fontmode = "0" 
         draw.text((0,0), text, font=font, fill=fg)
         img.save(image_dir+img_name,"JPEG",quality=100)  
     
