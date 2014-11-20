@@ -63,7 +63,7 @@ class RoboUser(models.Model):
   #grad_year = models.DecimalField(max_digits=4, decimal_places=0)
   grad_year = models.IntegerField(blank=True, null=True)
 
-  major = models.CharField(max_length=20)
+  major = models.CharField(max_length=50)
   
   # Roboclub Transaction Info
   dues_paid = models.DateField(blank=True, null=True)
