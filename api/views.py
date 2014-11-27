@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from robocrm.models import RoboUser
 from projects.models import Project
 from officers.models import Officer
@@ -26,6 +27,8 @@ from tshirts.models import TShirt
 from django.core.mail import send_mail
 import logging
 from posters.models import Poster
+from .models import APIRequest
+from rest_framework_extensions.cache.decorators import cache_response
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +50,33 @@ def list_route(methods=['get'], **kwargs):
     func.kwargs = kwargs
     return func
   return decorator
+
+# TODO: clean this up by overriding method in a base class
+# and having all views in this file extend that instead
+# of the current fix of method patching
+
+# Place api_request in self
+# so View specific methods can override
+old_initial = APIView.initial
+def new_initial(self, request, *args, **kwargs):
+  endpoint = request.path.replace("/api", "")
+  user = request.user
+
+  api_request = APIRequest(
+    endpoint = endpoint,
+    requester_object = user,
+  )
+
+  self.api_request = api_request
+
+  return old_initial(self, request, *args, **kwargs)
+APIView.initial = new_initial
+
+old_finalize_response = APIView.finalize_response
+def new_finalize_response(self, request, response, *args, **kwargs):
+  self.api_request.save()
+  return old_finalize_response(self, request, response, *args, **kwargs)
+APIView.finalize_response = new_finalize_response
 
 
 class LoginViewSet(viewsets.ViewSet):
@@ -76,6 +106,13 @@ class LoginViewSet(viewsets.ViewSet):
     user = authenticate(username=username, password=password)
 
     valid = user is not None
+
+    if valid:
+      if hasattr(user, 'robouser'):
+        self.api_request.user = user.robouser
+      else:
+        self.api_request.meta = user
+
     return Response(valid)
     
 
@@ -233,6 +270,8 @@ class CalendarViewSet(viewsets.ViewSet):
   The 'current time' can be changed by setting the URL parameter 'dt' to a specified datetime.
   """
 
+  # TODO: key this to take into account dt
+  #@cache_response(30)
   def list(self, request):
     """
     List the calendar events.
@@ -244,7 +283,7 @@ class CalendarViewSet(viewsets.ViewSet):
       # If no datetime specified use now
       dt = timezone.now()
     else:
-        dt = dateutil.parser.parse(dt)
+      dt = dateutil.parser.parse(dt)
 
     events = get_calendar_events(dt)
     return Response(events)
@@ -264,6 +303,7 @@ class MagneticViewSet(viewsets.ViewSet):
 
     try:
       robouser = RoboUser.objects.get(magnetic=card_id)
+      self.api_request.user = robouser
       return Response(robouser.id)
     except RoboUser.DoesNotExist:
       error = APIException(detail="Magnetic ID has no such member")
@@ -284,6 +324,7 @@ class RFIDViewSet(viewsets.ViewSet):
 
     try:
       robouser = RoboUser.objects.get(rfid=rfid)
+      self.api_request.user = robouser
       return Response(robouser.id)
     except RoboUser.DoesNotExist:
       error = APIException(detail="RFID has no such member")
