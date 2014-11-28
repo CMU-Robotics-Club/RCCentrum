@@ -16,6 +16,8 @@ class Officer(OrderedModel):
 
   image = models.ImageField(upload_to=image_upload_to, null=True)
 
+  memo = models.TextField(null=True)
+  
   description = models.TextField(null=True)
 
   class Meta(OrderedModel.Meta):
