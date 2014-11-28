@@ -48,6 +48,8 @@ class ChannelFilter(django_filters.FilterSet):
     return qs
 
   active = django_filters.BooleanFilter(action=active_filter)
+  created = django_filters.DateTimeFilter()
+  updated = django_filters.DateTimeFilter()
     
   class Meta:
     model = Channel

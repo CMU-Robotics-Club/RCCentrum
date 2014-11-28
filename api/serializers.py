@@ -86,8 +86,13 @@ class OfficerSerializer(serializers.ModelSerializer):
 class ChannelSerializer(serializers.ModelSerializer):
     active = serializers.Field(source='active')
     name = serializers.CharField(source='name', required=False)
-    created = serializers.DateField(source='created', read_only=True)
-    updated = serializers.DateField(source='updated', read_only=True)
+    created = serializers.DateField(source='created_datetime', read_only=True)
+    updated = serializers.DateField(source='updated_datetime', read_only=True)
+
+    def save_object(self, obj, **kwargs):
+        user = self.context['request'].user
+        obj.updater_object = user
+        return super().save_object(obj, **kwargs)
 
     class Meta:
         model = Channel

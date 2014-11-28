@@ -64,7 +64,7 @@ def new_initial(self, request, *args, **kwargs):
 
   api_request = APIRequest(
     endpoint = endpoint,
-    requester_object = user,
+    updater_object = user,
   )
 
   self.api_request = api_request

@@ -1,20 +1,14 @@
 from django.contrib import admin
 from django.core import urlresolvers
 from .models import APIRequest
+from crm.admin import UpdatedByAdmin
 
-_fields = ('id', 'endpoint', 'requester_url', 'user_url', 'meta', 'created_date', 'modified_date', )
+_fields = ('id', 'endpoint', 'updater_url', 'user_url', 'meta', 'created_datetime', 'updated_datetime', )
 
-class APIRequestAdmin(admin.ModelAdmin):
+class APIRequestAdmin(UpdatedByAdmin):
   fields = _fields
   readonly_fields = _fields
   list_display = _fields
-
-  def requester_url(self, obj):
-    s = "admin:{}_{}_change".format(obj.requester_type.app_label, obj.requester_type.model)
-    url = urlresolvers.reverse(s, args=(obj.requester_id, ))
-    return '<a href="{}">{}</a>'.format(url, obj.requester_object)
-  requester_url.allow_tags = True
-  requester_url.short_description = "Requester"
 
   def user_url(self, obj):
     if obj.user:
