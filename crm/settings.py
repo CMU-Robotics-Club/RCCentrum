@@ -229,8 +229,9 @@ THUMBNAIL_ALIASES = {
 
 SUIT_CONFIG = {
     'MENU_ICONS': {
-        'sites': 'icon-leaf',
+        'api': 'icon-off',
         'auth': 'icon-user',
+        'channels': 'icon-comment',
         'faq': 'icon-star',
         'links': 'icon-globe',
         'officers': 'icon-th',
