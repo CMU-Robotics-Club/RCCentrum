@@ -1,0 +1,5 @@
+from django.contrib.redirects.middleware import RedirectFallbackMiddleware
+from django.http import HttpResponseRedirect
+
+class TemporaryRedirectFallbackMiddleware(RedirectFallbackMiddleware):
+  response_redirect_class = HttpResponseRedirect

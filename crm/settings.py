@@ -125,7 +125,10 @@ MIDDLEWARE_CLASSES = (
     #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    
+    'crm.middleware.TemporaryRedirectFallbackMiddleware',
+    
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -172,6 +175,7 @@ INSTALLED_APPS = (
     'password_reset',
     'easy_thumbnails',
     'django_object_actions',
+    'django.contrib.redirects',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
@@ -238,6 +242,7 @@ SUIT_CONFIG = {
         'ordered_flatpages': 'icon-bookmark',
         'posters': 'icon-check',
         'projects': 'icon-random',
+        'redirects': 'icon-refresh',
         'resources': 'icon-file',
         'robocrm': 'icon-tasks',
         'sites': 'icon-info-sign',
