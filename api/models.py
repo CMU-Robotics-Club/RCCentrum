@@ -6,7 +6,7 @@ from projects.models import Project
 from robocrm.models import RoboUser
 
 class APIRequest(UpdatedByModel):
-  
+
   """
   Name of the request endpoint.
   """

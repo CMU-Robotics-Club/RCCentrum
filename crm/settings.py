@@ -365,3 +365,5 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+FONT_ROOT = os.path.join(STATIC_ROOT, "fonts")
