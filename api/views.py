@@ -74,7 +74,8 @@ APIView.initial = new_initial
 
 old_finalize_response = APIView.finalize_response
 def new_finalize_response(self, request, response, *args, **kwargs):
-  self.api_request.save()
+  if self.api_request is not None:
+    self.api_request.save()
   return old_finalize_response(self, request, response, *args, **kwargs)
 APIView.finalize_response = new_finalize_response
 
