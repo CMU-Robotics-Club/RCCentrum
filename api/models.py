@@ -6,6 +6,10 @@ from projects.models import Project
 from robocrm.models import RoboUser
 
 class APIRequest(UpdatedByModel):
+  """
+  Log of API Requests for /rfid, /magnetic,
+  /users/:id/email, and /users/:id/rfid
+  """
 
   """
   Name of the request endpoint.
@@ -13,15 +17,15 @@ class APIRequest(UpdatedByModel):
   endpoint = models.CharField(max_length=30)
   
   """
-  If this is a User lookup API call this fields
-  contains who the lookup is for.
+  Which RoboUser this request is for.
+  (Can be none if invalid request)
   """
   user = models.ForeignKey(RoboUser, null=True)
   
   """
-  Extra endpoint specific information.
+  Extra endpoint and request specific information.
   """
-  meta = models.CharField(max_length=50, null=True, blank=True)
+  meta = models.TextField(null=True)
 
   def __str__(self):
     return self.endpoint

@@ -10,7 +10,7 @@ from channels.models import Channel
 from faq.models import Category, QA
 from tshirts.models import TShirt
 from posters.models import Poster
-from .fields import APIImageField, ProjectActiveField
+from .fields import ProjectActiveField
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 
 class WebcamSerializer(serializers.ModelSerializer):
@@ -20,6 +20,14 @@ class WebcamSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        for key, value in ret.items():
+            method = getattr(self, 'transform_' + key, None)
+            if method is not None:
+                ret[key] = method(value)
+        return ret
+
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'date_joined', 'last_login', 'is_active',)
@@ -27,14 +35,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RoboUserSerializer(serializers.ModelSerializer):
     
-    user = UserSerializer()
-
-    magnetic = serializers.Field(source='is_magnetic_set')
-    rfid = serializers.Field(source='is_rfid_set')
-    machines = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    magnetic = serializers.BooleanField(source='is_magnetic_set')
+    rfid = serializers.BooleanField(source='is_rfid_set')
 
     # TODO: find better way to do this
-    def to_native(self, obj):
+    def to_representation(self, obj):
         """
         Hack to embed 'user' fields into main object
         eliminating nested fields.
@@ -43,9 +48,9 @@ class RoboUserSerializer(serializers.ModelSerializer):
         if obj is None:
             return {}
 
-        ret = super(RoboUserSerializer, self).to_native(obj)
+        ret = super().to_representation(obj)
         p_serializer = UserSerializer(obj.user, context=self.context)
-        p_ret = p_serializer.to_native(obj.user)
+        p_ret = p_serializer.to_representation(obj.user)
 
         # If user ID exists, delete it from dictionary
         # because only interested in RoboUser id
@@ -62,13 +67,10 @@ class RoboUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RoboUser
-        depth = 2
-
         fields = ('id', 'magnetic', 'rfid', 'machines', )
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    image = APIImageField(source='image')
     active = ProjectActiveField(source='last_api_activity')
 
     class Meta:
@@ -77,17 +79,15 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class OfficerSerializer(serializers.ModelSerializer):
-    image = APIImageField(source='image')
-
     class Meta:
         model = Officer
         fields = ('id', 'position', 'user', 'image', 'description', 'order', )
 
+
 class ChannelSerializer(serializers.ModelSerializer):
-    active = serializers.Field(source='active')
-    name = serializers.CharField(source='name', required=False)
-    created = serializers.DateField(source='created_datetime', read_only=True)
-    updated = serializers.DateField(source='updated_datetime', read_only=True)
+    name = serializers.CharField(required=False)
+    created = serializers.DateTimeField(source='created_datetime', read_only=True)
+    updated = serializers.DateTimeField(source='updated_datetime', read_only=True)
 
     def save_object(self, obj, **kwargs):
         user = self.context['request'].user
@@ -100,7 +100,6 @@ class ChannelSerializer(serializers.ModelSerializer):
 
 
 class SponsorSerializer(serializers.ModelSerializer):
-    logo = APIImageField(source='logo')
 
     class Meta:
         model = Sponsor
@@ -129,9 +128,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class TShirtSerializer(serializers.ModelSerializer):
-    front_image = APIImageField(source='front_image')
-    back_image = APIImageField(source='back_image')
-
     class Meta:
         model = TShirt
         fields = ('id', 'name', 'year', 'front_image', 'back_image', )
@@ -140,7 +136,6 @@ class TShirtSerializer(serializers.ModelSerializer):
 class PosterSerializer(serializers.ModelSerializer):
 
     image_thumb = serializers.SerializerMethodField('image_thumb_url')
-    image = APIImageField(source='image')
 
     class Meta:
         model = Poster

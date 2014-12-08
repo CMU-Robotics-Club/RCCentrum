@@ -32,8 +32,18 @@ class Label(object):
     return (position, end_position)
 
   def add_rectangle(self, color, position, size):
-    # TODO: implement
-    pass
+    
+    x_start, y_start = position
+    width, height = dimensions
+    end_position = (x_start + width, y_start + height)
+
+    self._adjust_image_dimensions(end_position)
+
+    f = lambda draw, image: draw.rectangle([position, end_position], fill=color)
+
+    self._actions.append(f)
+    
+    return end_position
 
   def add_image(self, position, dimensions, image_path):
     end_position = (position[0] + dimensions[0], position[1] + dimensions[1])
