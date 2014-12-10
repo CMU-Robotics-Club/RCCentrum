@@ -14,7 +14,11 @@ class Channel(UpdatedByModel):
   @property
   def active(self):
     time_threshold = timezone.now() - settings.CHANNEL_ACTIVE_TIME_DELTA
-    return (self.updated_datetime > time_threshold)
+    
+    if self.updated_datetime:
+      return (self.updated_datetime > time_threshold)
+    else:
+      return False
 
   class Meta:
     ordering = ['id', ]
