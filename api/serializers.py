@@ -96,7 +96,7 @@ class ChannelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Channel
-        fields = ('id', 'name', 'value', 'created', 'updated', 'active', )
+        fields = ('id', 'name', 'value', 'created', 'updated', 'active', 'description', )
 
 
 class SponsorSerializer(serializers.ModelSerializer):

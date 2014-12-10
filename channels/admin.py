@@ -3,9 +3,9 @@ from .models import Channel
 from crm.admin import UpdatedByAdmin
 
 class ChannelAdmin(UpdatedByAdmin):
-  fields = ('id', 'name', 'value', 'created_datetime', 'updated_datetime', 'active', 'updater_url', )
+  fields = ('id', 'name', 'value', 'created_datetime', 'updated_datetime', 'active', 'updater_url', 'description', )
   readonly_fields = ['id', 'active', 'created_datetime', 'updated_datetime', 'updater_url', ]
-  list_display = ('id', 'name', 'value', 'created_datetime', 'updated_datetime', 'active', 'updater_url', )
+  list_display = ('id', 'name', 'value', 'created_datetime', 'updated_datetime', 'active', 'updater_url', 'description', )
 
   def save_model(self, request, obj, form, change):
     obj.updater_object = request.user

@@ -9,6 +9,8 @@ class Channel(UpdatedByModel):
 
   value = models.TextField(null=True, blank=True)
 
+  description = models.TextField(null=True, blank=True, help_text="Description about what this channel is used for")
+
   @property
   def active(self):
     time_threshold = timezone.now() - settings.CHANNEL_ACTIVE_TIME_DELTA
