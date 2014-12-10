@@ -49,7 +49,12 @@ def new_initial(self, request, *args, **kwargs):
     updater_object = user,
   )
 
-  api_request.meta = request.data.get('meta', "")
+  if isinstance(request.data, dict):
+    api_request.meta = request.data.get('meta', "")
+  else:
+    error = ParseError(detail="Received data not in dictionary format")
+    error.erno = NOT_DICT
+    raise error
 
   self.api_request = api_request
 
