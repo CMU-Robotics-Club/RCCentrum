@@ -12,6 +12,7 @@ from tshirts.models import TShirt
 from posters.models import Poster
 from .fields import ProjectActiveField
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
+from django.contrib.contenttypes.models import ContentType
 
 class WebcamSerializer(serializers.ModelSerializer):
     class Meta:
@@ -89,10 +90,20 @@ class ChannelSerializer(serializers.ModelSerializer):
     created = serializers.DateTimeField(source='created_datetime', read_only=True)
     updated = serializers.DateTimeField(source='updated_datetime', read_only=True)
 
-    def save_object(self, obj, **kwargs):
+    def create(self, validated_data):
         user = self.context['request'].user
-        obj.updater_object = user
-        return super().save_object(obj, **kwargs)
+
+        validated_data['updater_type_id'] = ContentType.objects.get_for_model(user).id
+        validated_data['updater_id'] = user.id
+
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        instance.updater_object = user
+        print(instance)
+        print(validated_data)
+        return super().update(instance, validated_data)
 
     class Meta:
         model = Channel
