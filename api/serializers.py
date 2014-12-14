@@ -101,8 +101,6 @@ class ChannelSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         user = self.context['request'].user
         instance.updater_object = user
-        print(instance)
-        print(validated_data)
         return super().update(instance, validated_data)
 
     class Meta:
