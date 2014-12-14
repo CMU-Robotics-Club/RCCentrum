@@ -8,7 +8,6 @@ class RoboUserFilter(django_filters.FilterSet):
 
   # Eliminates the need for user__ prefix in filter
   username = django_filters.CharFilter(name='user__username')
-  email = django_filters.CharFilter(name='user__email')
   first_name = django_filters.CharFilter(name='user__first_name')
   last_name = django_filters.CharFilter(name='user__last_name')
   is_active = django_filters.BooleanFilter(name='user__is_active')
