@@ -1,5 +1,7 @@
-roboticsclub.org
-==================
+roboticsclub.org 
+=======================
+
+[![Build Status](https://travis-ci.org/CMU-Robotics-Club/roboticsclub.org.svg?branch=master)](https://travis-ci.org/CMU-Robotics-Club/roboticsclub.org)
 
 (New) Main Club site, CRM system, and API.
 
