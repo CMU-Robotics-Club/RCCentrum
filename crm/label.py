@@ -3,17 +3,34 @@ from django.conf import settings
 from PIL import Image, ImageFont, ImageDraw
 
 class Label(object):
+  """
+  Base class that defines functions
+  used to create a roboclub image that
+  will eventually be printed on paper.
+  """
 
   def __init__(self):
+    """
+    Initialize a blank image.
+    """
+
     self._image_dimensions = [50, 50]
     self._actions = []
 
   def get_text_dimensions(self, font_name, font_size, text):
+    """
+    Returns the dimensions of the string of text.
+    """
+
     font_path = os.path.join(settings.FONT_ROOT, font_name)
     font = ImageFont.truetype(font_path, font_size)
     return font.getsize(text)
 
   def add_text(self, color, position, font_name, font_size, text, center_x=False):
+    """
+    Adds text to this image.
+    """
+
     font_path = os.path.join(settings.FONT_ROOT, font_name)
     font = ImageFont.truetype(font_path, font_size)
     font_width, font_height = font.getsize(text)
@@ -31,8 +48,11 @@ class Label(object):
 
     return (position, end_position)
 
-  def add_rectangle(self, color, position, size):
-    
+  def add_rectangle(self, color, position, dimensions):
+    """
+    Adds a rectangle to this image.
+    """
+
     x_start, y_start = position
     width, height = dimensions
     end_position = (x_start + width, y_start + height)
@@ -43,9 +63,13 @@ class Label(object):
 
     self._actions.append(f)
     
-    return end_position
+    return (position, end_position)
 
   def add_image(self, position, dimensions, image_path):
+    """
+    Adds an image to this image.
+    """
+
     end_position = (position[0] + dimensions[0], position[1] + dimensions[1])
     
     self._adjust_image_dimensions(end_position)
@@ -60,6 +84,11 @@ class Label(object):
     return (position, end_position)
 
   def create(self):
+    """
+    Creates and returns the 
+    underlying Pillow/PIL image.
+    """
+
     image_width, image_height = self._image_dimensions
     image = Image.new('RGBA', (image_width, image_height), "#ffffff")
 
@@ -70,7 +99,14 @@ class Label(object):
 
     return image
 
+
   def _adjust_image_dimensions(self, end_position):
+    """
+    Private function that expands the internal dimension pair
+    of the image to end_position if end_position is outside
+    the current dimensions.
+    """
+
     (x_end, y_end) = end_position
 
     if x_end > self._image_dimensions[0]:
