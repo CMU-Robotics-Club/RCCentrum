@@ -3,9 +3,9 @@ from projects.models import Project
 from robocrm.models import RoboUser
 from django.forms import ModelForm
 from django_object_actions import DjangoObjectActions
-from django.shortcuts import redirect
 from django.conf import settings
-from projects.label import load_label
+from django.http import HttpResponse
+from projects.label import create_project_label
 
 class ProjectAdmin(DjangoObjectActions, admin.ModelAdmin):
 
@@ -14,13 +14,14 @@ class ProjectAdmin(DjangoObjectActions, admin.ModelAdmin):
   readonly_fields = ['current_image', 'last_api_activity']
   list_display = ('name', 'current_image', 'website', 'display', 'blurb', 'last_api_activity')
 
-  def create_label(self, request, obj):
-    label_filename, label_path = load_label(obj)
-    label_url = "{}{}/{}".format(settings.MEDIA_URL, "project_labels", label_filename)
-    return redirect(label_url)
-  create_label.label = "Create Label"
+  def create_project_label(self, request, obj):
+    response = HttpResponse(content_type="image/png")
+    image = create_project_label(obj)
+    image.save(response, "PNG")
+    return response
+  create_project_label.label = "Create Project Label"
 
-  objectactions = ('create_label', )
+  objectactions = ('create_project_label', )
 
   # TODO: find be a better way to do this function
   def get_form(self, request, obj=None, **kwargs):

@@ -12,7 +12,6 @@ from .util import subscribe_to_list
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django_object_actions import DjangoObjectActions
-from django.shortcuts import redirect
 from django.conf import settings
 from django.http import HttpResponse
 from .label import create_robouser_label
