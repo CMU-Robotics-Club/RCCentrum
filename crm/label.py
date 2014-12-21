@@ -90,6 +90,11 @@ class Label(object):
     """
 
     image_width, image_height = self._image_dimensions
+    
+    # Fixes bug on Linux where font getsize
+    # underestimates
+    image_height = int(1.2*image_height)
+
     image = Image.new('RGBA', (image_width, image_height), "#ffffff")
 
     draw = ImageDraw.Draw(image)
