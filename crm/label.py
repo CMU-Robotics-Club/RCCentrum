@@ -24,7 +24,15 @@ class Label(object):
 
     font_path = os.path.join(settings.FONT_ROOT, font_name)
     font = ImageFont.truetype(font_path, font_size)
-    return font.getsize(text)
+
+    font_width, font_height = font.getsize(text)
+
+    # Fixes bug on Linux where font getsize
+    # underestimates
+    # TODO: find a better way to do this
+    font_height = int(1.2*font_height)
+
+    return (font_width, font_height)
 
   def add_text(self, color, position, font_name, font_size, text, center_x=False):
     """
@@ -34,6 +42,11 @@ class Label(object):
     font_path = os.path.join(settings.FONT_ROOT, font_name)
     font = ImageFont.truetype(font_path, font_size)
     font_width, font_height = font.getsize(text)
+
+    # Fixes bug on Linux where font getsize
+    # underestimates
+    # TODO: find a better way to do this
+    font_height = int(1.2*font_height)
 
     if center_x:
       position = (position[0] - int(font_width/2), position[1])
@@ -90,10 +103,6 @@ class Label(object):
     """
 
     image_width, image_height = self._image_dimensions
-    
-    # Fixes bug on Linux where font getsize
-    # underestimates
-    image_height = int(1.2*image_height)
 
     image = Image.new('RGBA', (image_width, image_height), "#ffffff")
 
