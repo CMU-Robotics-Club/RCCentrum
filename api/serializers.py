@@ -10,7 +10,6 @@ from channels.models import Channel
 from faq.models import Category, QA
 from tshirts.models import TShirt
 from posters.models import Poster
-from .fields import ProjectActiveField
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 from django.contrib.contenttypes.models import ContentType
 
@@ -72,11 +71,10 @@ class RoboUserSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    active = ProjectActiveField(source='last_api_activity')
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'image', 'blurb', 'description', 'website', 'display', 'leaders', 'active', 'last_api_activity', )
+        fields = ('id', 'name', 'image', 'blurb', 'description', 'website', 'display', 'leaders', 'last_api_activity', )
 
 
 class OfficerSerializer(serializers.ModelSerializer):
@@ -105,7 +103,7 @@ class ChannelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Channel
-        fields = ('id', 'name', 'value', 'created', 'updated', 'active', 'description', )
+        fields = ('id', 'name', 'value', 'created', 'updated', 'description', )
 
 
 class SponsorSerializer(serializers.ModelSerializer):

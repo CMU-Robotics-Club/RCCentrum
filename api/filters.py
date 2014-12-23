@@ -36,20 +36,13 @@ class RoboUserFilter(django_filters.FilterSet):
     fields = ('id', 'machines', )
 
 
+# TODO: now that active field is gone
+# is seperate class still required?
 class ChannelFilter(django_filters.FilterSet):
 
-  # TODO: make static method
-  def active_filter(qs, value):
-    o = qs.all()
-    for c in o:
-      if c.active != value:
-        qs = qs.exclude(id=c.id)
-    return qs
-
-  active = django_filters.BooleanFilter(action=active_filter)
   created = django_filters.DateTimeFilter()
   updated = django_filters.DateTimeFilter()
     
   class Meta:
     model = Channel
-    fields = ('id', 'name', 'created', 'updated', 'active')
+    fields = ('id', 'name', 'created', 'updated')
