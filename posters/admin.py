@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import Poster
-from django.utils.safestring import mark_safe
 
 class PosterAdmin(admin.ModelAdmin):
   fields = ('name', 'year', 'current_image', 'image', )
