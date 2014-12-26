@@ -2,6 +2,10 @@ import os
 from django.conf import settings
 from PIL import Image, ImageFont, ImageDraw
 
+# TODO: fix bug where center_x can put
+# text in location with negative x cordinates
+# causing it not to be displayed.
+
 class Label(object):
   """
   Base class that defines functions
