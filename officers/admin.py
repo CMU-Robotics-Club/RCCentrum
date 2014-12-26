@@ -15,7 +15,7 @@ class OfficerAdmin(DjangoObjectActions, OrderedModelAdmin):
     image = create_officer_label(obj)
     image.save(response, "PNG")
     return response
-  create_officer_label.label = "Create Officer Label"
+  create_officer_label.label = "<i class='icon-picture icon-alpha75'></i>Create Officer Label"
 
   objectactions = ('create_officer_label', )
 

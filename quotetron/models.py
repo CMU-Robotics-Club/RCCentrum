@@ -8,6 +8,7 @@ class VoteableModel(models.Model):
   up_votes = models.IntegerField(editable=False, default=0)
   down_votes = models.IntegerField(editable=False, default=0)
 
+  @property
   def votes(self):
     """
     Ranking by weighting up votes with down votes.
@@ -15,6 +16,7 @@ class VoteableModel(models.Model):
 
     return self.up_votes + self.down_votes
 
+  @property
   def total_votes(self):
     """
     Ranking by total times voted regardless of whether

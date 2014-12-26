@@ -125,7 +125,7 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
     image = create_robouser_label(obj)
     image.save(response, "PNG")
     return response
-  create_robouser_label.label = "Create RoboUser Label"
+  create_robouser_label.label = "<i class='icon-picture icon-alpha75'></i>Create RoboUser Label"
 
   objectactions = ('create_robouser_label', )
 

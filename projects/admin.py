@@ -19,7 +19,7 @@ class ProjectAdmin(DjangoObjectActions, admin.ModelAdmin):
     image = create_project_label(obj)
     image.save(response, "PNG")
     return response
-  create_project_label.label = "Create Project Label"
+  create_project_label.label = "<i class='icon-picture icon-alpha75'></i>Create Project Label"
 
   objectactions = ('create_project_label', )
 
