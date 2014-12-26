@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib import admin
 from django.db.models.signals import post_save
 from django.conf import settings
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
 from .fields import CharNullField
 
 class Machine(models.Model):
@@ -66,7 +68,32 @@ class RoboUser(models.Model):
   major = models.CharField(max_length=50)
   
   # Roboclub Transaction Info
-  dues_paid = models.DateField(blank=True, null=True)
+  dues_paid = models.DateField()
+  dues_paid_year = models.BooleanField(default=True, help_text="Uncheck if only Semester membership was paid")
+
+  @property
+  def membership_valid(self):
+    """
+    Returns True if membership is still valid,
+    False otherwise(should pay dues).
+    """
+
+    today = date.today()
+
+    if self.dues_paid is None:
+      return False
+
+    months = 12 if self.dues_paid_year else 6
+    dues_due = datetime.combine(self.dues_paid, datetime.min.time()) + relativedelta(months=+months)
+    dues_due = dues_due.date()
+
+    return dues_due > today
+
+  def save(self, *args, **kwargs):
+    if self.dues_paid is None:
+      self.dues_paid = date.today()
+
+    return super().save(*args, **kwargs)
 
   class Meta:
     ordering = ['user__username']

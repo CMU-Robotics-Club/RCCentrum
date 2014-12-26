@@ -21,6 +21,10 @@ class RoboUserInline(admin.StackedInline):
   can_delete = False
   filter_horizontal = ('machines', )
 
+  def membership_valid(self, obj):
+    return obj.membership_valid
+  membership_valid.boolean = True
+
   # TODO: find a way to make Django not abbreviate the result
   # of 'Machine.objects.exclude(robouser=obj)' so the string
   # does not manually need to be constructed.
@@ -42,9 +46,9 @@ class RoboUserInline(admin.StackedInline):
       user = request.user
 
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
-        return ['machines', 'machines_not_authorized', 'rfid', 'dues_paid']
+        return ['machines', 'machines_not_authorized', 'rfid', 'dues_paid', 'dues_paid_year', 'membership_valid', ]
       else:
-        return []
+        return ['membership_valid', ]
     else:
       return super().get_readonly_fields(request, obj)
 
@@ -55,7 +59,7 @@ class RoboUserInline(admin.StackedInline):
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
         return (
           (None, {'fields':
-            ('cell', 'machines', 'machines_not_authorized', 'magnetic', 'rfid', 'class_level', 'major', 'grad_year', 'dues_paid') 
+            ('cell', 'machines', 'machines_not_authorized', 'magnetic', 'rfid', 'class_level', 'major', 'grad_year', 'dues_paid', 'dues_paid_year', 'membership_valid', ) 
           }),
         )
       else:
@@ -64,7 +68,7 @@ class RoboUserInline(admin.StackedInline):
       # add user form
       return (
           (None, {'fields':
-            ('class_level', 'grad_year', 'major', 'dues_paid',
+            ('class_level', 'grad_year', 'major', 'dues_paid_year', 
             )
           }),)
 
@@ -115,7 +119,7 @@ class UserCreationForm(ModelForm):
 
 class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   inlines = (RoboUserInline, )
-  list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser', 'roles', 'last_login', 'date_joined', 'dues_paid', 'is_magnetic_set', 'is_rfid_set', 'class_level', 'major', 'grad_year', )
+  list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser', 'roles', 'last_login', 'date_joined', 'dues_paid', 'dues_paid_year', 'membership_valid', 'is_magnetic_set', 'is_rfid_set', 'class_level', 'major', 'grad_year', )
   search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', ]
   exclude = ['password', 'user_permissions', 'is_staff', ]
   filter_horizontal = ('groups',)
@@ -149,6 +153,14 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
 
   def dues_paid(self, obj):
     return obj.robouser.dues_paid
+
+  def dues_paid_year(self, obj):
+    return obj.robouser.dues_paid_year
+  dues_paid_year.boolean = True
+
+  def membership_valid(self, obj):
+    return obj.robouser.membership_valid
+  membership_valid.boolean = True
 
   def roles(self, obj):
     p = sorted([str(x) for x in obj.groups.all()])
@@ -205,6 +217,7 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
     ordering = ['username']
     order_with_respect_to = 'username'
 
+
 class EventAdmin(admin.ModelAdmin):
     list_display = ('type', 'tstart', 'tend', 'user', 'succ', 'machine', )
     readonly_fields = ('type', 'tstart', 'tend', 'user', 'succ', 'machine', )
@@ -212,9 +225,11 @@ class EventAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
       return False
 
+
 class MachineAdmin(admin.ModelAdmin):
    list_display = ('type', 'maint', )
    readonly_fields = ('id', )
+
 
 class GroupAdmin(GroupAdmin):
   list_display = ['name', 'members']
