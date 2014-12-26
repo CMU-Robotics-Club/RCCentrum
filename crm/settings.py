@@ -233,6 +233,7 @@ THUMBNAIL_ALIASES = {
 
 SUIT_CONFIG = {
     'MENU_ICONS': {
+        'announcements': 'icon-inbox',
         'api': 'icon-off',
         'auth': 'icon-user',
         'channels': 'icon-comment',
