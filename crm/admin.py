@@ -3,6 +3,10 @@ from django.core import urlresolvers
 
 class UpdatedByAdmin(admin.ModelAdmin):
 
+  def save_model(self, request, obj, form, change):
+    obj.updater_object = request.user
+    obj.save()
+
   def updater_url(self, obj):
     s = "admin:{}_{}_change".format(obj.updater_type.app_label, obj.updater_type.model)
     url = urlresolvers.reverse(s, args=(obj.updater_id, ))

@@ -163,6 +163,7 @@ INSTALLED_APPS = (
     'tshirts',
     'quotetron',
     'faq',
+    'announcements',
     'tinymce',
     'rest_framework',
     'ordered_model',

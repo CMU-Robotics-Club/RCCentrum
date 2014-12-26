@@ -8,10 +8,6 @@ class ChannelAdmin(UpdatedByAdmin):
   readonly_fields = ['id', 'created_datetime', 'updated_datetime', 'updater_url', ]
   list_display = ('id', 'name', 'value', 'created_datetime', 'updated_datetime', 'updater_url', 'description', )
 
-  def save_model(self, request, obj, form, change):
-    obj.updater_object = request.user
-    obj.save()
-
   def get_readonly_fields(self, request, obj=None):
     if obj:
       return super().get_readonly_fields(request, obj) + ['name']

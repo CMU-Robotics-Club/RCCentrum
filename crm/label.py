@@ -61,6 +61,41 @@ class Label(object):
 
     return (position, end_position)
 
+
+  def add_text_split(self, color, position, font_name, font_size, text, center_x=False, words_per_line=None):
+    """
+    Adds text to this image with max words_per_line words per line.
+    If words_per_line is None all words are on on line(same functionality as add_text).
+    """
+
+    line_starts = []
+    line_ends = []
+
+    if not text:
+        text = ""
+        # End in the same place we begin if empty string
+        line_ends.append(position)
+
+    words = text.split()
+
+    if not words_per_line:
+        split_words = words
+    else:
+        split_words = [' '.join(words[x:x+words_per_line]) for x in range(0, len(words), words_per_line)]
+
+    for s in split_words:
+        if line_starts == []:
+            start_y = position[1]
+        else:
+            start_y = line_ends[-1][1]
+
+        line_start, line_end = self.add_text(color, (position[0], start_y), font_name, font_size, s, center_x)
+
+        line_starts.append(line_start)
+        line_ends.append(line_end)
+
+    return (position, line_ends[-1])
+
   def add_rectangle(self, color, position, dimensions):
     """
     Adds a rectangle to this image.
