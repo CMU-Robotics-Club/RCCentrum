@@ -4,6 +4,7 @@ from django.conf.urls import include, patterns, url
 
 router = routers.DefaultRouter()
 
+router.register(r'api_requests', APIRequestViewSet)
 router.register(r'webcams', WebcamViewSet)
 router.register(r'datetime', DateTimeViewSet, base_name="datetime")
 router.register(r'users', RoboUserViewSet)

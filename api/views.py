@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.views import APIView
 from robocrm.models import RoboUser
 from projects.models import Project
@@ -20,7 +20,7 @@ from .google_api import get_calendar_events
 import dateutil.parser
 from django.conf import settings
 from django.utils import timezone
-from .filters import RoboUserFilter, ChannelFilter
+from .filters import APIRequestFilter, RoboUserFilter, ChannelFilter
 from rest_framework.viewsets import GenericViewSet
 from tshirts.models import TShirt
 from django.core.mail import send_mail
@@ -29,6 +29,7 @@ from posters.models import Poster
 from .models import APIRequest
 from rest_framework_extensions.cache.decorators import cache_response
 from django.utils.text import slugify
+from django.contrib.contenttypes.models import ContentType
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +61,27 @@ def new_initial(self, request, *args, **kwargs):
 
   return old_initial(self, request, *args, **kwargs)
 APIView.initial = new_initial
+
+
+# APIRequest is a ModelViewSet without create and destroy abilities
+class APIRequestViewSet(
+                      #mixins.CreateModelMixin,
+                      mixins.RetrieveModelMixin,
+                      mixins.UpdateModelMixin,
+                      #mixins.DestroyModelMixin,
+                      mixins.ListModelMixin,
+                      GenericViewSet):
+  """
+  A APIRequest is generated whenever a 
+  """
+
+  # Only display API Requests by Projects since ones by Users
+  # are just for testing and by only listing Project API Requests
+  # do not need to expose ContentType endpoint, extra ContentType 
+  # field, etc.
+  queryset = APIRequest.objects.filter(updater_type=ContentType.objects.get_for_model(Project))
+  serializer_class = APIRequestSerializer
+  filter_class = APIRequestFilter
 
 
 class WebcamViewSet(viewsets.ReadOnlyModelViewSet):

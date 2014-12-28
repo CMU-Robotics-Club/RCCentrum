@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from .models import APIRequest
 from robocrm.models import RoboUser
 from projects.models import Project
 from officers.models import Officer
@@ -12,6 +13,16 @@ from tshirts.models import TShirt
 from posters.models import Poster
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 from django.contrib.contenttypes.models import ContentType
+
+
+class APIRequestSerializer(serializers.ModelSerializer):
+
+    project = serializers.IntegerField(source='updater_id', read_only=True)
+
+    class Meta:
+        model = APIRequest
+        fields = ('id', 'endpoint', 'user', 'meta', 'project', 'created_datetime', 'updated_datetime', )
+
 
 class WebcamSerializer(serializers.ModelSerializer):
     class Meta:

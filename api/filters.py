@@ -1,7 +1,17 @@
 import django_filters
+from .models import APIRequest
 from robocrm.models import RoboUser
 from channels.models import Channel
 from rest_framework import generics
+
+class APIRequestFilter(django_filters.FilterSet):
+
+  project = django_filters.NumberFilter(name='updater_id')
+    
+  class Meta:
+    model = APIRequest
+    fields = ('id', 'endpoint', 'user', 'meta', 'project', 'created_datetime', 'updated_datetime',)
+
 
 # TODO: clean this class up
 class RoboUserFilter(django_filters.FilterSet):
