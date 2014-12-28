@@ -10,7 +10,7 @@ class APIRequestFilter(django_filters.FilterSet):
     
   class Meta:
     model = APIRequest
-    fields = ('id', 'endpoint', 'user', 'meta', 'project', 'created_datetime', 'updated_datetime',)
+    fields = ('id', 'endpoint', 'user', 'project', 'created_datetime', 'updated_datetime', 'success', 'meta', )
 
 
 # TODO: clean this class up

@@ -3,12 +3,19 @@ from django.core import urlresolvers
 from .models import APIRequest
 from crm.admin import UpdatedByAdmin
 
-_fields = ('id', 'endpoint', 'updater_url', 'user_url', 'meta', 'created_datetime', 'updated_datetime', )
+_fields = ('id', 'endpoint', 'project', 'user_url', 'created_datetime', 'updated_datetime', 'success', 'meta', )
 
 class APIRequestAdmin(UpdatedByAdmin):
   fields = _fields
   readonly_fields = _fields
   list_display = _fields
+
+  # Only Projects should/can access API endpoints 
+  # that are logged and thus give this field a less
+  # confusing name of "Project"
+  def project(self, obj):
+    return self.updater_url(obj)
+  project.allow_tags = True
 
   def user_url(self, obj):
     if obj.user:
@@ -17,7 +24,7 @@ class APIRequestAdmin(UpdatedByAdmin):
     else:
       return ''
   user_url.allow_tags = True
-  user_url.short_description = "User Lookup"
+  user_url.short_description = "User"
 
   # No one should be able to add, change, or remove API log information
   def has_add_permission(self, request):

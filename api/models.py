@@ -23,6 +23,18 @@ class APIRequest(UpdatedByModel):
   user = models.ForeignKey(RoboUser, null=True, editable=False)
   
   """
+  Project editable field.
+  Should be set to False if a User lookup was successful
+  but the User did not have permissions to perform the intended 
+  action.
+  (ex. User successfull yauthenticated for Tooltron 
+  by RFID lookup but not authorized to use specific tool
+  outside scope of original RFID lookup request).
+  """
+  success = models.BooleanField(default=True)
+
+  """
+  Project editable field.
   Extra endpoint and request specific information.
   """
   meta = models.TextField(null=True)

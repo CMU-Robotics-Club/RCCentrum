@@ -72,7 +72,9 @@ class APIRequestViewSet(
                       mixins.ListModelMixin,
                       GenericViewSet):
   """
-  A APIRequest is generated whenever a 
+  A APIRequest is created whenever a sucessfully authenticated request
+  is made to '/rfid/', '/magnetic/', '/users/<id>/rfid/', '/users/<id>/email/',
+  or '/users/<id>/balance/'.
   """
 
   # Only display API Requests by Projects since ones by Users

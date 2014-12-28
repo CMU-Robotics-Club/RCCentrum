@@ -21,7 +21,7 @@ class APIRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = APIRequest
-        fields = ('id', 'endpoint', 'user', 'meta', 'project', 'created_datetime', 'updated_datetime', )
+        fields = ('id', 'endpoint', 'user', 'project', 'created_datetime', 'updated_datetime', 'success', 'meta', )
 
 
 class WebcamSerializer(serializers.ModelSerializer):
