@@ -14,13 +14,13 @@ class APIRequest(UpdatedByModel):
   """
   Name of the request endpoint.
   """
-  endpoint = models.CharField(max_length=30)
+  endpoint = models.CharField(max_length=30, editable=False)
   
   """
   Which RoboUser this request is for.
   (Can be none if invalid request)
   """
-  user = models.ForeignKey(RoboUser, null=True)
+  user = models.ForeignKey(RoboUser, null=True, editable=False)
   
   """
   Extra endpoint and request specific information.
