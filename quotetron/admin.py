@@ -41,7 +41,7 @@ class VoteableModelAdmin(admin.ModelAdmin):
     obj = get_object_or_404(self.model, pk=unquote(obj_id))
     obj.upvote()
 
-    return HttpResponseRedirect('../../')
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
   def downvote_view(self, request, obj_id):
     """
@@ -51,7 +51,7 @@ class VoteableModelAdmin(admin.ModelAdmin):
     obj = get_object_or_404(self.model, pk=unquote(obj_id))
     obj.downvote()
 
-    return HttpResponseRedirect('../../')
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
   def get_urls(self):
     """
@@ -79,8 +79,9 @@ class VoteableModelAdmin(admin.ModelAdmin):
 
 class QuoteAdmin(VoteableModelAdmin):
 
-  fields = ('quote', )
-  list_display = ('id', 'quote', 'upvote', 'up_votes', 'downvote', 'down_votes', 'votes', 'total_votes', )
+  fields = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'votes', 'total_votes', )
+  readonly_fields = ('id', 'up_votes', 'down_votes', 'upvote', 'downvote', 'votes', 'total_votes', )
+  list_display = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'votes', 'total_votes', )
 
   # Hides admin interface from Admin sidebar
   # Users can still visit the Admin Model URL
