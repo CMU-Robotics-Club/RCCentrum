@@ -30,6 +30,7 @@ from .models import APIRequest
 from rest_framework_extensions.cache.decorators import cache_response
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
+from .permissions import IsAPIRequesterOrReadOnly
 
 logger = logging.getLogger(__name__)
 
@@ -73,9 +74,11 @@ class APIRequestViewSet(
                       GenericViewSet):
   """
   A APIRequest is created whenever a sucessfully authenticated request
-  is made to '/rfid/', '/magnetic/', '/users/<id>/rfid/', '/users/<id>/email/',
-  or '/users/<id>/balance/'.
+  is made to '/rfid/', '/magnetic/', '/users/id/rfid/', '/users/id/email/',
+  or '/users/id/balance/'.
   """
+
+  permission_classes = (IsAPIRequesterOrReadOnly, )
 
   # Only display API Requests by Projects since ones by Users
   # are just for testing and by only listing Project API Requests
