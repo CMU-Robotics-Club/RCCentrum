@@ -1,7 +1,10 @@
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth import authenticate, login
-from robocrm.models import *
+from api.models import APIRequest
+from django.views.decorators.http import require_POST
+from projects.models import Project
+from .models import *
 
 def roboauth(request, rfid_tag, mach_num):
   r = RoboUser.objects.filter(rfid=rfid_tag)
@@ -26,9 +29,8 @@ def roboauthall(request, rfid_tag):
     auth |= 1 << int(mach.id)
   return HttpResponse(str(auth))
 
+@require_POST
 def add_card_event(request):
-  if request.method != 'POST':
-    raise Http404
   if 'username' in request.POST and 'password' in request.POST:
     user = authenticate(username=request.POST['username'],
         password=request.POST['password'])
@@ -39,7 +41,7 @@ def add_card_event(request):
       or not request.user.has_perm('robocrm.add_event'):
     raise PermissionDenied
 
-  tstart = request.POST['tstart'] # TODO convert to date
+  tstart = request.POST['tstart'] # TODO: convert to date
   tend = request.POST['tend']
   user_id = request.POST['user_id']
   succ = request.POST['succ'] == '1'
@@ -60,5 +62,25 @@ def add_card_event(request):
       machine=machine)
 
   ev.save()
+
+  # TODO: add APIRequest event
+  api_request = APIRequest(
+    endpoint="/rfid/",
+    updater_object=Project.objects.get(name="Tooltron"),
+    user=robouser,
+    success=succ,
+    meta=machine.type
+  )
+
+  api_request.save()
+
+  # Cannot update updated_datetime with tend
+  # because would be overwritten on save however
+  # does not matter because Tooltron pushes
+  # card events every 70ms which a lower resolution
+  # that what tend even provides so update_datetime
+  # being the value when this save() is called is okay 
+  api_request.created_datetime = tstart
+  api_request.save()
 
   return HttpResponse()
