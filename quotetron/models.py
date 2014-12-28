@@ -9,7 +9,7 @@ class VoteableModel(models.Model):
   down_votes = models.IntegerField(editable=False, default=0)
 
   @property
-  def votes(self):
+  def net_votes(self):
     """
     Ranking by weighting up votes with down votes.
     """

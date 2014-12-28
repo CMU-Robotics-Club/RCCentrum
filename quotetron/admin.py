@@ -79,9 +79,9 @@ class VoteableModelAdmin(admin.ModelAdmin):
 
 class QuoteAdmin(VoteableModelAdmin):
 
-  fields = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'votes', 'total_votes', )
-  readonly_fields = ('id', 'up_votes', 'down_votes', 'upvote', 'downvote', 'votes', 'total_votes', )
-  list_display = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'votes', 'total_votes', )
+  fields = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', )
+  readonly_fields = ('id', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', )
+  list_display = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', )
 
   # Hides admin interface from Admin sidebar
   # Users can still visit the Admin Model URL
