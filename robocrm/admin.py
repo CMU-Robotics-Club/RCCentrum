@@ -219,8 +219,8 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
 
 
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('type', 'tstart', 'tend', 'user', 'succ', 'machine', )
-    readonly_fields = ('type', 'tstart', 'tend', 'user', 'succ', 'machine', )
+    list_display = ('id', 'type', 'tstart', 'tend', 'user', 'succ', 'machine', )
+    readonly_fields = ('id', 'type', 'tstart', 'tend', 'user', 'succ', 'machine', )
 
     def has_add_permission(self, request):
       return False
