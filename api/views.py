@@ -31,6 +31,7 @@ from rest_framework_extensions.cache.decorators import cache_response
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from .permissions import IsAPIRequesterOrReadOnly
+from django.db import IntegrityError
 
 logger = logging.getLogger(__name__)
 
@@ -133,7 +134,7 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
     else:
       u = RoboUser.objects.filter(pk=pk)[0]
 
-      rfid = request.DATA
+      rfid = request.data.get('rfid', "")
 
       if not rfid:
         error = ParseError(detail="Empty RFID #")
@@ -141,7 +142,13 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
         raise error
       else:
         u.rfid = rfid
-        u.save()
+
+        try:
+          u.save()
+        except IntegrityError:
+          error = ParseError(detail="RFID already belongs to another member.")
+          error.errno = DUPLICATE
+          raise error
 
         self.api_request.user = u
         self.api_request.save()
