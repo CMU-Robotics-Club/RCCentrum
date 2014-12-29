@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Quote
+from crm.admin import UpdatedByAdmin
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.conf.urls import patterns, url
@@ -8,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from functools import update_wrapper
 
-class VoteableModelAdmin(admin.ModelAdmin):
+class VoteableModelAdmin(UpdatedByAdmin):
   """
   Admin support for voteable models.
   """
@@ -79,9 +80,9 @@ class VoteableModelAdmin(admin.ModelAdmin):
 
 class QuoteAdmin(VoteableModelAdmin):
 
-  fields = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', )
-  readonly_fields = ('id', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', )
-  list_display = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', )
+  fields = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', 'updated_datetime', 'updater_url', )
+  readonly_fields = ('id', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', 'updated_datetime', 'updater_url',)
+  list_display = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', 'updated_datetime', 'updater_url', )
 
   # Hides admin interface from Admin sidebar
   # Users can still visit the Admin Model URL

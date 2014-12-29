@@ -1,6 +1,7 @@
 from django.db import models
+from crm.models import UpdatedByModel
 
-class VoteableModel(models.Model):
+class VoteableModel(UpdatedByModel):
   """
   Model that can be voted on by upvoting and downvoting.
   """
