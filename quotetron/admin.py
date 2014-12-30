@@ -19,7 +19,13 @@ class VoteableModelAdmin(UpdatedByAdmin):
     Provide a button to upvote instance.
     """
 
-    url = reverse("admin:{}_{}_upvote".format(self.model._meta.app_label, self.model._meta.model_name), args=(obj.id, ))
+    # If no ID is present Quote has not yet been saved to database
+    # so have upvote do nothing instead of cause a Interval Server Error (500).
+    if obj.id:
+      url = reverse("admin:{}_{}_upvote".format(self.model._meta.app_label, self.model._meta.model_name), args=(obj.id, ))
+    else:
+      url = '#'
+
     return mark_safe('<a href="{}"><div class="arrow-up"></div></a>'.format(url))
   upvote.short_description = 'Upvote'
   upvote.allow_tags = True
@@ -29,7 +35,13 @@ class VoteableModelAdmin(UpdatedByAdmin):
     Provide a button to downvote instance.
     """
     
-    url = reverse("admin:{}_{}_downvote".format(self.model._meta.app_label, self.model._meta.model_name), args=(obj.id, ))
+    # If no ID is present Quote has not yet been saved to database
+    # so have downvote do nothing instead of cause a Interval Server Error (500).
+    if obj.id:
+      url = reverse("admin:{}_{}_downvote".format(self.model._meta.app_label, self.model._meta.model_name), args=(obj.id, ))
+    else:
+      url = '#'
+
     return mark_safe('<a href="{}"><div class="arrow-down"></div></a>'.format(url))
   downvote.short_description = 'Downvote'
   downvote.allow_tags = True
@@ -80,14 +92,31 @@ class VoteableModelAdmin(UpdatedByAdmin):
 
 class QuoteAdmin(VoteableModelAdmin):
 
-  fields = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', 'updated_datetime', 'updater_url', )
-  readonly_fields = ('id', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', 'updated_datetime', 'updater_url',)
-  list_display = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', 'updated_datetime', 'updater_url', )
+  fields = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
+  readonly_fields = ('id', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
+  list_display = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
+
+  def get_readonly_fields(self, request, obj=None):
+    e = ()
+
+    if obj:
+      e += ('quote', )
+    
+    return super().get_readonly_fields(request, obj) + e
 
   # Hides admin interface from Admin sidebar
   # Users can still visit the Admin Model URL
   # directly
   def get_model_perms(self, request):
     return {}
+
+
+  def has_delete_permission(self, request, obj=None):
+    return False
+
+  def get_actions(self, request):
+    actions = super().get_actions(request)
+    del actions['delete_selected']
+    return actions
 
 admin.site.register(Quote, QuoteAdmin)
