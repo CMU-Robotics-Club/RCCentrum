@@ -4,7 +4,7 @@ from easy_thumbnails.fields import ThumbnailerImageField
 
 class Photo(OrderedModel):
 
-  title = models.CharField(max_length=30, null=True, blank=True)
+  title = models.CharField(max_length=60, null=True, blank=True)
 
   description = models.TextField(null=True, blank=True)
 
