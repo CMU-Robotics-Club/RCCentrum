@@ -239,6 +239,7 @@ SUIT_CONFIG = {
         'auth': 'icon-user',
         'channels': 'icon-comment',
         'faq': 'icon-star',
+        'gallery': 'icon-picture',
         'links': 'icon-globe',
         'officers': 'icon-th',
         'ordered_flatpages': 'icon-bookmark',
