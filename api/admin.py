@@ -6,6 +6,9 @@ from crm.admin import UpdatedByAdmin
 _fields = ('id', 'endpoint', 'project', 'user_url', 'created_datetime', 'updated_datetime', 'success', 'meta', )
 
 class APIRequestAdmin(UpdatedByAdmin):
+
+  change_form_template = "admin/change_form_no_change_save.html"
+
   fields = _fields
   readonly_fields = _fields
   list_display = _fields
@@ -37,11 +40,5 @@ class APIRequestAdmin(UpdatedByAdmin):
     actions = super().get_actions(request)
     del actions['delete_selected']
     return actions
-
-  class Media:
-    # Hacky way to hide the "Save"
-    # and "Save and Add Another" buttons
-    # but is the only solution that appears to work.
-    js = ('/static/hide_save.js',)
 
 admin.site.register(APIRequest, APIRequestAdmin)

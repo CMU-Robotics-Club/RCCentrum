@@ -92,6 +92,8 @@ class VoteableModelAdmin(UpdatedByAdmin):
 
 class QuoteAdmin(VoteableModelAdmin):
 
+  change_form_template = "admin/change_form_no_change_save.html"
+
   fields = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
   readonly_fields = ('id', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
   list_display = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
@@ -109,7 +111,6 @@ class QuoteAdmin(VoteableModelAdmin):
   # directly
   def get_model_perms(self, request):
     return {}
-
 
   def has_delete_permission(self, request, obj=None):
     return False
