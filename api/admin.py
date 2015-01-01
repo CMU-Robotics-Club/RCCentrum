@@ -3,7 +3,7 @@ from django.core import urlresolvers
 from .models import APIRequest
 from crm.admin import UpdatedByAdmin
 
-_fields = ('id', 'endpoint', 'project', 'user_url', 'created_datetime', 'updated_datetime', 'success', 'meta', )
+_fields = ('id', 'endpoint', 'extra', 'project', 'user_url', 'created_datetime', 'updated_datetime', 'success', 'meta', )
 
 class APIRequestAdmin(UpdatedByAdmin):
 

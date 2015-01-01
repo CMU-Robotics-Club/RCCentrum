@@ -63,7 +63,6 @@ def add_card_event(request):
 
   ev.save()
 
-  # TODO: add APIRequest event
   api_request = APIRequest(
     endpoint="/rfid/",
     updater_object=Project.objects.get(name="Tooltron"),

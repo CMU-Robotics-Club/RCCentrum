@@ -17,6 +17,12 @@ class APIRequest(UpdatedByModel):
   endpoint = models.CharField(max_length=30, editable=False)
   
   """
+  Extra information provided by endpoint view.
+  Not project editable.
+  """
+  extra = models.TextField(null=True, editable=False)
+
+  """
   Which RoboUser this request is for.
   (Can be none if invalid request)
   """

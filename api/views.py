@@ -187,6 +187,7 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
 
         send_mail(subject, body, from_address, [user.user.email])
 
+        self.api_request.extra = "Subject: {}, Body: {}".format(subject, body)
         self.api_request.user = user
         self.api_request.save()
 
