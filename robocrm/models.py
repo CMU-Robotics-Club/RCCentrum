@@ -24,7 +24,7 @@ class RoboUser(models.Model):
   user = models.OneToOneField(User)
 
   # Roboclub Magnetic Card Number
-  magnetic = CharNullField(max_length=9, null=True, blank=True, unique=True, help_text="9 Character Magnetic Card ID(found on Student ID)")
+  magnetic = CharNullField(max_length=9, null=True, blank=True, unique=True, help_text="9 Character Magnetic Card ID(found on Student ID)(Only you can see this ID)")
 
   # Roboclub RFID Card Number
   rfid = CharNullField(max_length=10, null=True, blank=True, unique=True)
@@ -69,7 +69,7 @@ class RoboUser(models.Model):
   
   # Roboclub Transaction Info
   dues_paid = models.DateField()
-  dues_paid_year = models.BooleanField(default=True, help_text="Uncheck if only Semester membership was paid")
+  dues_paid_year = models.BooleanField(default=True, help_text="Unchecked if only Semester membership was paid")
 
   @property
   def membership_valid(self):

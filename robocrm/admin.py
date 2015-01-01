@@ -20,6 +20,23 @@ class RoboUserInline(admin.StackedInline):
   model = RoboUser
   can_delete = False
   filter_horizontal = ('machines', )
+  readonly_fields = ('is_magnetic_set', 'is_rfid_set', 'membership_valid', 'machines_not_authorized', )
+
+  def get_fields(self, request, obj=None):
+    if obj:
+      fields = super().get_fields(request, obj)
+
+      # TODO: find better way to work around lazy behavior of user object
+      # Unwrap SimpleLazyObject so type is 'User' or 'Project'
+      user = request.user._wrapped if hasattr(request.user,'_wrapped') else request.user
+
+      if user != obj:
+        fields.remove("magnetic")
+
+      return fields
+    else:
+      # New User
+      return ('class_level', 'grad_year', 'major', 'dues_paid_year', )
 
   def membership_valid(self, obj):
     return obj.membership_valid
@@ -46,31 +63,11 @@ class RoboUserInline(admin.StackedInline):
       user = request.user
 
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
-        return ['machines', 'machines_not_authorized', 'rfid', 'dues_paid', 'dues_paid_year', 'membership_valid', ]
+        return super().get_readonly_fields(request, obj) + ('machines', 'dues_paid', 'dues_paid_year', )
       else:
-        return ['membership_valid', ]
+        return super().get_readonly_fields(request, obj)
     else:
       return super().get_readonly_fields(request, obj)
-
-  def get_fieldsets(self, request, obj=None):
-    if obj:
-      user = request.user
-
-      if not user.is_superuser and not user.groups.filter(name='officers').exists():
-        return (
-          (None, {'fields':
-            ('cell', 'machines', 'machines_not_authorized', 'magnetic', 'rfid', 'class_level', 'major', 'grad_year', 'dues_paid', 'dues_paid_year', 'membership_valid', ) 
-          }),
-        )
-      else:
-        return super().get_fieldsets(request, obj)
-    else:
-      # add user form
-      return (
-          (None, {'fields':
-            ('class_level', 'grad_year', 'major', 'dues_paid_year', 
-            )
-          }),)
 
 
 class UserCreationForm(ModelForm):
@@ -212,6 +209,14 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
       qs = qs.filter(id=user.id)
 
     return qs
+
+  def get_actions(self, request):
+    actions = super().get_actions(request)
+    del actions['delete_selected']
+    return actions
+
+  def has_delete_permission(self, request, obj=None):
+    return False
 
   class Meta:
     ordering = ['username']
