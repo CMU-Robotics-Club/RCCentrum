@@ -52,6 +52,8 @@ def new_initial(self, request, *args, **kwargs):
     updater_object = user,
   )
 
+  api_request.api_client = request.META.get('HTTP_API_CLIENT', "")
+
   if isinstance(request.data, dict):
     api_request.meta = request.data.get('meta', "")
   else:

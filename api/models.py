@@ -12,17 +12,19 @@ class APIRequest(UpdatedByModel):
   """
 
   """
+  Not project editable.
   Name of the request endpoint.
   """
   endpoint = models.CharField(max_length=30, editable=False)
   
   """
-  Extra information provided by endpoint view.
   Not project editable.
+  Extra information provided by endpoint view.
   """
   extra = models.TextField(null=True, editable=False)
 
   """
+  Not project editable.
   Which RoboUser this request is for.
   (Can be none if invalid request)
   """
@@ -44,6 +46,13 @@ class APIRequest(UpdatedByModel):
   Extra endpoint and request specific information.
   """
   meta = models.TextField(null=True)
+
+
+  """
+  Not Project editable.
+  The value of the HTTP Header 'API_CLIENT' if present.
+  """
+  api_client = models.CharField(max_length=50, null=True, editable=False)
 
   def __str__(self):
     return self.endpoint
