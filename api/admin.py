@@ -22,8 +22,8 @@ class APIRequestAdmin(UpdatedByAdmin):
 
   def user_url(self, obj):
     if obj.user:
-      url = urlresolvers.reverse("admin:auth_user_change", args=(obj.user.id, ))
-      return '<a href="{}">{}</a>'.format(url, obj.user)
+      url = urlresolvers.reverse("admin:auth_user_change", args=(obj.user.user.id, ))
+      return '<a href="{}">{}</a>'.format(url, obj.user.user)
     else:
       return ''
   user_url.allow_tags = True
