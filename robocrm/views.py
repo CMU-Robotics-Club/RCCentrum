@@ -37,10 +37,6 @@ def add_card_event(request):
     if user is not None and user.is_active:
       login(request, user)
 
-  if not request.user.is_authenticated() \
-      or not request.user.has_perm('robocrm.add_event'):
-    raise PermissionDenied
-
   tstart = request.POST['tstart'] # TODO: convert to date
   tend = request.POST['tend']
   user_id = request.POST['user_id']
