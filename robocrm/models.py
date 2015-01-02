@@ -100,17 +100,3 @@ class RoboUser(models.Model):
 
   def __str__(self):
     return self.user.username
-
-
-# TODO: move to Tooltron
-class Event(models.Model):
-  type = models.CharField(max_length=30)
-  tstart = models.DateTimeField()
-  tend = models.DateTimeField()
-  user = models.ForeignKey('RoboUser', null=True)
-  succ = models.BooleanField(default=False)
-  machine = models.ForeignKey('Machine')
-  
-  def __str__(self):
-    return "{} {} {}".format(self.type, 
-      self.user.user.username if self.user else 'unknown', self.succ)

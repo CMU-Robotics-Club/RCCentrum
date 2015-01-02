@@ -1,4 +1,4 @@
-from robocrm.models import Machine, Event
+from robocrm.models import Machine
 from django.forms import ModelForm, ValidationError
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
@@ -17,6 +17,7 @@ from django.http import HttpResponse
 from .label import create_robouser_label
 
 class RoboUserInline(admin.StackedInline):
+
   model = RoboUser
   can_delete = False
   filter_horizontal = ('machines', )
@@ -223,17 +224,9 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
     order_with_respect_to = 'username'
 
 
-class EventAdmin(admin.ModelAdmin):
-    list_display = ('id', 'type', 'tstart', 'tend', 'user', 'succ', 'machine', )
-    readonly_fields = ('id', 'type', 'tstart', 'tend', 'user', 'succ', 'machine', )
-
-    def has_add_permission(self, request):
-      return False
-
-
 class MachineAdmin(admin.ModelAdmin):
    list_display = ('type', 'maint', )
-   readonly_fields = ('id', )
+   readonly_fields = ('id', 'maint', )
 
 
 class GroupAdmin(GroupAdmin):
@@ -247,7 +240,6 @@ class GroupAdmin(GroupAdmin):
 admin.site.unregister(User)
 admin.site.register(User, RoboUserAdmin)
 admin.site.register(Machine, MachineAdmin)
-admin.site.register(Event, EventAdmin)
 
 admin.site.unregister(Group)
 admin.site.register(Group, GroupAdmin)

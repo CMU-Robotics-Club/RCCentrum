@@ -54,15 +54,6 @@ def add_card_event(request):
 
   machine = Machine.objects.get(id__exact=machine_id)
 
-  ev = Event(type='card',
-      tstart=tstart,
-      tend=tend,
-      user=robouser,
-      succ=succ,
-      machine=machine)
-
-  ev.save()
-
   api_request = APIRequest(
     endpoint="/rfid/",
     updater_object=Project.objects.get(name="Tooltron"),
