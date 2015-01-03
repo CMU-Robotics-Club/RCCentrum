@@ -6,6 +6,7 @@ from django.conf import settings
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from .fields import CharNullField
+from api.models import APIRequest
 
 class Machine(models.Model):
   type = models.CharField(max_length=20)
@@ -28,9 +29,6 @@ class RoboUser(models.Model):
 
   # Roboclub RFID Card Number
   rfid = CharNullField(max_length=10, null=True, blank=True, unique=True)
-
-  def magnetic_set(self):
-    return bool(self.magnetic)
 
   @property
   def is_magnetic_set(self):
@@ -88,6 +86,15 @@ class RoboUser(models.Model):
     dues_due = dues_due.date()
 
     return dues_due > today
+
+  @property
+  def club_activity(self):
+    """
+    Return up to the 15 most recent
+    APIRequests for this user.
+    """
+
+    return APIRequest.objects.filter(user=self).order_by('-created_datetime')[:15]
 
   def save(self, *args, **kwargs):
     if self.dues_paid is None:

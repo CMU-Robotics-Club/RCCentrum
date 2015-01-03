@@ -1,9 +1,5 @@
 from django.db import models
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from crm.models import UpdatedByModel
-from projects.models import Project
-from robocrm.models import RoboUser
 
 class APIRequest(UpdatedByModel):
   """
@@ -28,7 +24,7 @@ class APIRequest(UpdatedByModel):
   Which RoboUser this request is for.
   (Can be none if invalid request)
   """
-  user = models.ForeignKey(RoboUser, null=True, editable=False)
+  user = models.ForeignKey('robocrm.RoboUser', null=True, editable=False)
   
   """
   Project editable field.

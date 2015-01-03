@@ -21,7 +21,7 @@ class RoboUserInline(admin.StackedInline):
   model = RoboUser
   can_delete = False
   filter_horizontal = ('machines', )
-  readonly_fields = ('is_magnetic_set', 'is_rfid_set', 'membership_valid', 'machines_not_authorized', )
+  readonly_fields = ('is_magnetic_set', 'is_rfid_set', 'membership_valid', 'machines_not_authorized', 'club_activity', )
 
   def get_fields(self, request, obj=None):
     if obj:
@@ -58,6 +58,34 @@ class RoboUserInline(admin.StackedInline):
       field += str(machine)
 
     return field
+
+  def club_activity(self, obj):
+    activities = obj.club_activity
+    field = ""
+
+    for i, activity in enumerate(activities):
+      if i != 0:
+        field += '<br />'
+
+      endpoint = activity.endpoint.rsplit("/")
+      endpoint[:] = (x for x in endpoint if x != "")
+      endpoint = endpoint[-1]
+      created_datetime = activity.created_datetime.strftime("%A %B %d %Y, %I:%M:%S %p")
+      s = "{}: {} {}".format(created_datetime, activity.updater_object, endpoint)
+
+      if activity.extra:
+        s += "({})".format(activity.extra)
+
+      if activity.meta:
+        s += " {}".format(activity.meta)
+
+      s += " Granted" if activity.success else " Denied" 
+
+      field += s
+
+    return field
+  club_activity.mark_safe=True
+  club_activity.short_description="Club Activity(most recent 15 events)"
 
   def get_readonly_fields(self, request, obj=None):
     if obj:

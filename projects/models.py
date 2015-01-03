@@ -5,7 +5,6 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 import random
 import string
-from robocrm.models import RoboUser
 
 class Project(models.Model):
   name = models.CharField(max_length=30, unique=True)

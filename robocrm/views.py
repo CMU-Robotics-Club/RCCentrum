@@ -55,7 +55,8 @@ def add_card_event(request):
     updater_object=Project.objects.get(name="Tooltron"),
     user=robouser,
     success=succ,
-    meta=machine.type
+    meta=machine.type,
+    api_client="",
   )
 
   api_request.save()
