@@ -14,6 +14,43 @@ from posters.models import Poster
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 from django.contrib.contenttypes.models import ContentType
 
+class RFIDSerializer(serializers.Serializer):
+    """
+    To validate RFID lookup endpoint.
+    """
+
+    rfid = serializers.CharField()
+    meta = serializers.CharField(required=False, allow_blank=True)
+
+    def validate_rfid(self, value):
+        """
+        Ensures the RFID is the proper length
+        """
+
+        if len(value) != 8:
+            raise serializers.ValidationError("RFIDs must be 8 characters long")
+
+        return value
+
+
+class MagneticSerializer(serializers.Serializer):
+    """
+    To validate magnetic lookup endpoint.
+    """
+
+    magnetic = serializers.CharField()
+    meta = serializers.CharField(required=False, allow_blank=True)
+
+    def validate_magnetic(self, value):
+        """
+        Ensures the Magnetic ID is the proper length
+        """
+
+        if len(value) != 9:
+            raise serializers.ValidationError("Magnetic IDs must be 9 characters long")
+
+        return value
+
 
 class APIRequestSerializer(serializers.ModelSerializer):
 
@@ -25,12 +62,14 @@ class APIRequestSerializer(serializers.ModelSerializer):
 
 
 class WebcamSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Webcam
         fields = ('id', 'name', 'url', )
 
 
 class UserSerializer(serializers.ModelSerializer):
+    
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         for key, value in ret.items():
@@ -95,17 +134,10 @@ class OfficerSerializer(serializers.ModelSerializer):
 
 
 class ChannelSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(required=False)
+    name = serializers.CharField(read_only=True)
     created = serializers.DateTimeField(source='created_datetime', read_only=True)
     updated = serializers.DateTimeField(source='updated_datetime', read_only=True)
-
-    def create(self, validated_data):
-        user = self.context['request'].user
-
-        validated_data['updater_type_id'] = ContentType.objects.get_for_model(user).id
-        validated_data['updater_id'] = user.id
-
-        return super().create(validated_data)
+    description = serializers.CharField(read_only=True)
 
     def update(self, instance, validated_data):
         user = self.context['request'].user

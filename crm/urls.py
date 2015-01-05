@@ -35,6 +35,9 @@ urlpatterns = patterns('',
     # we would not need to do this, but this is easier.
     url(r'^recover/$', password_reset_views.recover, name='admin_password_reset'),
 
+    url(r'^docs/', include('rest_framework_swagger.urls')),
+
+
     url(r'^', include('password_reset.urls')),
     url(r'^', include('robocrm.urls')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

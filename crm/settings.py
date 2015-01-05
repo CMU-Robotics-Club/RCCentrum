@@ -174,6 +174,7 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'django_object_actions',
     'django.contrib.redirects',
+    'rest_framework_swagger',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
@@ -203,14 +204,35 @@ REST_FRAMEWORK = {
         'rest_framework.filters.DjangoFilterBackend',
     ),
     'DEFAULT_PARSER_CLASSES': (
+        # allows Swagger to perform requests
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FormParser',
+
+        # How everyone else should be making requests
         'rest_framework.parsers.JSONParser',
     ),
     'EXCEPTION_HANDLER': 'api.exception_handler.api_exception_handler',
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework_csv.renderers.CSVRenderer',
     ),
+}
+
+# Only have BrowseableAPI in debug mode to help find errors
+# Members should use Swagger for documentation
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ('rest_framework.renderers.BrowsableAPIRenderer', )
+
+
+SWAGGER_SETTINGS = {
+    'api_version': '1.0',
+    'is_authenticated': True,
+    'permission_denied_handler': 'api.views.redirect_login',
+    'info': {
+        'title': 'CMU Robotics Club API',
+        'description': 'For further documentation & tutorials please visit '
+                    '<a href="https://github.com/CMU-Robotics-Club/roboticsclub.org/wiki">the wiki</a>.',
+    },
 }
 
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (

@@ -3,8 +3,10 @@ from crm.models import UpdatedByModel
 
 class APIRequest(UpdatedByModel):
   """
-  Log of API Requests for /rfid, /magnetic,
-  /users/:id/email, and /users/:id/rfid
+  Log of API Requests for /rfid/, /magnetic/,
+  /users/:id/email/, and /users/:id/rfid/
+  since these are considered 'sensitive' or
+  'priveleged' endpoints.
   """
 
   """
@@ -42,7 +44,6 @@ class APIRequest(UpdatedByModel):
   Extra endpoint and request specific information.
   """
   meta = models.TextField(null=True)
-
 
   """
   Not Project editable.

@@ -32,6 +32,7 @@ from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from .permissions import IsAPIRequesterOrReadOnly
 from django.db import IntegrityError
+from rest_framework.generics import CreateAPIView
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +68,7 @@ def new_initial(self, request, *args, **kwargs):
 APIView.initial = new_initial
 
 
-# APIRequest is a ModelViewSet without create and destroy abilities
+# APIRequestViewSet is a ModelViewSet without create and destroy abilities
 class APIRequestViewSet(
                       #mixins.CreateModelMixin,
                       mixins.RetrieveModelMixin,
@@ -76,9 +77,12 @@ class APIRequestViewSet(
                       mixins.ListModelMixin,
                       GenericViewSet):
   """
-  A APIRequest is created whenever a sucessfully authenticated request
-  is made to '/rfid/', '/magnetic/', '/users/id/rfid/', '/users/id/email/',
-  or '/users/id/balance/'.
+  A APIRequest is created whenever a sucessfully authenticated POST request
+  is made to '/rfid/', '/magnetic/', '/users/:id/rfid/', '/users/:id/email/',
+  or '/users/:id/balance/'.
+  Users can successfully make POST requests to '/rfid/' and '/magnetic/' through
+  the HTML API viewer however those requests are not shown here(only those made
+  by projects are shown here).
   """
 
   permission_classes = (IsAPIRequesterOrReadOnly, )
@@ -223,26 +227,18 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
   filter_fields = ('id', 'name', 'display', 'leaders', )
 
 
-class ChannelViewSet(viewsets.ModelViewSet):
+# ChannelViewSet is a ModelViewSet without create and destroy abilities
+class ChannelViewSet(
+                    #mixins.CreateModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    #mixins.DestroyModelMixin,
+                    mixins.ListModelMixin,
+                    GenericViewSet):
 
   queryset = Channel.objects.all()
   serializer_class = ChannelSerializer
   filter_class = ChannelFilter
-
-  # Called when POST to /channels/
-  def create(self, request, *args, **kwargs):
-    logger.debug("Channel create")
-
-    response = super().create(request, *args, **kwargs)
-
-    # TODO: make this better by changing
-    # default exception to include errno
-    if response.status_code != 201:
-      error = ParseError(detail="Duplicate")
-      error.errno = DUPLICATE
-      raise error
-    else:
-      return response
 
 
 class SponsorViewSet(viewsets.ReadOnlyModelViewSet):
@@ -282,23 +278,19 @@ class CalendarViewSet(viewsets.ViewSet):
     events = get_calendar_events(dt)
     return Response(events)
 
-class MagneticViewSet(viewsets.ViewSet):
+
+class MagneticView(CreateAPIView):
   """
-  Returns the RoboUser ID associated with the specified CMU Card ID.
-  If no such user exists returns a HTTP status code of 400.
+  Returns the RoboUser ID associated with the specified CMU Card ID
+  and the APIRequest ID.
   """
+
+  serializer_class = MagneticSerializer
 
   def create(self, request):
-    """
-    Returns the RoboUser ID associated with the Card ID sent in the POST body.
-    """
-
-    data = request.data
-    magnetic = data.get('magnetic')
-    # Cast to string so if a request
-    # passes an integer .get does not
-    # throw Multiple Users error
-    magnetic = str(magnetic)
+    serializer = MagneticSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    magnetic = serializer.validated_data['magnetic']
 
     logger.debug("Magnetic lookup {}".format(magnetic))
 
@@ -318,22 +310,18 @@ class MagneticViewSet(viewsets.ViewSet):
       raise error
 
 
-class RFIDViewSet(viewsets.ViewSet):
+class RFIDView(CreateAPIView):
   """
-  Returns the RoboUser ID associated with the specified CMU RFID tag.
-  If no such user exists returns a HTTP Status code of 400.
-  Request should contain a dictionary with keys 'rfid'(required)
-  and 'meta'(optional).
+  Returns the RoboUser ID associated with the specified CMU RFID tag
+  and the APIRequest ID.
   """
+
+  serializer_class = RFIDSerializer
 
   def create(self, request):
-    data = request.data
-
-    rfid = data.get('rfid')
-    # Cast to string so if a request
-    # passes an integer .get does not
-    # throw Multiple Users error
-    rfid = str(rfid)
+    serializer = RFIDSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    rfid = serializer.validated_data['rfid']
 
     logger.debug("RFID lookup {}".format(rfid))
 
@@ -378,3 +366,9 @@ class MachineViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Machine.objects.all()
   serializer_class = MachineSerializer
   filter_fields = ('id', 'type', )
+
+
+from django.shortcuts import redirect
+
+def redirect_login(request):
+  return redirect('/admin/login/?next=/docs/')

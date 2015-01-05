@@ -19,9 +19,8 @@ router.register(r'faq', CategoryViewSet)
 router.register(r'tshirts', TShirtViewSet)
 router.register(r'posters', PosterViewSet)
 
-router.register(r'magnetic', MagneticViewSet, base_name="magnetic")
-router.register(r'rfid', RFIDViewSet, base_name="rfid")
 
-#router.register(r'projects/datastore', MessageViewSet, base_name="datastore")
-
-urlpatterns = router.urls
+urlpatterns = router.urls + [
+  url(r'^magnetic/$', MagneticView.as_view()),
+  url(r'^rfid/$', RFIDView.as_view()),
+]
