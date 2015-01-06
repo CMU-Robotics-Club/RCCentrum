@@ -47,6 +47,8 @@ logger = logging.getLogger(__name__)
 # so View specific methods can override
 old_initial = APIView.initial
 def new_initial(self, request, *args, **kwargs):
+  logger.debug(request.path)
+
   endpoint = request.path.replace("/api", "")
   user = request.user
 
@@ -325,7 +327,7 @@ class MagneticView(GenericAPIView):
     serializer.is_valid(raise_exception=True)
     magnetic = serializer.validated_data['magnetic']
 
-    logger.debug("Magnetic lookup {}".format(magnetic))
+    logger.info("Magnetic lookup {}".format(magnetic))
 
     try:
       robouser = RoboUser.objects.get(magnetic=magnetic)
@@ -356,7 +358,7 @@ class RFIDView(GenericAPIView):
     serializer.is_valid(raise_exception=True)
     rfid = serializer.validated_data['rfid']
 
-    logger.debug("RFID lookup {}".format(rfid))
+    logger.info("RFID lookup {}".format(rfid))
 
     try:
       robouser = RoboUser.objects.get(rfid=rfid)

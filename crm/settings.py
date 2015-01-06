@@ -287,7 +287,7 @@ LOGGING = {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
             'filename': '{}/logs/django_log.log'.format(BASE_DIR),
-            'maxBytes': 1024*1024*50, # 50 MB
+            'maxBytes': 1024*1024, # 1 MB
             'backupCount': 5,
             'formatter':'default',
         },
@@ -295,7 +295,7 @@ LOGGING = {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
             'filename': '{}/logs/api_log.log'.format(BASE_DIR),
-            'maxBytes': 1024*1024*50, # 50 MB
+            'maxBytes': 1024*1024, # 1 MB
             'backupCount': 5,
             'formatter':'default',
         },
@@ -303,7 +303,7 @@ LOGGING = {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
             'filename': '{}/logs/apps_log.log'.format(BASE_DIR),
-            'maxBytes': 1024*1024*50, # 50 MB
+            'maxBytes': 1024*1024, # 1 MB
             'backupCount': 5,
             'formatter':'default',
         },   
