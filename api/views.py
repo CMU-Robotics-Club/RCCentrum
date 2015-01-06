@@ -32,7 +32,7 @@ from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from .permissions import IsAPIRequesterOrReadOnly
 from django.db import IntegrityError
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import GenericAPIView, CreateAPIView
 
 logger = logging.getLogger(__name__)
 
@@ -105,6 +105,7 @@ class WebcamViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = WebcamSerializer
   filter_fields = ('id', 'name', )
 
+
 class DateTimeViewSet(viewsets.ViewSet):
   """
   The current datetime.  Exists so that projects
@@ -114,19 +115,42 @@ class DateTimeViewSet(viewsets.ViewSet):
   def list(self, request):
     return Response(timezone.now())
 
+
 class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
   """
   The members of the Robotics Club.
-  Has '/rfid' and '/email' endpoints.
   """
 
   queryset = RoboUser.objects.all()
   serializer_class = RoboUserSerializer
   filter_class = RoboUserFilter
 
-  # TODO: make UPDATE
+  # rfid and email are special cases
+  def get_serializer_class(self):
+    path = self.request.path
+    tokens = path.rsplit('/')
+    tokens[:] = (x for x in tokens if x != "")
+
+    if len(tokens):
+      action = tokens[-1]
+    
+      if action == 'email':
+        return EmailSerializer
+      elif action == 'rfid':
+        return RFIDSerializer
+  
+    return super().get_serializer_class()
+
+
   @detail_route(methods=['POST'])
   def rfid(self, request, pk):
+    """
+    Set a Users RFID(privileged operation).
+    ---
+
+    serializer: api.serializers.RFIDSerializer
+    """
+
     user = request._user
 
     if type(user).__name__ != 'Project':
@@ -166,6 +190,13 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
 
   @detail_route(methods=['POST'])
   def email(self, request, pk):
+    """
+    Sends a User an email(privileged operation).
+    ---
+
+    serializer: api.serializers.EmailSerializer
+    """
+
     project = request._user
 
     if type(project).__name__ != 'Project':
@@ -184,12 +215,12 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
       allowed_users = settings.EMAIL_POST_PROJECT_IDS[project.id]
 
       if allowed_users is None or user.id in allowed_users:
-
         from_address = "{}@roboticsclub.org".format(slugify(project.name))
 
-        data = request.data
-        subject = data.get('subject', '')
-        body = data.get('body', '')
+        serializer = EmailSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        subject = serializer.validated_data['subject']
+        content = serializer.validated_data['body']
 
         send_mail(subject, body, from_address, [user.user.email])
 
@@ -279,7 +310,7 @@ class CalendarViewSet(viewsets.ViewSet):
     return Response(events)
 
 
-class MagneticView(CreateAPIView):
+class MagneticView(GenericAPIView):
   """
   Returns the RoboUser ID associated with the specified CMU Card ID
   and the APIRequest ID.
@@ -287,7 +318,7 @@ class MagneticView(CreateAPIView):
 
   serializer_class = MagneticSerializer
 
-  def create(self, request):
+  def post(self, request, *args, **kwargs):
     serializer = MagneticSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     magnetic = serializer.validated_data['magnetic']
@@ -310,7 +341,7 @@ class MagneticView(CreateAPIView):
       raise error
 
 
-class RFIDView(CreateAPIView):
+class RFIDView(GenericAPIView):
   """
   Returns the RoboUser ID associated with the specified CMU RFID tag
   and the APIRequest ID.
@@ -318,7 +349,7 @@ class RFIDView(CreateAPIView):
 
   serializer_class = RFIDSerializer
 
-  def create(self, request):
+  def post(self, request, *args, **kwargs):
     serializer = RFIDSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     rfid = serializer.validated_data['rfid']

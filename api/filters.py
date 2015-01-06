@@ -20,9 +20,9 @@ class RoboUserFilter(django_filters.FilterSet):
   username = django_filters.CharFilter(name='user__username')
   first_name = django_filters.CharFilter(name='user__first_name')
   last_name = django_filters.CharFilter(name='user__last_name')
-  is_active = django_filters.BooleanFilter(name='user__is_active')
   date_joined = django_filters.DateTimeFilter(name='user__date_joined')
   last_login = django_filters.DateTimeFilter(name='user__last_login')
+  is_active = django_filters.BooleanFilter(name='user__is_active')
 
   # TODO: make static method
   def magnetic_filter(qs, value):

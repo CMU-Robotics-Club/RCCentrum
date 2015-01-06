@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from .models import APIRequest
 from robocrm.models import RoboUser
 from projects.models import Project
@@ -14,9 +13,18 @@ from posters.models import Poster
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 from django.contrib.contenttypes.models import ContentType
 
+class EmailSerializer(serializers.Serializer):
+    """
+    To validate /users/:id/email/ endpoint.
+    """
+    
+    subject = serializers.CharField()
+    content = serializers.CharField()
+
+
 class RFIDSerializer(serializers.Serializer):
     """
-    To validate RFID lookup endpoint.
+    To validate /rfid/ and /users/:id/rfid/ lookup endpoint.
     """
 
     rfid = serializers.CharField()
@@ -35,7 +43,7 @@ class RFIDSerializer(serializers.Serializer):
 
 class MagneticSerializer(serializers.Serializer):
     """
-    To validate magnetic lookup endpoint.
+    To validate /magnetic/ lookup endpoint.
     """
 
     magnetic = serializers.CharField()
@@ -68,56 +76,22 @@ class WebcamSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'url', )
 
 
-class UserSerializer(serializers.ModelSerializer):
-    
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        for key, value in ret.items():
-            method = getattr(self, 'transform_' + key, None)
-            if method is not None:
-                ret[key] = method(value)
-        return ret
-
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'date_joined', 'last_login', 'is_active',)
-
-
 class RoboUserSerializer(serializers.ModelSerializer):
-    
-    magnetic = serializers.BooleanField(source='is_magnetic_set')
-    rfid = serializers.BooleanField(source='is_rfid_set')
 
-    # TODO: find better way to do this
-    def to_representation(self, obj):
-        """
-        Hack to embed 'user' fields into main object
-        eliminating nested fields.
-        """
+    username = serializers.CharField(source='user.username', read_only=True)
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
+    date_joined = serializers.DateTimeField(source='user.date_joined', read_only=True)
+    last_login = serializers.DateTimeField(source='user.last_login', read_only=True)
+    is_active = serializers.BooleanField(source='user.is_active', read_only=True)
 
-        if obj is None:
-            return {}
-
-        ret = super().to_representation(obj)
-        p_serializer = UserSerializer(obj.user, context=self.context)
-        p_ret = p_serializer.to_representation(obj.user)
-
-        # If user ID exists, delete it from dictionary
-        # because only interested in RoboUser id
-        if 'id' in p_ret:
-            del p_ret['id']
-
-        for key in p_ret:
-            ret[key] = p_ret[key]
-
-        if 'user' in p_ret:
-            del ret['user']
-
-        return ret
+    magnetic = serializers.BooleanField(source='is_magnetic_set', read_only=True)
+    rfid = serializers.BooleanField(source='is_rfid_set', read_only=True)
+    machines = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = RoboUser
-        fields = ('id', 'magnetic', 'rfid', 'machines', )
+        fields = ('id', 'username', 'first_name', 'last_name', 'date_joined', 'last_login', 'is_active', 'magnetic', 'rfid', 'machines', )
 
 
 class ProjectSerializer(serializers.ModelSerializer):
