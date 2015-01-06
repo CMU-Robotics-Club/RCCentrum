@@ -43,14 +43,8 @@ class UserTests(AuthenticatedAPITestCase):
     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-class ChannelTests(AuthenticatedAPITestCase):
+#class ChannelTests(AuthenticatedAPITestCase):
+#  pass
 
-  def test_create_channel(self):
-    data = {
-      'name': "TestChannel",
-      'meta': "TestMeta"
-    }
-
-    response = self.client.post("/api/channels/", data, **self.headers)
-
-    self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+#class PrivelegedTests(AuthenticatedAPITestCase):
+#  pass
