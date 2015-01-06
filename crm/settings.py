@@ -221,7 +221,7 @@ REST_FRAMEWORK = {
 SWAGGER_SETTINGS = {
     'api_version': '1.0',
     'is_authenticated': True,
-    'permission_denied_handler': 'api.views.redirect_login',
+    'permission_denied_handler': 'api.views.login_redirect_docs',
     'info': {
         'title': 'CMU Robotics Club API',
         'description': 'For further documentation & tutorials please visit '

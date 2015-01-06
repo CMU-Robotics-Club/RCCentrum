@@ -7,6 +7,7 @@ from webcams.models import Webcam
 from social_media.models import SocialMedia
 from sponsors.models import Sponsor
 from faq.models import Category, QA
+from robocrm.models import Machine
 from rest_framework.response import Response
 from channels.models import Channel
 from rest_framework.parsers import JSONParser
@@ -33,6 +34,7 @@ from django.contrib.contenttypes.models import ContentType
 from .permissions import IsAPIRequesterOrReadOnly
 from django.db import IntegrityError
 from rest_framework.generics import GenericAPIView, CreateAPIView
+from django.shortcuts import redirect
 
 logger = logging.getLogger(__name__)
 
@@ -390,16 +392,11 @@ class PosterViewSet(viewsets.ReadOnlyModelViewSet):
   filter_fields = ('id', 'name', 'year', )
 
 
-# TODO: move to machines app
-from robocrm.models import Machine
-
 class MachineViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Machine.objects.all()
   serializer_class = MachineSerializer
   filter_fields = ('id', 'type', )
 
 
-from django.shortcuts import redirect
-
-def redirect_login(request):
+def login_redirect_docs(request):
   return redirect('/admin/login/?next=/docs/')
