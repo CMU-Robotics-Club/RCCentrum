@@ -218,12 +218,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-# Only have BrowseableAPI in debug mode to help find errors
-# Members should use Swagger for documentation
-if DEBUG:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ('rest_framework.renderers.BrowsableAPIRenderer', )
-
-
 SWAGGER_SETTINGS = {
     'api_version': '1.0',
     'is_authenticated': True,
@@ -394,3 +388,9 @@ except ImportError:
     pass
 
 FONT_ROOT = os.path.join(STATIC_ROOT, "fonts")
+
+# Only have BrowseableAPI in debug mode to help find errors
+# Members should use Swagger for documentation
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ('rest_framework.renderers.BrowsableAPIRenderer', )
+
