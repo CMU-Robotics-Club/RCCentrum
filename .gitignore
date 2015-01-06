@@ -54,7 +54,8 @@ docs/_build/
 
 .DS_Store
 
-crm/local_settings.py
 
+crm/local_settings.py
 media/
 static_root/
+logs/
