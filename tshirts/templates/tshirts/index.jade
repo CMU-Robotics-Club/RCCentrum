@@ -7,15 +7,16 @@ block title
 block content
   .container-fluid
     .row
-      for tshirt in tshirts
+      each tshirt, i in tshirts
+        .clearfix.visible-xs
         .col-md-6
           .well
             .row
               .col-md-12
                   .pull-center
-                    img.img-thumbnail(src="{{ tshirt.front_image.url }}" style="width:70%;")
+                    img.img-thumbnail(src="{{ tshirt.front_image.url }}" style="height: 200px;")
                   .pull-center
-                    img.img-thumbnail(src="{{ tshirt.back_image.url }}" style="width:70%;")
+                    img.img-thumbnail(src="{{ tshirt.back_image.url }}" style="height: 200px;")
               .col-md-12
                 .caption
                   h3
@@ -23,3 +24,4 @@ block content
 
                   p
                     | {{ tshirt.year }}
+ 
