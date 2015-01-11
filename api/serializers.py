@@ -13,6 +13,15 @@ from posters.models import Poster
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 from django.contrib.contenttypes.models import ContentType
 
+class BalanceSerializer(serializers.Serializer):
+    """
+    To validate /users/:id/balance/ endpoint.
+    """
+
+    amount = serializers.DecimalField(max_digits=3, decimal_places=2)
+    meta = serializers.CharField(required=False, allow_blank=True)
+
+
 class EmailSerializer(serializers.Serializer):
     """
     To validate /users/:id/email/ endpoint.
@@ -20,6 +29,7 @@ class EmailSerializer(serializers.Serializer):
     
     subject = serializers.CharField()
     content = serializers.CharField()
+    meta = serializers.CharField(required=False, allow_blank=True)
 
 
 class RFIDSerializer(serializers.Serializer):

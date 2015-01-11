@@ -31,10 +31,11 @@ from .models import APIRequest
 from rest_framework_extensions.cache.decorators import cache_response
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
-from .permissions import IsAPIRequesterOrReadOnly
+from .permissions import IsAPIRequesterOrReadOnlyPermission, UserBalancePermission, UserRFIDPermission, UserEmailPermission
 from django.db import IntegrityError
 from rest_framework.generics import GenericAPIView, CreateAPIView
 from django.shortcuts import redirect
+from rest_framework import status
 
 logger = logging.getLogger(__name__)
 
@@ -49,27 +50,36 @@ old_initial = APIView.initial
 def new_initial(self, request, *args, **kwargs):
   logger.debug(request.path)
 
-  endpoint = request.path.replace("/api", "")
-  user = request.user
-
-  api_request = APIRequest(
-    endpoint = endpoint,
-    updater_object = user,
-  )
-
-  api_request.api_client = request.META.get('HTTP_API_CLIENT', "")
-
-  if isinstance(request.data, dict):
-    api_request.meta = request.data.get('meta', "")
-  else:
+  if not isinstance(request.data, dict):
     error = ParseError(detail="Received data not in dictionary format")
     error.erno = NOT_DICT
     raise error
 
-  self.api_request = api_request
+  #api_request = APIRequest(
+  #  endpoint = request.path.replace("/api", ""),
+  #  updater_object = request.user,
+  #  meta = request.data.get('meta', "")
+  #  api_client = request.META.get('HTTP_API_CLIENT', "")
+  #)
+  #self.api_request = api_request
 
   return old_initial(self, request, *args, **kwargs)
 APIView.initial = new_initial
+
+def create_api_request(request, serializer):
+  """
+  Helper function to construct
+  an APIRequest and populate it's fields
+  that are constructed from the request
+  object and serializer 'meta' field.
+  """
+
+  return APIRequest(
+    endpoint = request.path.replace("/api", ""),
+    updater_object = request.user,
+    meta = serializer.validated_data.get('meta', ""),
+    api_client = request.META.get('HTTP_API_CLIENT', "")
+  )
 
 
 # APIRequestViewSet is a ModelViewSet without create and destroy abilities
@@ -89,7 +99,7 @@ class APIRequestViewSet(
   by projects are shown here).
   """
 
-  permission_classes = (IsAPIRequesterOrReadOnly, )
+  permission_classes = (IsAPIRequesterOrReadOnlyPermission, )
 
   # Only display API Requests by Projects since ones by Users
   # are just for testing and by only listing Project API Requests
@@ -129,7 +139,7 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = RoboUserSerializer
   filter_class = RoboUserFilter
 
-  # rfid and email are special cases
+  # rfid, email, and balance are special cases
   def get_serializer_class(self):
     path = self.request.path
     tokens = path.rsplit('/')
@@ -142,11 +152,40 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
         return EmailSerializer
       elif action == 'rfid':
         return RFIDSerializer
+      elif action == 'balance':
+        return BalanceSerializer
   
     return super().get_serializer_class()
 
+  @detail_route(methods=['POST'], permission_classes=[UserBalancePermission, ])
+  def balance(self, request, pk):
+    """
+    Increments/decrements a User's balance(privileged operation).
+    ---
 
-  @detail_route(methods=['POST'])
+    serializer: api.serializers.BalanceSerializer
+    """
+
+    u = self.get_object()
+    user = request._user
+
+    serializer = BalanceSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    amount = serializer.validated_data['amount']
+
+    u.balance += amount
+    u.save()
+
+    api_request = create_api_request(request, serializer)
+    api_request.user = u
+    api_request.extra = str(balance)
+    api_request.save()
+
+    return Response({
+      "api_request": api_request.id
+    })
+
+  @detail_route(methods=['POST'], permission_classes=[UserRFIDPermission, ])
   def rfid(self, request, pk):
     """
     Set a Users RFID(privileged operation).
@@ -154,45 +193,33 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
 
     serializer: api.serializers.RFIDSerializer
     """
+    u = self.get_object()
 
     user = request._user
 
-    if type(user).__name__ != 'Project':
-      error = PermissionDenied(detail="Not authenticated as a project")
-      error.errno = NOT_AUTHENTICATED_AS_PROJECT
+    serializer = RFIDSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    rfid = serializer.validated_data['rfid']
+
+    u.rfid = rfid
+
+    # save() causes server error
+    try:
+      u.save()
+    except IntegrityError:
+      error = ParseError(detail="RFID already belongs to another member.")
+      error.errno = DUPLICATE
       raise error
-    elif user.id not in settings.RFID_POST_PROJECT_IDS:
-      error = PermissionDenied(detail="This project is not authenticated to perform this operation")
-      error.errno = INSUFFICIENT_PROJECT_PERMISSIONS
-      raise error
-    else:
-      u = RoboUser.objects.filter(pk=pk)[0]
 
-      rfid = request.data.get('rfid', "")
+    api_request = create_api_request(request, serializer)
+    api_request.user = u
+    api_request.save()
 
-      if not rfid:
-        error = ParseError(detail="Empty RFID #")
-        error.errno = EMPTY_POST
-        raise error
-      else:
-        u.rfid = rfid
+    return Response({
+      "api_request": api_request.id
+    })
 
-        try:
-          u.save()
-        except IntegrityError:
-          error = ParseError(detail="RFID already belongs to another member.")
-          error.errno = DUPLICATE
-          raise error
-
-        self.api_request.user = u
-        self.api_request.save()
-
-        return Response({
-          "updated": True,
-          "api_request": self.api_request.id
-        })
-
-  @detail_route(methods=['POST'])
+  @detail_route(methods=['POST'], permission_classes=[UserEmailPermission, ])
   def email(self, request, pk):
     """
     Sends a User an email(privileged operation).
@@ -201,45 +228,26 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
     serializer: api.serializers.EmailSerializer
     """
 
+    user = self.get_object()
     project = request._user
 
-    if type(project).__name__ != 'Project':
-      error = PermissionDenied(detail="Not authenticated as a project")
-      error.errno = NOT_AUTHENTICATED_AS_PROJECT
-      raise error
-    elif project.id not in settings.EMAIL_POST_PROJECT_IDS:
-      error = PermissionDenied(detail="This project is not authenticated to perform this operation")
-      error.errno = INSUFFICIENT_PROJECT_PERMISSIONS
-      raise error
-    else:
+    from_address = "{}@roboticsclub.org".format(slugify(str(project)))
 
-      # Check if project can send to this user
-      user = RoboUser.objects.filter(pk=pk)[0]
+    serializer = EmailSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    subject = serializer.validated_data['subject']
+    content = serializer.validated_data['content']
 
-      allowed_users = settings.EMAIL_POST_PROJECT_IDS[project.id]
+    send_mail(subject, content, from_address, [user.user.email])
 
-      if allowed_users is None or user.id in allowed_users:
-        from_address = "{}@roboticsclub.org".format(slugify(project.name))
+    api_request = create_api_request(request, serializer)
+    api_request.extra = "Subject: {}, Body: {}".format(subject, content)
+    api_request.user = user
+    api_request.save()
 
-        serializer = EmailSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        subject = serializer.validated_data['subject']
-        content = serializer.validated_data['body']
-
-        send_mail(subject, body, from_address, [user.user.email])
-
-        self.api_request.extra = "Subject: {}, Body: {}".format(subject, body)
-        self.api_request.user = user
-        self.api_request.save()
-
-        return Response({
-          "sent": True,
-          "api_request": self.api_request.id
-        })
-      else:
-        error = PermissionDenied(detail="This project is not authenticated to perform this operation")
-        error.errno = INSUFFICIENT_PROJECT_PERMISSIONS
-        raise error
+    return Response({
+      "api_request": api_request.id
+    })
 
 
 class OfficerViewSet(viewsets.ReadOnlyModelViewSet):
@@ -329,20 +337,25 @@ class MagneticView(GenericAPIView):
 
     logger.info("Magnetic lookup {}".format(magnetic))
 
+    api_request = create_api_request(request, serializer)      
+
     try:
       robouser = RoboUser.objects.get(magnetic=magnetic)
-      self.api_request.user = robouser
-      self.api_request.save()
+
+      api_request.user = robouser
+      api_request.save()
+      
       return Response({
         "user": robouser.id,
-        "api_request": self.api_request.id
+        "api_request": api_request.id
       })
     except RoboUser.DoesNotExist:
-      error = APIException(detail="Magnetic ID has no such member")
-      error.errno = MAGNETIC_NO_MEMBER
-      error.status_code = 400
-      self.api_request.save()
-      raise error
+      api_request.save()
+
+      return Response({
+        "user": None,
+        "api_request": api_request.id
+      }, status=status.HTTP_204_NO_CONTENT)
 
 
 class RFIDView(GenericAPIView):
@@ -360,20 +373,25 @@ class RFIDView(GenericAPIView):
 
     logger.info("RFID lookup {}".format(rfid))
 
+    api_request = create_api_request(request, serializer)
+
     try:
       robouser = RoboUser.objects.get(rfid=rfid)
-      self.api_request.user = robouser
-      self.api_request.save()
+      
+      api_request.user = robouser
+      api_request.save()
+      
       return Response({
         "user": robouser.id,
-        "api_request": self.api_request.id
+        "api_request": api_request.id
       })
     except RoboUser.DoesNotExist:
-      error = APIException(detail="RFID has no such member")
-      error.errno = RFID_NO_MEMBER
-      error.status_code = 400
-      self.api_request.save()
-      raise error
+      api_request.save()
+
+      return Response({
+        "user": None,
+        "api_request": api_request.id
+      }, status=status.HTTP_204_NO_CONTENT)
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):

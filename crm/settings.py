@@ -13,12 +13,17 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
 
 GOOGLE_API_KEY = ''
 
-# The Project ID's who have permission to set a user's RFID tag
-RFID_POST_PROJECT_IDS = []
+# A dictionary of Project IDs to arrays of User IDs that the
+# project has permission to set the RFIDs of(None all IDs, [] no IDs)
+USER_RFID_PROJECTS_TO_USERS = {}
 
-# The Project ID's who have permission to send emails as well as an array of robouser IDs project can send to(None all IDs, [] no IDs)
-#EMAIL_POST_PROJECT_IDS = {1:[2, 40, 52]}
-EMAIL_POST_PROJECT_IDS = {}
+# A dictionary of Project IDs to arrays of User IDs that the
+# project has permission to change the balance of(None all IDs, [] no IDs)
+USER_BALANCE_PROJECTS_TO_USERS = {}
+
+# A dictionary of Project IDs to arrays of User IDs that the
+# project has permission to send an email to(None all IDs, [] no IDs)
+USER_EMAIL_PROJECTS_TO_USERS = {}
 
 # ==========================
 

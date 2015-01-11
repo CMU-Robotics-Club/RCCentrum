@@ -60,11 +60,13 @@ class RoboUser(models.Model):
                                  default=UNDERGRAD)
 
   # Graduation Year
-  #grad_year = models.DecimalField(max_digits=4, decimal_places=0)
   grad_year = models.IntegerField(blank=True, null=True)
 
   major = models.CharField(max_length=50)
   
+  # If someone trusts Roboclub with more than $999 we have a problem
+  balance = models.DecimalField(max_digits=3, decimal_places=2, default=0.00, help_text="Roboclub balance(currently only being used by Fridgetron)")
+
   # Roboclub Transaction Info
   dues_paid = models.DateField()
   dues_paid_year = models.BooleanField(default=True, help_text="Unchecked if only Semester membership was paid")

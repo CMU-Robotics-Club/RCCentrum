@@ -21,7 +21,7 @@ class RoboUserInline(admin.StackedInline):
   model = RoboUser
   can_delete = False
   filter_horizontal = ('machines', )
-  readonly_fields = ('is_magnetic_set', 'is_rfid_set', 'membership_valid', 'machines_not_authorized', 'club_activity', )
+  readonly_fields = ('is_magnetic_set', 'is_rfid_set', 'membership_valid', 'machines_not_authorized', 'balance', 'club_activity', )
 
   def get_fields(self, request, obj=None):
     if obj:
@@ -145,7 +145,7 @@ class UserCreationForm(ModelForm):
 
 class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   inlines = (RoboUserInline, )
-  list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser', 'roles', 'last_login', 'date_joined', 'dues_paid', 'dues_paid_year', 'membership_valid', 'is_magnetic_set', 'is_rfid_set', 'class_level', 'major', 'grad_year', )
+  list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser', 'roles', 'last_login', 'date_joined', 'dues_paid', 'dues_paid_year', 'membership_valid', 'is_magnetic_set', 'is_rfid_set', 'class_level', 'major', 'grad_year', 'balance', )
   search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', ]
   exclude = ['password', 'user_permissions', 'is_staff', ]
   filter_horizontal = ('groups',)
@@ -187,6 +187,9 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   def membership_valid(self, obj):
     return obj.robouser.membership_valid
   membership_valid.boolean = True
+
+  def balance(self, obj):
+    return obj.robouser.balance
 
   def roles(self, obj):
     p = sorted([str(x) for x in obj.groups.all()])
