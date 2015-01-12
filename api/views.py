@@ -346,6 +346,7 @@ class MagneticView(GenericAPIView):
       api_request.save()
       
       return Response({
+        "found": True,
         "user": robouser.id,
         "api_request": api_request.id
       })
@@ -353,9 +354,10 @@ class MagneticView(GenericAPIView):
       api_request.save()
 
       return Response({
+        "found": False,
         "user": None,
         "api_request": api_request.id
-      }, status=status.HTTP_204_NO_CONTENT)
+      })
 
 
 class RFIDView(GenericAPIView):
@@ -382,6 +384,7 @@ class RFIDView(GenericAPIView):
       api_request.save()
       
       return Response({
+        "found": True,
         "user": robouser.id,
         "api_request": api_request.id
       })
@@ -389,9 +392,10 @@ class RFIDView(GenericAPIView):
       api_request.save()
 
       return Response({
+        "found": False,
         "user": None,
         "api_request": api_request.id
-      }, status=status.HTTP_204_NO_CONTENT)
+      })
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
