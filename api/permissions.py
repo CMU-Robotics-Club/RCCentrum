@@ -68,8 +68,7 @@ class UserEmailPermission(UserAuthorizedProjectOrReadOnlyPermission):
 
 class IsAPIRequesterOrReadOnlyPermission(permissions.BasePermission):
     """
-    Anyone can view.  Only original Project to request API endpoint
-    in first place('project' field) can update request.
+    Anyone can view.  Only original creator can update request.
     """
 
     def has_object_permission(self, request, view, obj):
@@ -82,5 +81,7 @@ class IsAPIRequesterOrReadOnlyPermission(permissions.BasePermission):
             # Unwrap SimpleLazyObject so type is 'User' or 'Project'
             user = request.user._wrapped if hasattr(request.user,'_wrapped') else request.user
 
-            # Ensure user is a Project and is the same project
-            return (type(user).__name__ == 'Project') and (user.id == obj.updater_id)
+            if hasattr(user, 'robouser'):
+                user = user.robouser
+
+            return user == obj.updater_object

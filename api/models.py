@@ -43,7 +43,7 @@ class APIRequest(UpdatedByModel):
   Project editable field.
   Extra endpoint and request specific information.
   """
-  meta = models.TextField(null=True)
+  meta = models.TextField(null=True, blank=True)
 
   """
   Not Project editable.
