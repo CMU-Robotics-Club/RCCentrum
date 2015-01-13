@@ -51,5 +51,15 @@ class APIRequest(UpdatedByModel):
   """
   api_client = models.CharField(max_length=50, null=True, editable=False)
 
+  @property
+  def updater_type_is_project(self):
+    """
+    This field should be shown in the API as it is used
+    to distinguish updaters (of the types RoboUser and Project)
+    that have the same ID. 
+    """
+
+    return type(self.updater_object).__name__ == 'Project'
+
   def __str__(self):
     return self.endpoint

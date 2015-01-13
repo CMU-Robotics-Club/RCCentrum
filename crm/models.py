@@ -10,6 +10,7 @@ class TimeStampedModel(models.Model):
   # TODO: look into auto_now_add and auto_now more
   # as some posts claim it causes issues in certain
   # circumstances
+  # auto_now_add and auto_now implicity set editable to False
   created_datetime = models.DateTimeField(auto_now_add=True)
   updated_datetime = models.DateTimeField(auto_now=True)
 
@@ -25,9 +26,11 @@ class UpdatedByModel(TimeStampedModel):
 
   """
   Project or User that made update.
+  Should not be editable since it is automatically set
+  (not through admin interface which the editable field is for).
   """
-  updater_type = models.ForeignKey(ContentType)
-  updater_id = models.PositiveIntegerField()
+  updater_type = models.ForeignKey(ContentType, editable=False)
+  updater_id = models.PositiveIntegerField(editable=False)
   updater_object = GenericForeignKey('updater_type', 'updater_id')
 
   class Meta:

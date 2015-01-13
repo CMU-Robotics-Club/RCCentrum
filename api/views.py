@@ -74,9 +74,16 @@ def create_api_request(request, serializer):
   object and serializer 'meta' field.
   """
 
+  # Fix so updater_id maps correctly since
+  # API exposes RoboUser IDs not User IDs
+  user = request.user
+
+  if hasattr(user, 'robouser'):
+    user = user.robouser
+
   return APIRequest(
     endpoint = request.path.replace("/api", ""),
-    updater_object = request.user,
+    updater_object = user,
     meta = serializer.validated_data.get('meta', ""),
     api_client = request.META.get('HTTP_API_CLIENT', "")
   )
@@ -101,11 +108,7 @@ class APIRequestViewSet(
 
   permission_classes = (IsAPIRequesterOrReadOnlyPermission, )
 
-  # Only display API Requests by Projects since ones by Users
-  # are just for testing and by only listing Project API Requests
-  # do not need to expose ContentType endpoint, extra ContentType 
-  # field, etc.
-  queryset = APIRequest.objects.filter(updater_type=ContentType.objects.get_for_model(Project))
+  queryset = APIRequest.objects.all()
   serializer_class = APIRequestSerializer
   filter_class = APIRequestFilter
 

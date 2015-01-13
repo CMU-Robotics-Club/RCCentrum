@@ -72,11 +72,9 @@ class MagneticSerializer(serializers.Serializer):
 
 class APIRequestSerializer(serializers.ModelSerializer):
 
-    project = serializers.IntegerField(source='updater_id', read_only=True)
-
     class Meta:
         model = APIRequest
-        fields = ('id', 'endpoint', 'user', 'project', 'created_datetime', 'updated_datetime', 'success', 'meta', )
+        fields = ('id', 'endpoint', 'user', 'updater_type_is_project', 'updater_id', 'created_datetime', 'updated_datetime', 'success', 'meta', )
 
 
 class WebcamSerializer(serializers.ModelSerializer):
