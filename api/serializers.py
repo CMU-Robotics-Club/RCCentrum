@@ -74,7 +74,7 @@ class APIRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = APIRequest
-        fields = ('id', 'endpoint', 'user', 'updater_type_is_project', 'updater_id', 'created_datetime', 'updated_datetime', 'success', 'meta', )
+        fields = ('id', 'endpoint', 'user', 'updater_is_project', 'updater_id', 'created_datetime', 'updated_datetime', 'success', 'meta', )
 
 
 class WebcamSerializer(serializers.ModelSerializer):

@@ -21,7 +21,7 @@ from .google_api import get_calendar_events
 import dateutil.parser
 from django.conf import settings
 from django.utils import timezone
-from .filters import APIRequestFilter, RoboUserFilter, ChannelFilter
+from .filters import *
 from rest_framework.viewsets import GenericViewSet
 from tshirts.models import TShirt
 from django.core.mail import send_mail

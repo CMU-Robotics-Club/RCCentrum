@@ -3,14 +3,23 @@ from .models import APIRequest
 from robocrm.models import RoboUser
 from channels.models import Channel
 from rest_framework import generics
+from django.contrib.contenttypes.models import ContentType
+from projects.models import Project
+
 
 class APIRequestFilter(django_filters.FilterSet):
 
-  project = django_filters.NumberFilter(name='updater_id')
-    
+  def _updater_is_project(qs, value):
+    if value:
+      return qs.filter(updater_type_id = ContentType.objects.get_for_model(Project).id)
+    else:
+      return qs.exclude(updater_type_id = ContentType.objects.get_for_model(Project).id)
+
+  updater_is_project = django_filters.BooleanFilter(action=_updater_is_project)
+
   class Meta:
     model = APIRequest
-    fields = ('id', 'endpoint', 'user', 'project', 'created_datetime', 'updated_datetime', 'success', 'meta', )
+    fields = ('id', 'endpoint', 'user', 'updater_is_project', 'updater_id', 'created_datetime', 'updated_datetime', 'success', 'meta', )
 
 
 # TODO: clean this class up
