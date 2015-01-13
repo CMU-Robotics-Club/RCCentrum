@@ -29,4 +29,4 @@ block content
         .text-left
           img.img-thumbnail(src="{% get_media_prefix %}{{ project.image }}" style="width:80%; height:80%;")
       .col-md-6
-        | {{ project.description }}
+        | {{ project.description|safe }}

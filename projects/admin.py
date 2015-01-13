@@ -1,11 +1,48 @@
 from django.contrib import admin
 from projects.models import Project
 from robocrm.models import RoboUser
-from django.forms import ModelForm
+from django.forms import ModelForm, CharField
 from django_object_actions import DjangoObjectActions
 from django.conf import settings
 from django.http import HttpResponse
 from projects.label import create_project_label
+from tinymce.widgets import TinyMCE
+
+class ProjectCreationForm(ModelForm):
+
+  def save(self, commit=True):
+    project = super().save(commit=False)
+
+    # Hacky but only way to get default leaders to work since
+    # original save_m2m overrides groups
+    old_save_m2m = self.save_m2m
+    def save_m2m():
+      old_save_m2m()
+      project.leaders.clear()
+
+      if hasattr(self.user, 'robouser'):
+        project.leaders.add(self.user.robouser)
+    self.save_m2m = save_m2m
+
+    if commit:
+      project.save()
+
+    return project
+
+  class Meta:
+    model = Project
+    fields = ('name', 'image', 'blurb', 'description', 'website', )
+
+
+class ProjectForm(ModelForm):
+  
+  blurb = CharField(widget=TinyMCE(attrs={'cols': 160, 'rows': 20}))
+  description = CharField(widget=TinyMCE(attrs={'cols': 160, 'rows': 20}))
+
+  class Meta:
+    model = Project
+    exclude = ()
+
 
 class ProjectAdmin(DjangoObjectActions, admin.ModelAdmin):
 
@@ -13,6 +50,7 @@ class ProjectAdmin(DjangoObjectActions, admin.ModelAdmin):
   filter_horizontal = ('leaders',)
   readonly_fields = ['current_image', 'last_api_activity']
   list_display = ('name', 'current_image', 'website', 'display', 'blurb', 'last_api_activity')
+  form = ProjectForm
 
   def create_project_label(self, request, obj):
     response = HttpResponse(content_type="image/png")
@@ -23,23 +61,21 @@ class ProjectAdmin(DjangoObjectActions, admin.ModelAdmin):
 
   objectactions = ('create_project_label', )
 
-  # TODO: find be a better way to do this function
   def get_form(self, request, obj=None, **kwargs):
-    user = request.user
-
-    if not user.is_superuser and not user.groups.filter(name='officers').exists():      
-      if 'display' not in self.readonly_fields:
-        self.readonly_fields.append('display')
-    else:
-      if 'display' in self.readonly_fields:
-        self.readonly_fields.remove('display')
-
     if obj:
       return super().get_form(request, obj, **kwargs)
     else:
       form = ProjectCreationForm
       form.user = request.user
       return form
+
+  def get_readonly_fields(self, request, obj=None):
+    user = request.user
+
+    if not user.is_superuser and not user.groups.filter(name='officers').exists():
+      return super().get_readonly_fields(request, obj) + ['display']
+    else:
+      return super().get_readonly_fields(request, obj)
 
   def get_fieldsets(self, request, obj=None):
     if obj:
@@ -66,30 +102,5 @@ class ProjectAdmin(DjangoObjectActions, admin.ModelAdmin):
 
     return qs
 
-
-class ProjectCreationForm(ModelForm):
-
-  def save(self, commit=True):
-    project = super().save(commit=False)
-
-    # Hacky but only way to get default leaders to work since
-    # original save_m2m overrides groups
-    old_save_m2m = self.save_m2m
-    def save_m2m():
-      old_save_m2m()
-      project.leaders.clear()
-
-      if hasattr(self.user, 'robouser'):
-        project.leaders.add(self.user.robouser)
-    self.save_m2m = save_m2m
-
-    if commit:
-      project.save()
-
-    return project
-
-  class Meta:
-    model = Project
-    fields = ('name', 'image', 'blurb', 'description', 'website', )
 
 admin.site.register(Project, ProjectAdmin)
