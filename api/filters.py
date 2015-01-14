@@ -19,7 +19,7 @@ class APIRequestFilter(django_filters.FilterSet):
 
   class Meta:
     model = APIRequest
-    fields = ('id', 'endpoint', 'user', 'updater_is_project', 'updater_id', 'created_datetime', 'updated_datetime', 'success', 'meta', )
+    fields = ('id', 'endpoint', 'extra', 'user', 'updater_is_project', 'updater_id', 'created_datetime', 'updated_datetime', 'success', 'meta', )
 
 
 # TODO: clean this class up
@@ -52,7 +52,7 @@ class RoboUserFilter(django_filters.FilterSet):
     
   class Meta:
     model = RoboUser
-    fields = ('id', 'machines', )
+    fields = ('id', 'balance', 'machines', )
 
 
 # TODO: now that active field is gone

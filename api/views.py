@@ -40,32 +40,6 @@ from rest_framework import status
 logger = logging.getLogger(__name__)
 
 
-# TODO: clean this up by overriding method in a base class
-# and having all views in this file extend that instead
-# of the current fix of method patching
-#
-# Place api_request in self
-# so View specific methods can override
-old_initial = APIView.initial
-def new_initial(self, request, *args, **kwargs):
-  logger.debug(request.path)
-
-  if not isinstance(request.data, dict):
-    error = ParseError(detail="Received data not in dictionary format")
-    error.erno = NOT_DICT
-    raise error
-
-  #api_request = APIRequest(
-  #  endpoint = request.path.replace("/api", ""),
-  #  updater_object = request.user,
-  #  meta = request.data.get('meta', "")
-  #  api_client = request.META.get('HTTP_API_CLIENT', "")
-  #)
-  #self.api_request = api_request
-
-  return old_initial(self, request, *args, **kwargs)
-APIView.initial = new_initial
-
 def create_api_request(request, serializer):
   """
   Helper function to construct

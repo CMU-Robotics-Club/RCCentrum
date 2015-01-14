@@ -74,7 +74,7 @@ class APIRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = APIRequest
-        fields = ('id', 'endpoint', 'user', 'updater_is_project', 'updater_id', 'created_datetime', 'updated_datetime', 'success', 'meta', )
+        fields = ('id', 'endpoint', 'extra', 'user', 'updater_is_project', 'updater_id', 'created_datetime', 'updated_datetime', 'success', 'meta', )
 
 
 class WebcamSerializer(serializers.ModelSerializer):
@@ -99,7 +99,7 @@ class RoboUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RoboUser
-        fields = ('id', 'username', 'first_name', 'last_name', 'date_joined', 'last_login', 'is_active', 'magnetic', 'rfid', 'machines', )
+        fields = ('id', 'username', 'first_name', 'last_name', 'date_joined', 'last_login', 'is_active', 'magnetic', 'rfid', 'balance', 'machines', )
 
 
 class ProjectSerializer(serializers.ModelSerializer):
