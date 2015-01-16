@@ -139,7 +139,8 @@ class ChannelSerializer(serializers.ModelSerializer):
             allowed = set(fields)
             existing = set(self.fields.keys())
             for field_name in existing - allowed:
-                self.fields.pop(field_name)
+                if field_name in self.fields:
+                    self.fields.pop(field_name)
 
         if exclude is not None:
             if "," in exclude:
@@ -150,7 +151,8 @@ class ChannelSerializer(serializers.ModelSerializer):
             disallowed = set(exclude)
             existing = set(self.fields.keys())
             for field_name in disallowed:
-                self.fields.pop(field_name)
+                if field_name in self.fields:
+                    self.fields.pop(field_name)
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
