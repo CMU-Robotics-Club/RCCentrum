@@ -121,6 +121,37 @@ class ChannelSerializer(serializers.ModelSerializer):
     updated = serializers.DateTimeField(source='updated_datetime', read_only=True)
     description = serializers.CharField(read_only=True)
 
+    # TODO: bring this functionality to all ModelSerializers
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        request = kwargs['context']['request']
+        params = request.QUERY_PARAMS
+        fields = params.get('fields')
+        exclude = params.get('exclude')
+
+        if fields is not None:
+            if "," in fields:
+                fields = fields.split(',')
+            else:
+                fields = [fields]
+
+            allowed = set(fields)
+            existing = set(self.fields.keys())
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+
+        if exclude is not None:
+            if "," in exclude:
+                exclude = exclude.split(',')
+            else:
+                exclude = [exclude]
+
+            disallowed = set(exclude)
+            existing = set(self.fields.keys())
+            for field_name in disallowed:
+                self.fields.pop(field_name)
+
     def update(self, instance, validated_data):
         user = self.context['request'].user
         instance.updater_object = user
