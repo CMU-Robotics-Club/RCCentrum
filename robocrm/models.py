@@ -65,7 +65,7 @@ class RoboUser(models.Model):
   major = models.CharField(max_length=50)
   
   # If someone trusts Roboclub with more than $999 we have a problem
-  balance = models.DecimalField(max_digits=3, decimal_places=2, default=0.00, help_text="Roboclub balance(currently only being used by Fridgetron)")
+  balance = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, help_text="Roboclub balance(currently only being used by Fridgetron)")
 
   # Roboclub Transaction Info
   dues_paid = models.DateField()

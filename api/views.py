@@ -103,6 +103,12 @@ class DateTimeViewSet(viewsets.ViewSet):
   without a realtime clock can easily get the datetime.
   """
 
+  # TODO: remove this once django-rest-swagger fixes the bug
+  # that requires these be set here
+  paginate_by=None
+  page_kwarg=None
+  paginate_by_param=None
+
   def list(self, request):
     return Response(timezone.now())
 
@@ -134,7 +140,7 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
   
     return super().get_serializer_class()
 
-  @detail_route(methods=['POST'], permission_classes=[UserBalancePermission, ])
+  @detail_route(methods=['POST'])#, permission_classes=[UserBalancePermission, ])
   def balance(self, request, pk):
     """
     Increments/decrements a User's balance(privileged operation).
@@ -155,7 +161,7 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
 
     api_request = create_api_request(request, serializer)
     api_request.user = u
-    api_request.extra = str(balance)
+    api_request.extra = "Amount: ${}, New Balance: ${}".format(str(amount), str(u.balance))
     api_request.save()
 
     return Response({
@@ -279,6 +285,12 @@ class CalendarViewSet(viewsets.ViewSet):
   Each event has the field 'name', 'location', 'start_time', and 'end_time'.
   The 'current time' can be changed by setting the URL parameter 'dt' to a specified datetime.
   """
+
+  # TODO: remove this once django-rest-swagger fixes the bug
+  # that requires these be set here
+  paginate_by=None
+  page_kwarg=None
+  paginate_by_param=None
 
   # TODO: key this to take into account dt
   #@cache_response(30)

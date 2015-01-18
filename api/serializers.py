@@ -18,7 +18,7 @@ class BalanceSerializer(serializers.Serializer):
     To validate /users/:id/balance/ endpoint.
     """
 
-    amount = serializers.DecimalField(max_digits=3, decimal_places=2)
+    amount = serializers.DecimalField(max_digits=5, decimal_places=2)
     meta = serializers.CharField(required=False, allow_blank=True)
 
 
@@ -125,34 +125,35 @@ class ChannelSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        request = kwargs['context']['request']
-        params = request.QUERY_PARAMS
-        fields = params.get('fields')
-        exclude = params.get('exclude')
+        if hasattr(kwargs, 'context'):
+            request = kwargs['context']['request']
+            params = request.QUERY_PARAMS
+            fields = params.get('fields')
+            exclude = params.get('exclude')
 
-        if fields is not None:
-            if "," in fields:
-                fields = fields.split(',')
-            else:
-                fields = [fields]
+            if fields is not None:
+                if "," in fields:
+                    fields = fields.split(',')
+                else:
+                    fields = [fields]
 
-            allowed = set(fields)
-            existing = set(self.fields.keys())
-            for field_name in existing - allowed:
-                if field_name in self.fields:
-                    self.fields.pop(field_name)
+                allowed = set(fields)
+                existing = set(self.fields.keys())
+                for field_name in existing - allowed:
+                    if field_name in self.fields:
+                        self.fields.pop(field_name)
 
-        if exclude is not None:
-            if "," in exclude:
-                exclude = exclude.split(',')
-            else:
-                exclude = [exclude]
+            if exclude is not None:
+                if "," in exclude:
+                    exclude = exclude.split(',')
+                else:
+                    exclude = [exclude]
 
-            disallowed = set(exclude)
-            existing = set(self.fields.keys())
-            for field_name in disallowed:
-                if field_name in self.fields:
-                    self.fields.pop(field_name)
+                disallowed = set(exclude)
+                existing = set(self.fields.keys())
+                for field_name in disallowed:
+                    if field_name in self.fields:
+                        self.fields.pop(field_name)
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
