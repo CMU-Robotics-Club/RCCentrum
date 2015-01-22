@@ -11,11 +11,11 @@ from api.models import APIRequest
 class Machine(models.Model):
   type = models.CharField(max_length=20)
 
-  # TODO: remove ID
+  # TODO: figure out how to make a migration
+  # removing this and making id an integer while
+  # preserving existing data
   id = models.CharField(max_length=10, primary_key=True)
-  
-  maint = models.BooleanField(default=False)
-  
+    
   def __str__(self):
     return self.type
 

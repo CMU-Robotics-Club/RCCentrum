@@ -256,8 +256,7 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
 
 
 class MachineAdmin(admin.ModelAdmin):
-   list_display = ('type', 'maint', )
-   readonly_fields = ('id', 'maint', )
+   list_display = ('id', 'type', )
 
 
 class GroupAdmin(GroupAdmin):
