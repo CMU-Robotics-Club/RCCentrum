@@ -94,15 +94,20 @@ class QuoteAdmin(VoteableModelAdmin):
 
   change_form_template = "admin/change_form_no_change_save.html"
 
-  fields = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
+  fields = ('id', '_quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
   readonly_fields = ('id', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
-  list_display = ('id', 'quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
+  list_display = ('id', '_quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
+
+  # don't HTML escape Quote
+  def _quote(self, obj):
+         return obj.quote
+  _quote.allow_tags = True
 
   def get_readonly_fields(self, request, obj=None):
     e = ()
 
     if obj:
-      e += ('quote', )
+      e += ('_quote', )
     
     return super().get_readonly_fields(request, obj) + e
 
