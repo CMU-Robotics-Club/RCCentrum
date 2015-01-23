@@ -32,12 +32,6 @@ def roboauthall(request, rfid_tag):
 
 @require_POST
 def add_card_event(request):
-  if 'username' in request.POST and 'password' in request.POST:
-    user = authenticate(username=request.POST['username'],
-        password=request.POST['password'])
-    if user is not None and user.is_active:
-      login(request, user)
-
   tstart = request.POST.get('tstart') # TODO: convert to date
   tend = request.POST.get('tend')
   user_id = request.POST.get('user_id', 0)

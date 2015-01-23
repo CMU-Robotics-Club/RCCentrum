@@ -50,6 +50,7 @@ class ProjectAdmin(DjangoObjectActions, admin.ModelAdmin):
   filter_horizontal = ('leaders',)
   readonly_fields = ['current_image', 'last_api_activity']
   list_display = ('name', 'current_image', 'website', 'display', 'blurb', 'last_api_activity')
+  list_filter = ('display', )
   form = ProjectForm
 
   def create_project_label(self, request, obj):

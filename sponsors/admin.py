@@ -6,5 +6,6 @@ class SponsorAdmin(OrderedModelAdmin):
   fields = ('name', 'current_logo', 'logo', 'website', 'active', )
   readonly_fields = ['current_logo']
   list_display = ('name', 'current_logo', 'active', 'website', 'move_up_down_links', )
+  list_filter = ('active', )
 
 admin.site.register(Sponsor, SponsorAdmin)

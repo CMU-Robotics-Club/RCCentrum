@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.core import urlresolvers
 from .models import APIRequest
-from crm.admin import UpdatedByAdmin
+from crm.admin import UpdatedByAdmin, UpdatedByListFilter
 
 _fields = ('id', 'endpoint', 'extra', 'requester', 'user_url', 'created_datetime', 'updated_datetime', 'success', 'meta', 'api_client', )
 
@@ -12,6 +12,7 @@ class APIRequestAdmin(UpdatedByAdmin):
   fields = _fields
   readonly_fields = _fields
   list_display = _fields
+  list_filter = ['endpoint', UpdatedByListFilter, 'user', 'success', 'meta', 'api_client', ]
 
   def requester(self, obj):
     return self.updater_url(obj)
