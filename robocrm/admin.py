@@ -16,6 +16,67 @@ from django.conf import settings
 from django.http import HttpResponse
 from .label import create_robouser_label
 
+
+class IsSetListFilter(admin.SimpleListFilter):
+  """
+  Filter used by is_magnetic_set and is_rfid_set
+  """
+
+  empty_value = None
+
+  def lookups(self, request, model_admin):
+    return (
+      ('true', "True"),
+      ('false', "False"),
+    )
+
+  def queryset(self, request, queryset):
+    if(self.value()):
+      v = (self.value() == "true")
+
+      if v:
+        return queryset.exclude(**{self.parameter_name: self.empty_value})
+      else:
+        return queryset.filter(**{self.parameter_name: self.empty_value})
+    else:
+      return queryset
+
+
+class IsMagneticSetListFilter(IsSetListFilter):
+  title = ('Is Magnetic Set')
+  parameter_name = 'robouser__magnetic'
+
+
+class IsRFIDSetListFilter(IsSetListFilter):
+  title = ('Is RFID Set')
+  parameter_name = 'robouser__rfid'
+
+
+class IsMembershipValidListFilter(admin.SimpleListFilter):
+  title = ('Is Membership Valid')
+  parameter_name = 'robouser__membership_valid'
+  
+  def lookups(self, request, model_admin):
+    return (
+      ('true', "True"),
+      ('false', "False"),
+    )
+
+  def queryset(self, request, queryset):
+    if(self.value()):
+      v = (self.value() == "true")
+
+      exclude_ids = []
+      
+      for user in queryset:
+        if user.robouser.membership_valid != v:
+          exclude_ids.append(user.id)
+
+      return queryset.exclude(id__in=exclude_ids)
+    else:
+      return queryset
+
+
 class RoboUserInline(admin.StackedInline):
 
   model = RoboUser
@@ -149,6 +210,7 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   search_fields = ['username', 'email', 'first_name', 'last_name', 'is_active', 'last_login', 'date_joined', ]
   exclude = ['password', 'user_permissions', 'is_staff', ]
   filter_horizontal = ('groups',)
+  list_filter = ('is_active', 'is_superuser', 'robouser__dues_paid_year', IsMembershipValidListFilter, IsMagneticSetListFilter, IsRFIDSetListFilter, 'robouser__class_level', 'robouser__major', 'robouser__grad_year', )
 
   def create_robouser_label(self, request, obj):
     response = HttpResponse(content_type="image/png")
