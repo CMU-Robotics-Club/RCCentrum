@@ -95,6 +95,10 @@ class RoboUserInline(admin.StackedInline):
       if user != obj:
         fields.remove("magnetic")
 
+      user = request.user
+      if not user.is_superuser and not user.groups.filter(name='officers').exists():
+        fields.remove('machines')
+
       return fields
     else:
       # New User
@@ -104,21 +108,32 @@ class RoboUserInline(admin.StackedInline):
     return obj.membership_valid
   membership_valid.boolean = True
 
-  # TODO: find a way to make Django not abbreviate the result
-  # of 'Machine.objects.exclude(robouser=obj)' so the string
-  # does not manually need to be constructed.
-  # Displays '[,,,,,,]' if string not manually constructed)
+  def machines_authorized(self, obj):
+    field = ""
+
+    for i, machine in enumerate(obj.machines.all()):
+      if i != 0:
+        field += '<br />'
+
+      field += str(machine)
+      field += ' <img src="{}" />'.format("/static/admin/img/icon-yes.gif")
+
+    return field
+  machines_authorized.mark_safe=True
+
   def machines_not_authorized(self, obj):
     machines = Machine.objects.exclude(robouser=obj)
     field = ""
 
     for i, machine in enumerate(machines):
       if i != 0:
-        field += ', '
+        field += '<br />'
 
       field += str(machine)
+      field += ' <img src="{}" />'.format("/static/admin/img/icon-no.gif")
 
     return field
+  machines_not_authorized.mark_safe=True
 
   def club_activity(self, obj):
     activities = obj.club_activity
@@ -153,7 +168,7 @@ class RoboUserInline(admin.StackedInline):
       user = request.user
 
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
-        return super().get_readonly_fields(request, obj) + ('machines', 'dues_paid', 'dues_paid_year', )
+        return super().get_readonly_fields(request, obj) + ('machines_authorized', 'dues_paid', 'dues_paid_year', )
       else:
         return super().get_readonly_fields(request, obj)
     else:
@@ -208,7 +223,7 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   inlines = (RoboUserInline, )
   list_display = ('username', 'email', 'first_name', 'last_name', 'is_superuser', 'roles', 'last_login', 'date_joined', 'dues_paid', 'dues_paid_year', 'membership_valid', 'is_magnetic_set', 'is_rfid_set', 'class_level', 'major', 'grad_year', 'balance', )
   search_fields = ['username', 'email', 'first_name', 'last_name', 'last_login', 'date_joined', ]
-  exclude = ['password', 'user_permissions', 'is_staff', ]
+  exclude = ['password', 'user_permissions', 'is_active', 'is_staff', ]
   filter_horizontal = ('groups',)
   list_filter = ('is_superuser', 'robouser__dues_paid_year', IsMembershipValidListFilter, IsMagneticSetListFilter, IsRFIDSetListFilter, 'robouser__class_level', 'robouser__major', 'robouser__grad_year', )
 
@@ -328,6 +343,7 @@ class GroupAdmin(GroupAdmin):
   def members(self, obj):
     return ', '.join(['<a href="%s">%s</a>' % (reverse('admin:auth_user_change', args=(x.id,)), x.username) for x in obj.user_set.all().order_by('username')])
   members.allow_tags = True
+
 
 admin.site.unregister(User)
 admin.site.register(User, RoboUserAdmin)
