@@ -82,7 +82,7 @@ class RoboUserInline(admin.StackedInline):
   model = RoboUser
   can_delete = False
   filter_horizontal = ('machines', )
-  readonly_fields = ('is_magnetic_set', 'is_rfid_set', 'membership_valid', 'machines_not_authorized', 'balance', 'club_activity', )
+  readonly_fields = ('is_magnetic_set', 'is_rfid_set', 'membership_valid', 'machines_authorized', 'machines_not_authorized', 'balance', 'club_activity', )
 
   def get_fields(self, request, obj=None):
     if obj:
@@ -107,6 +107,14 @@ class RoboUserInline(admin.StackedInline):
   def membership_valid(self, obj):
     return obj.membership_valid
   membership_valid.boolean = True
+
+  def is_magnetic_set(self, obj):
+    return obj.is_magnetic_set
+  is_magnetic_set.boolean = True
+
+  def is_rfid_set(self, obj):
+    return obj.is_rfid_set
+  is_rfid_set.boolean = True
 
   def machines_authorized(self, obj):
     field = ""
@@ -168,7 +176,7 @@ class RoboUserInline(admin.StackedInline):
       user = request.user
 
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
-        return super().get_readonly_fields(request, obj) + ('machines_authorized', 'dues_paid', 'dues_paid_year', )
+        return super().get_readonly_fields(request, obj) + ('dues_paid', 'dues_paid_year', )
       else:
         return super().get_readonly_fields(request, obj)
     else:
