@@ -287,7 +287,12 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
 
   def get_readonly_fields(self, request, obj=None):
     if obj:
-      return ['last_login', 'date_joined', 'username', 'first_name', 'last_name', 'email', ]
+      fields = ['last_login', 'date_joined', 'username', 'first_name', 'last_name', 'email', ]
+
+      if request.user == obj:
+        fields.remove('first_name')
+
+      return fields
     else:
       return []
 
