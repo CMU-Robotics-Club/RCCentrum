@@ -91,7 +91,6 @@ class RoboUserSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(source='user.last_name', read_only=True)
     date_joined = serializers.DateTimeField(source='user.date_joined', read_only=True)
     last_login = serializers.DateTimeField(source='user.last_login', read_only=True)
-    is_active = serializers.BooleanField(source='user.is_active', read_only=True)
 
     magnetic = serializers.BooleanField(source='is_magnetic_set', read_only=True)
     rfid = serializers.BooleanField(source='is_rfid_set', read_only=True)
@@ -99,7 +98,7 @@ class RoboUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RoboUser
-        fields = ('id', 'username', 'first_name', 'last_name', 'date_joined', 'last_login', 'is_active', 'magnetic', 'rfid', 'balance', 'machines', )
+        fields = ('id', 'username', 'first_name', 'last_name', 'date_joined', 'last_login', 'magnetic', 'rfid', 'balance', 'machines', )
 
 
 class ProjectSerializer(serializers.ModelSerializer):
