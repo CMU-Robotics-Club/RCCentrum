@@ -176,7 +176,7 @@ class RoboUserInline(admin.StackedInline):
       user = request.user
 
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
-        return super().get_readonly_fields(request, obj) + ('dues_paid', 'dues_paid_year', )
+        return super().get_readonly_fields(request, obj) + ('rfid_card', 'dues_paid', 'dues_paid_year', )
       else:
         return super().get_readonly_fields(request, obj)
     else:
@@ -229,11 +229,11 @@ class UserCreationForm(ModelForm):
 
 class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   inlines = (RoboUserInline, )
-  list_display = ('username', 'email', 'first_name', 'last_name', 'is_superuser', 'roles', 'last_login', 'date_joined', 'dues_paid', 'dues_paid_year', 'membership_valid', 'is_magnetic_set', 'is_rfid_set', 'class_level', 'major', 'grad_year', 'balance', )
+  list_display = ('username', 'email', 'first_name', 'last_name', 'is_superuser', 'roles', 'last_login', 'date_joined', 'dues_paid', 'dues_paid_year', 'membership_valid', 'is_magnetic_set', 'is_rfid_set', 'rfid_card', 'class_level', 'major', 'grad_year', 'balance', )
   search_fields = ['username', 'email', 'first_name', 'last_name', 'last_login', 'date_joined', ]
   exclude = ['password', 'user_permissions', 'is_active', 'is_staff', ]
   filter_horizontal = ('groups',)
-  list_filter = ('is_superuser', 'robouser__dues_paid_year', IsMembershipValidListFilter, IsMagneticSetListFilter, IsRFIDSetListFilter, 'robouser__class_level', 'robouser__major', 'robouser__grad_year', )
+  list_filter = ('is_superuser', 'robouser__dues_paid_year', IsMembershipValidListFilter, IsMagneticSetListFilter, IsRFIDSetListFilter, 'robouser__rfid_card', 'robouser__class_level', 'robouser__major', 'robouser__grad_year', )
 
   def create_robouser_label(self, request, obj):
     response = HttpResponse(content_type="image/png")
@@ -252,6 +252,9 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   def is_rfid_set(self, obj):
     return obj.robouser.is_rfid_set
   is_rfid_set.boolean = True
+
+  def rfid_card(self, obj):
+    return obj.robouser.rfid_card
 
   def class_level(self, obj):
     return obj.robouser.class_level

@@ -30,6 +30,15 @@ class RoboUser(models.Model):
   # Roboclub RFID Card Number
   rfid = CharNullField(max_length=10, null=True, blank=True, unique=True)
 
+  RFID_CARD_CHOICES = (
+      ("CMU", "CMU ID"),
+      ("PITT", "PITT ID"),
+      ("OTHER", "OTHER ID"),
+  )
+  rfid_card = models.CharField(max_length=5, 
+                                 choices=RFID_CARD_CHOICES,
+                                 default="CMU")
+
   @property
   def is_magnetic_set(self):
     return bool(self.magnetic)
