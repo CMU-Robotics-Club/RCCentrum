@@ -294,6 +294,7 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
 
       if request.user == obj:
         fields.remove('first_name')
+        fields.remove('email')
 
       return fields
     else:
