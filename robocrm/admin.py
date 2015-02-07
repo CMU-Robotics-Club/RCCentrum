@@ -15,6 +15,7 @@ from django_object_actions import DjangoObjectActions
 from django.conf import settings
 from django.http import HttpResponse
 from .label import create_robouser_label
+from datetime import timedelta
 
 
 class IsSetListFilter(admin.SimpleListFilter):
@@ -148,14 +149,19 @@ class RoboUserInline(admin.StackedInline):
     field = ""
 
     for i, activity in enumerate(activities):
-      if i != 0:
-        field += '<br />'
-
       endpoint = activity.endpoint.rsplit("/")
       endpoint[:] = (x for x in endpoint if x != "")
       endpoint = endpoint[-1]
-      created_datetime = activity.created_datetime.strftime("%A %B %d %Y, %I:%M:%S %p")
-      s = "{}: {} {}".format(created_datetime, activity.updater_object, endpoint)
+      created_datetime = activity.created_datetime
+
+      # TODO: fix this hacky solution
+      # Django and standard python treat timezones
+      # differently it appears, so manually subtracted
+      # 5 hours to make time correct
+      created_datetime += timedelta(hours=-5)
+      
+      created_datetime_s = created_datetime.strftime("%A %B %d %Y, %I:%M:%S %p")
+      s = "{}: {} {}".format(created_datetime_s, activity.updater_object, endpoint)
 
       if activity.extra:
         s += "({})".format(activity.extra)
@@ -165,7 +171,7 @@ class RoboUserInline(admin.StackedInline):
 
       s += " Granted" if activity.success else " Denied" 
 
-      field += s
+      field += "{} | <a href='{}'>Details</a> <br />".format(s, reverse('admin:api_apirequest_change', args=(activity.id,)))
 
     return field
   club_activity.mark_safe=True
