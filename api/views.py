@@ -140,7 +140,7 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
   
     return super().get_serializer_class()
 
-  @detail_route(methods=['POST'])#, permission_classes=[UserBalancePermission, ])
+  @detail_route(methods=['POST'], permission_classes=[UserBalancePermission, ])
   def balance(self, request, pk):
     """
     Increments/decrements a User's balance(privileged operation).
