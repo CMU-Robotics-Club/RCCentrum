@@ -176,7 +176,7 @@ class RoboUserInline(admin.StackedInline):
       user = request.user
 
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
-        return super().get_readonly_fields(request, obj) + ('rfid_card', 'dues_paid', 'dues_paid_year', )
+        return super().get_readonly_fields(request, obj) + ('rfid_card', 'rfid', 'dues_paid', 'dues_paid_year', )
       else:
         return super().get_readonly_fields(request, obj)
     else:
