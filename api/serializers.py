@@ -38,18 +38,8 @@ class RFIDSerializer(serializers.Serializer):
     To validate /rfid/ and /users/:id/rfid/ lookup endpoint.
     """
 
-    rfid = serializers.CharField()
+    rfid = serializers.RegexField('^[A-F0-9]{8}$')
     meta = serializers.CharField(required=False, allow_blank=True)
-
-    def validate_rfid(self, value):
-        """
-        Ensures the RFID is the proper length
-        """
-
-        if len(value) != 8:
-            raise serializers.ValidationError("RFIDs must be 8 characters long")
-
-        return value
 
 
 class MagneticSerializer(serializers.Serializer):
@@ -57,18 +47,8 @@ class MagneticSerializer(serializers.Serializer):
     To validate /magnetic/ lookup endpoint.
     """
 
-    magnetic = serializers.CharField()
+    magnetic = serializers.RegexField('^[0-9]{9}$')
     meta = serializers.CharField(required=False, allow_blank=True)
-
-    def validate_magnetic(self, value):
-        """
-        Ensures the Magnetic ID is the proper length
-        """
-
-        if len(value) != 9:
-            raise serializers.ValidationError("Magnetic IDs must be 9 characters long")
-
-        return value
 
 
 class APIRequestSerializer(serializers.ModelSerializer):
