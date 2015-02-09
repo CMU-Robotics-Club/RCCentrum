@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.conf import settings
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
+from django.core.validators import RegexValidator
 from .fields import CharNullField
 from api.models import APIRequest
 
@@ -28,7 +29,13 @@ class RoboUser(models.Model):
   magnetic = CharNullField(max_length=9, null=True, blank=True, unique=True, help_text="9 Character Magnetic Card ID(found on Student ID)(Only you can see this ID)")
 
   # Roboclub RFID Card Number
-  rfid = CharNullField(max_length=10, null=True, blank=True, unique=True)
+  rfid = CharNullField(max_length=10, null=True, blank=True, unique=True, validators=[
+    RegexValidator(
+      regex='^[A-F0-9]{8}$',
+      message='RFID must be 8 hexa-decimal characters(0-9, A-F)',
+      code='invalid_rfid'
+    ),
+  ])
 
   RFID_CARD_CHOICES = (
       ("CMU", "CMU ID"),
