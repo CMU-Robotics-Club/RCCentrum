@@ -13,6 +13,7 @@ from posters.models import Poster
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 from django.contrib.contenttypes.models import ContentType
 
+
 class BalanceSerializer(serializers.Serializer):
     """
     To validate /users/:id/balance/ endpoint.

@@ -101,6 +101,10 @@ class DateTimeViewSet(viewsets.ViewSet):
   """
   The current datetime.  Exists so that projects
   without a realtime clock can easily get the datetime.
+
+  The query parameter 'form' can be provided, returning
+  the response of the datetime through strftime with the
+  provided formatting string.
   """
 
   # TODO: remove this once django-rest-swagger fixes the bug
@@ -110,7 +114,17 @@ class DateTimeViewSet(viewsets.ViewSet):
   paginate_by_param=None
 
   def list(self, request):
-    return Response(timezone.now())
+
+    now = timezone.now()
+
+    form = request.query_params.get('form', None)
+
+    if form:
+      now = now.strftime(form)
+
+    return Response({
+      'datetime': now
+    })
 
 
 class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
