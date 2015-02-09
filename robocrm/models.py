@@ -9,6 +9,7 @@ from django.core.validators import RegexValidator
 from .fields import CharNullField
 from api.models import APIRequest
 
+
 class Machine(models.Model):
   type = models.CharField(max_length=20)
 
@@ -92,6 +93,14 @@ class RoboUser(models.Model):
   # Roboclub Transaction Info
   dues_paid = models.DateField()
   dues_paid_year = models.BooleanField(default=True, help_text="Unchecked if only Semester membership was paid")
+
+  color = models.CharField(max_length=6, default="FF0000", help_text="Color that can be used by Projects", validators=[
+    RegexValidator(
+      regex='^[0-9A-F]{6}$',
+      message='Must be a valid color code(6 hexadecimal characters)(ex. "FF0000" is red)',
+      code='invalid_color'
+    ),
+  ])
 
   @property
   def membership_valid(self):

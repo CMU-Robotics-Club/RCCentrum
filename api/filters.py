@@ -51,7 +51,7 @@ class RoboUserFilter(django_filters.FilterSet):
     
   class Meta:
     model = RoboUser
-    fields = ('id', 'balance', 'machines', )
+    fields = ('id', 'balance', 'machines', 'color', )
 
 
 # TODO: now that active field is gone

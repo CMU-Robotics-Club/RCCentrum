@@ -83,7 +83,7 @@ class RoboUserInline(admin.StackedInline):
   model = RoboUser
   can_delete = False
   filter_horizontal = ('machines', )
-  readonly_fields = ('is_magnetic_set', 'is_rfid_set', 'membership_valid', 'machines_authorized', 'machines_not_authorized', 'balance', 'club_activity', )
+  readonly_fields = ('current_color', 'is_magnetic_set', 'is_rfid_set', 'membership_valid', 'machines_authorized', 'machines_not_authorized', 'balance', 'club_activity', )
 
   def get_fields(self, request, obj=None):
     if obj:
@@ -95,6 +95,7 @@ class RoboUserInline(admin.StackedInline):
 
       if user != obj:
         fields.remove("magnetic")
+        fields.remove("color")
 
       user = request.user
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
@@ -176,6 +177,11 @@ class RoboUserInline(admin.StackedInline):
     return field
   club_activity.mark_safe=True
   club_activity.short_description="Club Activity(most recent 15 events)"
+
+  def current_color(self, obj):
+    return '<div style="float: left;width:20px;height:20px;margin:5px;border-width:1px;border-style:solid;border-color:rgba(0,0,0,.2);background-color:#{};"></div>'.format(obj.color)
+  current_color.mark_safe=True
+  current_color.short_description="Current User Color"
 
   def get_readonly_fields(self, request, obj=None):
     if obj:
