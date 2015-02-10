@@ -179,7 +179,15 @@ class RoboUserInline(admin.StackedInline):
   club_activity.short_description="Club Activity(most recent 15 events)"
 
   def current_color(self, obj):
-    return '<div style="float: left;width:20px;height:20px;margin:5px;border-width:1px;border-style:solid;border-color:rgba(0,0,0,.2);background-color:#{};"></div>'.format(obj.color)
+    color = obj.color
+    color_strings = [color[i:i+6] for i in range(0, len(color), 6)]
+
+    result = ''
+
+    for color_string in color_strings:
+      result += '<div style="float: left;width:20px;height:20px;margin:5px;border-width:1px;border-style:solid;border-color:rgba(0,0,0,.2);background-color:#{};"></div>'.format(color_string)
+  
+    return result
   current_color.mark_safe=True
   current_color.short_description="Current User Color"
 

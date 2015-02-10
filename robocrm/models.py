@@ -94,10 +94,10 @@ class RoboUser(models.Model):
   dues_paid = models.DateField()
   dues_paid_year = models.BooleanField(default=True, help_text="Unchecked if only Semester membership was paid")
 
-  color = models.CharField(max_length=6, default="FF0000", help_text="Color that can be used by Projects", validators=[
+  color = models.CharField(max_length=60, default="FF0000", help_text="Color (pattern, up to 10 colors,) that can be used by Projects(up to 60 hexadecimal characters)", validators=[
     RegexValidator(
-      regex='^[0-9A-F]{6}$',
-      message='Must be a valid color code(6 hexadecimal characters)(ex. "FF0000" is red)',
+      regex = '^(?:[0-9A-F]{6})+$',
+      message='Must be a valid color code(multiple of 6 hexadecimal characters)(ex. "FF0000" is red, FF000000FF00 red-green pattern)',
       code='invalid_color'
     ),
   ])
