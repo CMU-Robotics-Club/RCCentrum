@@ -36,6 +36,7 @@ from django.db import IntegrityError
 from rest_framework.generics import GenericAPIView, CreateAPIView
 from django.shortcuts import redirect
 from rest_framework import status
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -114,8 +115,7 @@ class DateTimeViewSet(viewsets.ViewSet):
   paginate_by_param=None
 
   def list(self, request):
-
-    now = timezone.now()
+    now = datetime.now()
 
     form = request.query_params.get('form', None)
 
