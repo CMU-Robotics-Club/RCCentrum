@@ -5,19 +5,15 @@ from api.models import APIRequest
 from django.views.decorators.http import require_POST
 from projects.models import Project
 from django.utils import timezone
-from .models import *
+from .models import RoboUser, Machine
 
 def roboauth(request, rfid_tag, mach_num):
-  r = RoboUser.objects.filter(rfid=rfid_tag)
-  if r.count() > 0:
-    us = r[0]
-  else:
+  try:
+    r = RoboUser.objects.get(rfid=rfid_tag)
+  except RoboUser.DoesNotExist:
     return HttpResponse("0")
-  auth_machines = us.machines.filter(id=mach_num)
-  if auth_machines.count() > 0 :
-    return HttpResponse("1")
-  else :
-    return HttpResponse("0")
+
+  return HttpResponse(r.machines.filter(id=mach_num).count())
 
 
 @require_POST
