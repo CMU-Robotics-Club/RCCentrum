@@ -8,6 +8,7 @@ from django.contrib.admin.util import unquote
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from functools import update_wrapper
+from django.utils.safestring import mark_safe
 
 class VoteableModelAdmin(UpdatedByAdmin):
   """
@@ -94,22 +95,26 @@ class QuoteAdmin(VoteableModelAdmin):
 
   change_form_template = "admin/change_form_no_change_save.html"
 
-  fields = ('id', '_quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
-  readonly_fields = ('id', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
-  list_display = ('id', '_quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
+  fields = ('id', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
+  readonly_fields = ('id', 'html_quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
+  list_display = ('id', 'html_quote', 'up_votes', 'down_votes', 'upvote', 'downvote', 'net_votes', 'total_votes', 'created_datetime', )
 
   # don't HTML escape Quote
-  def _quote(self, obj):
-         return obj.quote
-  _quote.allow_tags = True
+  def html_quote(self, obj):
+    return mark_safe(obj.quote)
+  html_quote.allow_tags = True
 
-  def get_readonly_fields(self, request, obj=None):
-    e = ()
+  def get_fields(self, request, obj=None):
+    e = super().get_fields(request, obj)
+
+    print(e)
 
     if obj:
-      e += ('_quote', )
-    
-    return super().get_readonly_fields(request, obj) + e
+      e = ('html_quote', ) + e
+    else:
+      e = ('quote', ) + e
+
+    return e
 
   # Hides admin interface from Admin sidebar
   # Users can still visit the Admin Model URL
