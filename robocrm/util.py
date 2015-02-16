@@ -5,6 +5,7 @@ def subscribe_to_list(first_name, last_name, email, listname):
     return
 
   name = first_name + ' ' + last_name
+
   if name == '':
     from_addr = email
   else:

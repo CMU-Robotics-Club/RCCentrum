@@ -231,8 +231,8 @@ class UserCreationForm(ModelForm):
     if commit:
       user.save()
 
-    # TODO: make this mailing list a setting
-    subscribe_to_list(user.first_name, user.last_name, user.email, 'roboclub-gb')
+    subscribe_to_list(user.first_name, user.last_name, user.email, settings.GB_LIST)
+    
     return user
 
   class Meta:
