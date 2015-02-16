@@ -27,6 +27,8 @@ USER_EMAIL_PROJECTS_TO_USERS = {}
 
 # ==========================
 
+PROJECT_PRIVATE_KEY_MIN_LENGTH = 30
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 

@@ -6,6 +6,11 @@ from django.core.exceptions import ValidationError
 import random
 import string
 
+
+def create_private_key():
+  return ''.join(random.choice(string.hexdigits) for i in range(40))
+
+
 class Project(models.Model):
   name = models.CharField(max_length=30, unique=True)
 
@@ -14,11 +19,8 @@ class Project(models.Model):
     return "projects/{}{}".format(instance.name.lower(), extension)
 
   def clean(self):
-    if len(self.private_key) == 0:
-      self.private_key = ''.join(random.choice(string.hexdigits) for i in range(30))
-
-    if len(self.private_key) < 30:
-      raise ValidationError("PrivateKey must be at least 30 characters")
+    if len(self.private_key) < settings.PROJECT_PRIVATE_KEY_MIN_LENGTH:
+      raise ValidationError("Private Key must be at least {} characters".format(settings.PROJECT_PRIVATE_KEY_MIN_LENGTH))
 
     super().clean()
 
@@ -43,7 +45,7 @@ class Project(models.Model):
     return '<img src="{}{}" width="100px height=100px"/>'.format(settings.MEDIA_URL, self.image)
   current_image.allow_tags = True
 
-  private_key = models.CharField(max_length=50)
+  private_key = models.CharField(max_length=50, default=create_private_key)
 
   def __str__(self):
     return self.name
