@@ -105,7 +105,7 @@ class ChannelSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if hasattr(kwargs, 'context'):
+        if 'context' in kwargs:
             request = kwargs['context']['request']
             params = request.QUERY_PARAMS
             fields = params.get('fields')

@@ -16,3 +16,4 @@ easy-thumbnails
 django-object-actions
 drf-extensions
 django_rest_swagger
+pytz

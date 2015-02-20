@@ -17,13 +17,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='quote',
             name='created_datetime',
-            field=models.DateTimeField(auto_now_add=True, default=datetime.datetime(2014, 12, 29, 19, 24, 16, 536939, tzinfo=utc)),
+            field=models.DateTimeField(auto_now_add=True, default=datetime.datetime(2014, 12, 29, 19, 24, 16, 536939)),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='quote',
             name='updated_datetime',
-            field=models.DateTimeField(auto_now=True, default=datetime.datetime(2014, 12, 29, 19, 24, 33, 48934, tzinfo=utc)),
+            field=models.DateTimeField(auto_now=True, default=datetime.datetime(2014, 12, 29, 19, 24, 33, 48934)),
             preserve_default=False,
         ),
         migrations.AddField(

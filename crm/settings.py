@@ -78,7 +78,10 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+# Set to False for simplicity and maintainability.
+# Although storing datetimes and times in TZ Aware format is recommended,
+# causes confusion to API and Admin end User.  Simplifies testing.
+USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -225,6 +228,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework_csv.renderers.CSVRenderer',
     ),
+    'DATETIME_FORMAT': '%m-%d-%YT%H:%M:%S',
 }
 
 SWAGGER_SETTINGS = {
