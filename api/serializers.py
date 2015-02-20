@@ -79,7 +79,7 @@ class RoboUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RoboUser
-        fields = ('id', 'username', 'first_name', 'last_name', 'date_joined', 'last_login', 'magnetic', 'rfid', 'balance', 'machines', 'color')
+        fields = ('id', 'username', 'first_name', 'last_name', 'date_joined', 'last_login', 'magnetic', 'rfid', 'balance', 'machines', 'color', 'membership_valid', )
 
 
 class ProjectSerializer(serializers.ModelSerializer):

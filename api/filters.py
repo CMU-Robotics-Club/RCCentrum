@@ -48,10 +48,19 @@ class RoboUserFilter(django_filters.FilterSet):
 
   magnetic = django_filters.BooleanFilter(action=magnetic_filter)
   rfid = django_filters.BooleanFilter(action=rfid_filter)
-    
+
+  def _membership_valid(qs, value):
+    for member in qs:
+      if member.membership_valid != value:
+        qs = qs.exclude(id=member.id)
+
+    return qs
+
+  membership_valid = django_filters.BooleanFilter(action=_membership_valid)
+
   class Meta:
     model = RoboUser
-    fields = ('id', 'balance', 'machines', 'color', )
+    fields = ('id', 'balance', 'machines', 'color', 'membership_valid', )
 
 
 # TODO: now that active field is gone
