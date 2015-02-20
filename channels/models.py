@@ -57,7 +57,7 @@ def channel_save_handler(sender, **kwargs):
 
   try:
     response = requests.post(url, headers=headers, data=json.dumps(body))
-  except requests.exception.ConnectionError as e:
+  except Exception as e:
     # If cannot send notification to WebSocket server,
     # it is likely not running
     # Gracefully fail, log failure, and continue save
