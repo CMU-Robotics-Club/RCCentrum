@@ -13,6 +13,9 @@ def roboauth(request, rfid_tag, mach_num):
   except RoboUser.DoesNotExist:
     return HttpResponse("0")
 
+  if not r.membership_valid:
+    return HttpResponse("0")
+
   return HttpResponse(r.machines.filter(id=mach_num).count())
 
 
