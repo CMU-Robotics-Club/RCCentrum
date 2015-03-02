@@ -12,7 +12,7 @@ from tshirts.models import TShirt
 from posters.models import Poster
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 from django.contrib.contenttypes.models import ContentType
-
+from upcs.models import UPCItem
 
 class BalanceSerializer(serializers.Serializer):
     """
@@ -190,6 +190,12 @@ class PosterSerializer(serializers.ModelSerializer):
     def image_thumb_url(self, obj):
         url = thumbnail_url(obj.image, 'poster_index')
         return self.context['request'].build_absolute_uri(url)
+
+
+class UPCItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UPCItem
+        fields = ('id', 'name', 'upc', 'cost', )
 
 
 # TODO: move to machines app

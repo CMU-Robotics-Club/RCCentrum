@@ -18,6 +18,7 @@ router.register(r'machines', MachineViewSet)
 router.register(r'faq', CategoryViewSet)
 router.register(r'tshirts', TShirtViewSet)
 router.register(r'posters', PosterViewSet)
+router.register(r'upcs', UPCItemViewSet, base_name="upcs")
 
 
 urlpatterns = router.urls + [

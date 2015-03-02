@@ -177,6 +177,7 @@ INSTALLED_APPS = (
     'faq',
     'gallery',
     'announcements',
+    'upcs',
     'tinymce',
     'rest_framework',
     'ordered_model',
@@ -281,6 +282,7 @@ SUIT_CONFIG = {
         'social_media': 'icon-thumbs-up',
         'sponsors': 'icon-gift',
         'tshirts': 'icon-tag',
+        'upcs': 'icon-list-alt',
         'webcams': 'icon-facetime-video',
     }
 }

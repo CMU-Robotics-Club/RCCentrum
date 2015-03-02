@@ -37,6 +37,9 @@ from rest_framework.generics import GenericAPIView, CreateAPIView
 from django.shortcuts import redirect
 from rest_framework import status
 from datetime import datetime
+from upcs.models import UPCItem
+from upcs.remote_lookup import remote_lookup as upc_remote_lookup
+from upcs.format_upc import format_upc
 
 logger = logging.getLogger(__name__)
 
@@ -423,6 +426,51 @@ class MachineViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Machine.objects.all()
   serializer_class = MachineSerializer
   filter_fields = ('id', 'type', )
+
+
+class UPCItemViewSet(viewsets.ReadOnlyModelViewSet):
+  """
+  This endpoint is used to find out more information about a item with a UPC code.
+  At the time of this writing, the only UPC items used by the club are Fridge items
+  and thus why this model has a `cost` field.
+  When a UPC is retrieved a request should be made to `/upcs/?upc=<YOUR_UPC>` to find
+  the Item corresponding to the specified UPC.  By making a request to this URL with the
+  `upc` query parameter the UPC is properly formatted to a 8 digit UPCE or 12 digit UPCA
+  and then looked up locally.  If an item cannot be found a external database is queried,
+  and if a result is found it's result is saved locally.
+  """
+
+  queryset = UPCItem.objects.all()
+
+  def get_queryset(self):
+    upc = self.request.query_params.get('upc', None)
+
+    if not upc:
+      return super().get_queryset()
+    
+    upc = format_upc(upc)
+
+    print(upc)
+
+    items = UPCItem.objects.filter(upc=upc)
+
+    if items.count() > 0:
+      # Need to return Queryset
+      return items
+    else:
+      name = upc_remote_lookup(upc)
+      
+      if not name:
+        return UPCItem.objects.none()
+      else:
+        upcitem = UPCItem(name=name, upc=upc)
+        upcitem.save()
+
+        return UPCItem.objects.filter(id=upcitem.id)
+
+
+  serializer_class = UPCItemSerializer
+  filter_fields = ('id', 'name', 'upc', 'cost', )
 
 
 def login_redirect_docs(request):
