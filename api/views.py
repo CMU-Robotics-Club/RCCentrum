@@ -450,8 +450,6 @@ class UPCItemViewSet(viewsets.ReadOnlyModelViewSet):
     
     upc = format_upc(upc)
 
-    print(upc)
-
     items = UPCItem.objects.filter(upc=upc)
 
     if items.count() > 0:
@@ -470,7 +468,10 @@ class UPCItemViewSet(viewsets.ReadOnlyModelViewSet):
 
 
   serializer_class = UPCItemSerializer
-  filter_fields = ('id', 'name', 'upc', 'cost', )
+
+  # UPC cannot be a filter field as it have to be used to determine
+  # the queryset in `get_queryset`.
+  filter_fields = ('id', 'name', 'cost', )
 
 
 def login_redirect_docs(request):

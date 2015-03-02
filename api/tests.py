@@ -96,7 +96,7 @@ class UPCTests(AuthenticatedAPITestCase):
     response = self.client.get("/api/upcs/?upc={}".format(upc), {}, **self.headers)
     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    if remote_lookup(upc) is not None:
+    if remote_lookup(format_upc(upc)) is not None:
       self.assertEqual(len(response.data), 1)
 
       self.assertEqual(sorted(response.data[0].keys()), sorted(['id', 'name', 'upc', 'cost']))

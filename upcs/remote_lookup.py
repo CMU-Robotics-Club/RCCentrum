@@ -1,6 +1,13 @@
 import requests
 
 def remote_lookup(upc):
+  """
+  Returns the name of the item with the specified UPC.
+  Returns None if the item is not found.
+  `upc` should always be formatted first by passing the result
+  of `format_upc`. 
+  """
+
   r = requests.get("http://www.upcdatabase.com/item/{}".format(upc))
 
   m = r.text
