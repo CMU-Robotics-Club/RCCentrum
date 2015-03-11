@@ -16,7 +16,7 @@ def roboauth(request, rfid_tag, mach_num):
   if not r.membership_valid:
     return HttpResponse("0")
 
-  return HttpResponse(r.machines.filter(id=mach_num).count())
+  return HttpResponse(r.machines.filter(toolbox_id=mach_num).count())
 
 
 @require_POST
@@ -32,7 +32,7 @@ def add_card_event(request):
   except ObjectDoesNotExist:
     robouser = None
 
-  machine = Machine.objects.get(id__exact=machine_id)
+  machine = Machine.objects.get(toolbox_id__exact=machine_id)
 
   tooltron = Project.objects.get(name="Tooltron")
 

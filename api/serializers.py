@@ -205,4 +205,4 @@ class MachineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Machine
-        fields = ('id', 'type', )
+        fields = ('id', 'type', 'toolbox_id', )

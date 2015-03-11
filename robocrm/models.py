@@ -17,6 +17,8 @@ class Machine(models.Model):
   # removing this and making id an integer while
   # preserving existing data
   id = models.CharField(max_length=10, primary_key=True)
+
+  toolbox_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
     
   def __str__(self):
     return self.type
@@ -62,7 +64,7 @@ class RoboUser(models.Model):
     return bool(self.rfid)
   
   # Roboclub Shop Access Permissions
-  machines = models.ManyToManyField(Machine, blank=True, null=True)
+  machines = models.ManyToManyField(Machine, blank=True, null=True, db_index=True)
 
   # Cell Phone
   cell = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True, help_text="Cell Phone # if you wish to provide it to Officers")
