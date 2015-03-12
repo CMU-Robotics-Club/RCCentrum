@@ -5,6 +5,7 @@ from django import forms
 from tinymce.widgets import TinyMCE
 from django.utils.text import slugify
 from suit.admin import SortableTabularInline
+from django.utils.safestring import mark_safe
 
 class QAForm(forms.ModelForm):
   
@@ -37,8 +38,7 @@ class CategoryAdmin(OrderedModelAdmin):
     for qa in qas:
       r += '<p><b>{}</b>:  {}</p><br/>'.format(qa.question, qa.answer)
 
-    return r
-  qas.allow_tags = True
+    return mark_safe(r)
   qas.short_description = 'QAs'
 
   def anchor(self, obj):

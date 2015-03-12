@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 from django import forms
 from tinymce.widgets import TinyMCE
 from .models import Channel
@@ -22,9 +23,8 @@ class ChannelAdmin(UpdatedByAdmin):
 
   # So description can be HTML rendered
   def description_html(self, obj):
-    return obj.description
+    return mark_safe(obj.description)
   description_html.short_description = "Description"
-  description_html.allow_tags = True
 
   def get_readonly_fields(self, request, obj=None):
     if obj:

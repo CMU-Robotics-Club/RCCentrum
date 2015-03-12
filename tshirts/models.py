@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.utils.safestring import mark_safe
 import os
 
 class TShirt(models.Model):
@@ -26,12 +27,10 @@ class TShirt(models.Model):
   # images with upload and curret_image functions
   # To show image in admin interface
   def current_front_image(self, width=100, height=100):
-    return '<img src="{}{}" width="{}px" height="{}px" class="img-responsive img-thumbnail"/>'.format(settings.MEDIA_URL, self.front_image, width, height)
-  current_front_image.allow_tags = True
+    return mark_safe('<img src="{}{}" width="{}px" height="{}px" class="img-responsive img-thumbnail"/>'.format(settings.MEDIA_URL, self.front_image, width, height))
 
   def current_back_image(self, width=100, height=100):
-    return '<img src="{}{}" width="{}px" height="{}px" class="img-responsive img-thumbnail"/>'.format(settings.MEDIA_URL, self.back_image, width, height)
-  current_back_image.allow_tags = True
+    return mark_safe('<img src="{}{}" width="{}px" height="{}px" class="img-responsive img-thumbnail"/>'.format(settings.MEDIA_URL, self.back_image, width, height))
 
   class Meta:
     ordering = ['-year', 'name', ]

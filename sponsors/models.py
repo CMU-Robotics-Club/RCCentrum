@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from ordered_model.models import OrderedModel
+from django.utils.safestring import mark_safe
 import os
 
 class Sponsor(OrderedModel):
@@ -19,8 +20,7 @@ class Sponsor(OrderedModel):
 
   # To show image in admin interface
   def current_logo(self, width=100, height=100):
-    return '<img src="{}{}" width="{}px" height="{}px" class="img-responsive img-thumbnail"/>'.format(settings.MEDIA_URL, self.logo, width, height)
-  current_logo.allow_tags = True
+    return mark_safe('<img src="{}{}" width="{}px" height="{}px" class="img-responsive img-thumbnail"/>'.format(settings.MEDIA_URL, self.logo, width, height))
 
   def __str__(self):
     return self.name

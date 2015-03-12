@@ -128,8 +128,7 @@ class RoboUserInline(admin.StackedInline):
       field += str(machine)
       field += ' <img src="{}" />'.format("/static/admin/img/icon-yes.gif")
 
-    return field
-  machines_authorized.mark_safe=True
+    return mark_safe(field)
 
   def machines_not_authorized(self, obj):
     machines = Machine.objects.exclude(robouser=obj)
@@ -142,8 +141,7 @@ class RoboUserInline(admin.StackedInline):
       field += str(machine)
       field += ' <img src="{}" />'.format("/static/admin/img/icon-no.gif")
 
-    return field
-  machines_not_authorized.mark_safe=True
+    return mark_safe(field)
 
   def club_activity(self, obj):
     activities = obj.club_activity
@@ -154,12 +152,6 @@ class RoboUserInline(admin.StackedInline):
       endpoint[:] = (x for x in endpoint if x != "")
       endpoint = endpoint[-1]
       created_datetime = activity.created_datetime
-
-      # TODO: fix this hacky solution
-      # Django and standard python treat timezones
-      # differently it appears, so manually subtracted
-      # 5 hours to make time correct
-      created_datetime += timedelta(hours=-5)
       
       created_datetime_s = created_datetime.strftime("%A %B %d %Y, %I:%M:%S %p")
       s = "{}: {} {}".format(created_datetime_s, activity.updater_object, endpoint)
@@ -174,8 +166,7 @@ class RoboUserInline(admin.StackedInline):
 
       field += "{} | <a href='{}'>Details</a> <br />".format(s, reverse('admin:api_apirequest_change', args=(activity.id,)))
 
-    return field
-  club_activity.mark_safe=True
+    return mark_safe(field)
   club_activity.short_description="Club Activity(most recent 15 events)"
 
   def current_color(self, obj):
@@ -187,8 +178,7 @@ class RoboUserInline(admin.StackedInline):
     for color_string in color_strings:
       result += '<div style="float: left;width:20px;height:20px;margin:5px;border-width:1px;border-style:solid;border-color:rgba(0,0,0,.2);background-color:#{};"></div>'.format(color_string)
   
-    return result
-  current_color.mark_safe=True
+    return mark_safe(result)
   current_color.short_description="Current User Color"
 
   def get_readonly_fields(self, request, obj=None):
@@ -250,7 +240,7 @@ class UserCreationForm(ModelForm):
 class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   inlines = (RoboUserInline, )
   list_display = ('username', 'email', 'first_name', 'last_name', 'is_superuser', 'roles', 'last_login', 'date_joined', 'dues_paid', 'dues_paid_year', 'membership_valid', 'is_magnetic_set', 'is_rfid_set', 'rfid_card', 'class_level', 'major', 'grad_year', 'balance', )
-  search_fields = ['username', 'email', 'first_name', 'last_name', 'last_login', 'date_joined', ]
+  search_fields = ['username', 'email', 'first_name', 'last_name', ]
   exclude = ['password', 'user_permissions', 'is_active', 'is_staff', ]
   filter_horizontal = ('groups',)
   list_filter = ('is_superuser', 'robouser__dues_paid_year', IsMembershipValidListFilter, IsMagneticSetListFilter, IsRFIDSetListFilter, 'robouser__rfid_card', 'robouser__class_level', 'robouser__major', 'robouser__grad_year', )
@@ -305,7 +295,6 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
       p += ['+']
     value = ', '.join(p)
     return mark_safe("<nobr>{}</nobr>".format(value))
-  roles.allow_tags = True
   roles.short_description = 'Groups'
 
   def get_readonly_fields(self, request, obj=None):
@@ -379,8 +368,7 @@ class GroupAdmin(GroupAdmin):
   list_display_links = ['name']
 
   def members(self, obj):
-    return ', '.join(['<a href="%s">%s</a>' % (reverse('admin:auth_user_change', args=(x.id,)), x.username) for x in obj.user_set.all().order_by('username')])
-  members.allow_tags = True
+    return mark_safe(', '.join(['<a href="%s">%s</a>' % (reverse('admin:auth_user_change', args=(x.id,)), x.username) for x in obj.user_set.all().order_by('username')]))
 
 
 admin.site.unregister(User)

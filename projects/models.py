@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 import random
 import string
-
+from django.utils.safestring import mark_safe
 
 def create_private_key():
   return ''.join(random.choice(string.hexdigits) for i in range(40))
@@ -42,8 +42,7 @@ class Project(models.Model):
 
   # To show image in admin interface
   def current_image(self):
-    return '<img src="{}{}" width="100px height=100px"/>'.format(settings.MEDIA_URL, self.image)
-  current_image.allow_tags = True
+    return mark_safe('<img src="{}{}" width="100px height=100px"/>'.format(settings.MEDIA_URL, self.image))
 
   private_key = models.CharField(max_length=50, default=create_private_key)
 

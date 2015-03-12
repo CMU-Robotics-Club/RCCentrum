@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.core import urlresolvers
 from django.contrib.contenttypes.models import ContentType
+from django.utils.safestring import mark_safe
 
 class UpdatedByAdmin(admin.ModelAdmin):
 
@@ -16,8 +17,7 @@ class UpdatedByAdmin(admin.ModelAdmin):
 
     s = "admin:{}_{}_change".format(obj.updater_type.app_label, obj.updater_type.model)
     url = urlresolvers.reverse(s, args=(obj.updater_id, ))
-    return '<a href="{}">{}</a>'.format(url, obj.updater_object)
-  updater_url.allow_tags = True
+    return mark_safe('<a href="{}">{}</a>'.format(url, obj.updater_object))
   updater_url.short_description = "Updater"
 
 

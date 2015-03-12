@@ -3,6 +3,7 @@ from django.conf import settings
 import os
 from easy_thumbnails.fields import ThumbnailerImageField
 from easy_thumbnails.files import get_thumbnailer
+from django.utils.safestring import mark_safe
 
 class Poster(models.Model):
 
@@ -22,8 +23,7 @@ class Poster(models.Model):
 
   # To show image in admin interface
   def current_image(self, width=100, height=100):
-    return '<a href="{}"><img src="{}" /></a>'.format(self.image.url, self.image['poster_admin'].url)
-  current_image.allow_tags = True
+    return mark_safe('<a href="{}"><img src="{}" /></a>'.format(self.image.url, self.image['poster_admin'].url))
 
   def __str__(self):
     return self.name

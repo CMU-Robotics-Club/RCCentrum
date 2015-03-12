@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 from django.core import urlresolvers
 from .models import APIRequest
 from crm.admin import UpdatedByAdmin, UpdatedByListFilter
@@ -15,16 +16,14 @@ class APIRequestAdmin(UpdatedByAdmin):
   list_filter = ['endpoint', UpdatedByListFilter, 'user', 'success', 'meta', 'api_client', ]
 
   def requester(self, obj):
-    return self.updater_url(obj)
-  requester.allow_tags = True
+    return mark_safe(self.updater_url(obj))
 
   def user_url(self, obj):
     if obj.user:
       url = urlresolvers.reverse("admin:auth_user_change", args=(obj.user.user.id, ))
-      return '<a href="{}">{}</a>'.format(url, obj.user.user)
+      return mark_safe('<a href="{}">{}</a>'.format(url, obj.user.user))
     else:
       return ''
-  user_url.allow_tags = True
   user_url.short_description = "User"
 
   # No one should be able to add, change, or remove API log information

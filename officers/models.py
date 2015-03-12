@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.safestring import mark_safe
 from ordered_model.models import OrderedModel
 import os
 
@@ -25,8 +26,7 @@ class Officer(OrderedModel):
 
   # To show image in admin interface
   def current_image(self, width=100, height=100):
-    return '<img src="{}{}" width="{}px" height="{}px" class="img-responsive img-thumbnail"/>'.format(settings.MEDIA_URL, self.image, width, height)
-  current_image.allow_tags = True
+    return mark_safe('<img src="{}{}" width="{}px" height="{}px" class="img-responsive img-thumbnail"/>'.format(settings.MEDIA_URL, self.image, width, height))
 
   def __str__(self):
     return self.position

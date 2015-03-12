@@ -29,7 +29,6 @@ class VoteableModelAdmin(UpdatedByAdmin):
 
     return mark_safe('<a href="{}"><div class="arrow-up"></div></a>'.format(url))
   upvote.short_description = 'Upvote'
-  upvote.allow_tags = True
 
   def downvote(self, obj):
     """
@@ -45,7 +44,6 @@ class VoteableModelAdmin(UpdatedByAdmin):
 
     return mark_safe('<a href="{}"><div class="arrow-down"></div></a>'.format(url))
   downvote.short_description = 'Downvote'
-  downvote.allow_tags = True
 
   def upvote_view(self, request, obj_id):
     """
@@ -102,7 +100,6 @@ class QuoteAdmin(VoteableModelAdmin):
   # don't HTML escape Quote
   def html_quote(self, obj):
     return mark_safe(obj.quote)
-  html_quote.allow_tags = True
 
   def get_fields(self, request, obj=None):
     e = super().get_fields(request, obj)
