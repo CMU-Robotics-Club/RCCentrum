@@ -31,6 +31,7 @@ from .models import APIRequest
 from rest_framework_extensions.cache.decorators import cache_response
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsAPIRequesterOrReadOnlyPermission, UserBalancePermission, UserRFIDPermission, UserEmailPermission
 from django.db import IntegrityError
 from rest_framework.generics import GenericAPIView, CreateAPIView
@@ -282,6 +283,9 @@ class ChannelViewSet(
   queryset = Channel.objects.all()
   serializer_class = ChannelSerializer
   filter_class = ChannelFilter
+
+  # Channels have anonymous read only access
+  permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
 class SponsorViewSet(viewsets.ReadOnlyModelViewSet):

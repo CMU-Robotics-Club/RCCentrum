@@ -11,9 +11,7 @@ class RCAuthentication(authentication.BaseAuthentication):
     private = request.META.get('HTTP_PRIVATE_KEY')
 
     if not public or not private:
-      e = exceptions.AuthenticationFailed(detail='Invalid authentication credentials')
-      e.errno = INVALID_PROJECT_AUTHENTICATION
-      raise e
+      return (None, None)
 
     try:
       public = int(public)

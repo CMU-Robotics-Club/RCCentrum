@@ -22,7 +22,75 @@ block content
 
       setInterval(refresh, 2000);
 
+      $.getJSON('/api/channels/14/', function( data ) {
+        console.log("Channel GET successful: " + data);
+        
+        var ws = new WebSocket("ws://" + window.location.hostname + ":1984/channels/14/");
+
+        /*
+         * Updated door label color and text.
+         * If datetime is null use current time.
+         */
+        function update_door_status(value, datetime) {
+          if(datetime == null) {
+            datetime = new Date();
+
+            var minutes = datetime.getMinutes();
+
+            if(minutes < 10) {
+              minutes = "0" + minutes;
+            }
+
+            datetime = "T" + datetime.getHours() + ":" + minutes + ":" + datetime.getSeconds();
+          }
+      
+          var time = datetime.split("T")[1];
+          var time_tokens = time.split(":");
+
+          var hour = time_tokens[0];
+          var t = "am";
+
+          if(hour > 12) {
+            hour = hour - 12;
+            t = "pm";
+          }
+
+          var minute = time_tokens[1];
+
+          var updated = hour + ":" + minute + " " + t;
+
+          $("#front_door").removeClass('label-danger');
+          $("#front_door").removeClass('label-success');
+
+          if(value == 1) {
+            $("#front_door").addClass('label-success');
+            $("#front_door").text("Opened at " + updated);
+          } else {
+            $("#front_door").addClass('label-danger');
+            $("#front_door").text("Closed at " + updated);
+          }
+        }
+
+        // Update from websocket connection on door status
+        ws.onmessage = function(m) {
+          m = parseInt(m.data);
+          console.log("Received new value channel 14: " + m);
+          update_door_status(m, null);
+        }
+
+        update_door_status(parseInt(data['value']), data['updated']);
+
+        $("#door_status").removeClass('hidden');
+      });
     });
+
+
+  .row.hidden(id='door_status')
+    h3
+      | Front Door:
+      span.label(id="front_door", style="margin-left:20px")
+
+  hr
 
   .row
     .col-md-12
