@@ -20,6 +20,20 @@ var wss = new WebSocketServer({
   server: server,
 });
 
+app.post('/api_requests/', function(req, res) {
+  var data = req.body;
+
+  console.log("POST request for APIRequest | data: %s", JSON.stringify(data));
+
+  if(typeof(data) == 'undefined') {
+    res.send("No value provided");
+    return;
+  }
+
+  wss.broadcast("api_requests", null, data);
+
+  res.send("Success");
+});
 
 app.post('/channels/:id/', function(req, res) {
   var id = req.params.id;
@@ -64,10 +78,13 @@ wss.broadcast = function broadcast(name, id, data) {
 
     console.log("Client endpoint | name: %s, id: %s", client_name, client_id);
 
-    if(client_name == name && client_id == id) {
-      ws.send(data);
+    if(client_name == name) {
+      if(id == null ){
+        ws.send(JSON.stringify(data));
+      } else if(client_id == id) {
+        ws.send(data);
+      }
     }
-
   });
 };
 
