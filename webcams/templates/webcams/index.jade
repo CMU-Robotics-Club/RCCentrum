@@ -35,9 +35,14 @@ block content
         var hour = time_tokens[0];
         var t = "am";
 
-        if(hour > 12) {
+        if(hour > 12 && hour <= 23) {
           hour = hour - 12;
           t = "pm";
+        } else if(hour == 12) {
+          t = "pm";
+        } else if(hour == 24) {
+          hour = hour - 12;
+          t = "am";
         }
 
         var minute = time_tokens[1];
