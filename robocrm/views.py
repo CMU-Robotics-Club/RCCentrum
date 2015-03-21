@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 from projects.models import Project
 from django.utils import timezone
 from .models import RoboUser, Machine
+import dateutil.parser
 
 def roboauth(request, rfid_tag, mach_num):
   try:
@@ -21,11 +22,10 @@ def roboauth(request, rfid_tag, mach_num):
 
 @require_POST
 def add_card_event(request):
-  tstart = request.POST.get('tstart') # TODO: convert to date
-  tend = request.POST.get('tend')
-  user_id = request.POST.get('user_id', 0)
+  tstart = dateutil.parser.parse(request.POST.get('tstart'))
+  user_id = request.POST.get('user_id')
   succ = request.POST.get('succ') == '1'
-  machine_id = int(request.POST.get('machine_id', 1))
+  machine_id = int(request.POST.get('machine_id'))
 
   try:
     robouser = RoboUser.objects.get(rfid__iexact=user_id)
