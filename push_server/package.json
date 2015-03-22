@@ -1,0 +1,11 @@
+{
+  "name": "PushServer",
+  "description": "CMU Robotics Club NodeJS Server that pushes model updates to connected clients via WebSockets",
+  "author": "Brent Strysko <brentstrysko@brentstrysko.com>",
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*",
+    "ws": "*"
+  },
+  "license": "MIT"
+}
