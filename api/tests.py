@@ -48,9 +48,13 @@ class AuthenticatedAPITestCase(APITestCase):
 
 class UserTests(AuthenticatedAPITestCase):
 
-  def test_get_users(self):
+  def test_get_users_authenticated(self):
     response = self.client.get("/api/users/", {}, **self.headers)
     self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+  def test_get_users_anonymous(self):
+    response = self.client.get("/api/users/", {}, {})
+    self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class ChannelTests(AuthenticatedAPITestCase):
@@ -61,8 +65,13 @@ class ChannelTests(AuthenticatedAPITestCase):
     self.channel = Channel(name="TestChannel", updater_object=self.project)
     self.channel.save()
 
-  def test_get_channel(self):
-    response = self.client.get("/api/channels/{}/".format(self.channel.id), {}, **self.headers)
+  def test_get_channel_anonymous(self):
+    """
+    Do not pass credentials in 'client.get' since Channels can be read
+    anonymously.
+    """
+
+    response = self.client.get("/api/channels/{}/".format(self.channel.id), {}, {})
     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     self.assertEqual(sorted(response.data.keys()), sorted(['id', 'name', 'created', 'updated', 'value', 'description']))
@@ -75,18 +84,39 @@ class ChannelTests(AuthenticatedAPITestCase):
 
 
   def test_get_channel_fields(self):
-    response = self.client.get("/api/channels/{}/?fields=id".format(self.channel.id), {}, **self.headers)
+    response = self.client.get("/api/channels/{}/?fields=id".format(self.channel.id), {}, {})
     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     self.assertEqual(sorted(response.data.keys()), sorted(['id']))
     self.assertEqual(response.data['id'], self.channel.id)
 
   def test_get_channel_exclude(self):
-    response = self.client.get("/api/channels/{}/?exclude=name,created,updated,value,description".format(self.channel.id), {}, **self.headers)
+    response = self.client.get("/api/channels/{}/?exclude=name,created,updated,value,description".format(self.channel.id), {}, {})
     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     self.assertEqual(sorted(response.data.keys()), sorted(['id']))
     self.assertEqual(response.data['id'], self.channel.id)
+
+  def test_put_channel_value_authenticated(self):
+    response = self.client.put("/api/channels/{}/".format(self.channel.id), {'value': 'Hello'}, **self.headers)
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(Channel.objects.get(id=self.channel.id).value, "Hello")
+
+  def test_put_channel_value_anonymous(self):
+    response = self.client.put("/api/channels/{}/".format(self.channel.id), {'value': 'Hello'}, {})
+    self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    self.assertEqual(Channel.objects.get(id=self.channel.id).value, None)
+
+  def test_put_channel_name(self):
+    """
+    Test that channel name is read-only via REST API.
+    """
+
+    original_name = self.channel.name
+
+    response = self.client.put("/api/channels/{}/".format(self.channel.id), {"name": "NewName"}, **self.headers)
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(Channel.objects.get(id=self.channel.id).name, original_name)
 
 
 class LookupTests(AuthenticatedAPITestCase):
