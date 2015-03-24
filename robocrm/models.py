@@ -19,6 +19,16 @@ class Machine(models.Model):
   id = models.CharField(max_length=10, primary_key=True)
 
   toolbox_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
+
+  """
+  True if a RFID is presently in the machine's RFID reader.
+  """
+  rfid_present = models.BooleanField(default=False)
+
+  """
+  Whose RFID is present.  None if no RFID present or unknown User.
+  """
+  user = models.ForeignKey('robocrm.RoboUser', null=True)
     
   def __str__(self):
     return self.type

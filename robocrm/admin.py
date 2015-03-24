@@ -359,8 +359,16 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
 
 
 class MachineAdmin(admin.ModelAdmin):
-   list_display = ('id', 'type', 'toolbox_id', )
-   fields = ('id', 'type', 'toolbox_id', )
+  list_display = ('id', 'type', 'toolbox_id', 'rfid_present', 'user_link', )
+  fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user_link', )
+  readonly_fields = ('rfid_present', 'user_link', )
+
+  def user_link(self, obj):
+    if obj.user:
+      return mark_safe('<a href="%s">%s</a>' % (reverse('admin:auth_user_change', args=(obj.user.user.id,)), obj.user.user.username))
+    else:
+      return ''
+  user_link.short_description='User'
 
 
 class GroupAdmin(GroupAdmin):

@@ -9,10 +9,29 @@ from .models import RoboUser, Machine
 import dateutil.parser
 
 def roboauth(request, rfid_tag, mach_num):
+  machine = None
+
+  try:
+    machine = Machine.objects.get(toolbox_id__exact=mach_num)
+    machine.rfid_present = True
+    machine.save()
+  except Machine.DoesNotExist:
+    pass
+
+  r = None
+
   try:
     r = RoboUser.objects.get(rfid=rfid_tag)
   except RoboUser.DoesNotExist:
+    if machine:
+      machine.user = None
+      machine.save()
+
     return HttpResponse("0")
+
+  if machine:
+    machine.user = r
+    machine.save()
 
   if not r.membership_valid:
     return HttpResponse("0")
@@ -33,6 +52,10 @@ def add_card_event(request):
     robouser = None
 
   machine = Machine.objects.get(toolbox_id__exact=machine_id)
+
+  machine.rfid_present = False
+  machine.user = None
+  machine.save()
 
   tooltron = Project.objects.get(name="Tooltron")
 
