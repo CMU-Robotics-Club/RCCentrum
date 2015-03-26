@@ -198,11 +198,12 @@ class UPCItemSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'upc', 'cost', )
 
 
-# TODO: move to machines app
+# TODO: move to machines app once migrating model
+# is figured out
 from robocrm.models import Machine
 
 class MachineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Machine
-        fields = ('id', 'type', 'toolbox_id', )
+        fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user', )

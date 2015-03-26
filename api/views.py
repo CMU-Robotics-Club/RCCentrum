@@ -429,7 +429,7 @@ class PosterViewSet(viewsets.ReadOnlyModelViewSet):
 class MachineViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Machine.objects.all()
   serializer_class = MachineSerializer
-  filter_fields = ('id', 'type', 'toolbox_id', )
+  filter_fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user', )
 
 
 class UPCItemViewSet(viewsets.ReadOnlyModelViewSet):
