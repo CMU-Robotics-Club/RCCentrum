@@ -363,6 +363,14 @@ class MachineAdmin(admin.ModelAdmin):
   fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user_link', )
   readonly_fields = ('rfid_present', 'user_link', )
 
+  def get_readonly_fields(self, request, obj=None):
+    user = request.user
+
+    if not user.is_superuser and not user.groups.filter(name='officers').exists():
+      return super().get_readonly_fields(request, obj) + ('id', 'type', 'toolbox_id', )
+    else:
+      return super().get_readonly_fields(request, obj)
+
   def user_link(self, obj):
     if obj.user:
       return mark_safe('<a href="%s">%s</a>' % (reverse('admin:auth_user_change', args=(obj.user.user.id,)), obj.user.user.username))
