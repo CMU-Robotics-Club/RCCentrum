@@ -179,7 +179,7 @@ class RoboUserViewSet(viewsets.ReadOnlyModelViewSet):
 
     api_request = create_api_request(request, serializer)
     api_request.user = u
-    api_request.extra = "Amount: ${}, New Balance: ${}".format(str(amount), str(u.balance))
+    api_request.extra = "Amount: ${0:.2f}, New Balance: ${1:.2f}".format(amount, u.balance)
     api_request.save()
 
     return Response({
