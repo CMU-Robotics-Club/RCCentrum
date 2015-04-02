@@ -409,3 +409,10 @@ FONT_ROOT = os.path.join(STATIC_ROOT, "fonts")
 if DEBUG:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ('rest_framework.renderers.BrowsableAPIRenderer', )
 
+
+from django.db.models.options import Options
+@property
+def monkeypatch__options__model_name(self):
+    return self.model_name.lower()
+Options.module_name = monkeypatch__options__model_name
+
