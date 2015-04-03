@@ -410,6 +410,7 @@ if DEBUG:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ('rest_framework.renderers.BrowsableAPIRenderer', )
 
 
+# Monkey patch to fix error in 'ordered_model' app
 from django.db.models.options import Options
 @property
 def monkeypatch__options__model_name(self):

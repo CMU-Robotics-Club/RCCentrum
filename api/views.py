@@ -429,7 +429,10 @@ class PosterViewSet(viewsets.ReadOnlyModelViewSet):
 class MachineViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Machine.objects.all()
   serializer_class = MachineSerializer
-  filter_fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user', )
+  filter_class = MachineFilter
+
+  # Channels have anonymous read only access
+  permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
 class UPCItemViewSet(viewsets.ReadOnlyModelViewSet):

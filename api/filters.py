@@ -5,6 +5,7 @@ from channels.models import Channel
 from rest_framework import generics
 from django.contrib.contenttypes.models import ContentType
 from projects.models import Project
+from robocrm.models import Machine
 
 
 class APIRequestFilter(django_filters.FilterSet):
@@ -73,3 +74,15 @@ class ChannelFilter(django_filters.FilterSet):
   class Meta:
     model = Channel
     fields = ('id', 'name', 'created', 'updated')
+
+
+class MachineFilter(django_filters.FilterSet):
+  # Needed by Tooltron mainbox
+  def _toolbox_id__isnull(qs, value):
+    return qs.filter(toolbox_id__isnull = value)
+
+  toolbox_id__isnull = django_filters.BooleanFilter(action=_toolbox_id__isnull)
+
+  class Meta:
+    model = Machine
+    filter_fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user', )
