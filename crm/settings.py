@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
 
-GOOGLE_API_KEY = ''
+GOOGLE_API_KEY = os.environ.get('DJANGO_GOOGLE_API_KEY', '')
 
 # A dictionary of Project IDs to arrays of User IDs that the
 # project has permission to set the RFIDs of(None all IDs, [] no IDs)

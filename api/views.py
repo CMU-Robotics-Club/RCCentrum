@@ -324,7 +324,7 @@ class CalendarViewSet(viewsets.ViewSet):
 
     if not dt:
       # If no datetime specified use now
-      dt = timezone.now()
+      dt = datetime.now()
     else:
       dt = dateutil.parser.parse(dt)
 

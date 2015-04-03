@@ -57,15 +57,8 @@ class MachineTests(AuthenticatedAPITestCase):
         Attempt to set machine 'powered' field but received 403
         because not authenticated as Tooltron project. 
         """
-        
-        project = Project.objects.create(name='Test')
 
-        headers = {
-          'HTTP_PUBLIC_KEY': project.id,
-          'HTTP_PRIVATE_KEY': project.private_key
-        }
-
-        response = self.client.put("/api/machines/{}/".format(self.tooltron_machine.id), {'powered': True}, **headers)
+        response = self.client.put("/api/machines/{}/".format(self.tooltron_machine.id), {'powered': True}, **self.headers)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 

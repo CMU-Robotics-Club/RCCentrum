@@ -40,10 +40,10 @@ def get_calendar_events(dt):
     end = end_pair.get('dateTime', end_pair.get('date', None))
     end = dateutil.parser.parse(end)
 
-    if not start.tzinfo:
+    if start.tzinfo:
       start = start.replace(tzinfo=dt.tzinfo)
 
-    if not end.tzinfo:
+    if end.tzinfo:
       end = end.replace(tzinfo=dt.tzinfo)
 
     if start <= dt < end:
