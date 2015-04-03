@@ -243,7 +243,7 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   search_fields = ['username', 'email', 'first_name', 'last_name', ]
   exclude = ['password', 'user_permissions', 'is_active', 'is_staff', ]
   filter_horizontal = ('groups',)
-  list_filter = ('is_superuser', 'robouser__dues_paid_year', IsMembershipValidListFilter, IsMagneticSetListFilter, IsRFIDSetListFilter, 'robouser__rfid_card', 'robouser__class_level', 'robouser__major', 'robouser__grad_year', )
+  list_filter = ('is_superuser', 'robouser__dues_paid_year', IsMembershipValidListFilter, IsMagneticSetListFilter, IsRFIDSetListFilter, 'robouser__rfid_card', 'robouser__class_level', 'robouser__major', 'robouser__grad_year', 'robouser__machines')
 
   def create_robouser_label(self, request, obj):
     response = HttpResponse(content_type="image/png")
