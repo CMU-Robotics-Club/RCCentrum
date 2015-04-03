@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from crm.settings import USER_RFID_PROJECTS_TO_USERS, USER_BALANCE_PROJECTS_TO_USERS, USER_EMAIL_PROJECTS_TO_USERS
+from projects.models import Project
 
 class UserAuthorizedProjectOrReadOnlyPermission(permissions.BasePermission):
     """
@@ -85,3 +86,23 @@ class IsAPIRequesterOrReadOnlyPermission(permissions.BasePermission):
                 user = user.robouser
 
             return user == obj.updater_object
+
+
+class IsTooltronOrReadOnlyPermission(permissions.BasePermission):
+    """
+    Anyone can view.  Only Tooltron can update Machine state.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        else:
+            # TODO: find better way to work around lazy behavior of user object
+            # Unwrap SimpleLazyObject so type is 'User' or 'Project'
+            user = request.user._wrapped if hasattr(request.user,'_wrapped') else request.user
+            
+            tooltron = Project.objects.filter(name='Tooltron')
+
+            return tooltron.count() > 0 and user == tooltron.first()

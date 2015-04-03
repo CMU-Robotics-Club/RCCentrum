@@ -203,7 +203,12 @@ class UPCItemSerializer(serializers.ModelSerializer):
 from robocrm.models import Machine
 
 class MachineSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(read_only=True)
+    type = serializers.CharField(read_only=True)
+    toolbox_id = serializers.IntegerField(read_only=True)
+    rfid_present = serializers.BooleanField(read_only=True)
+    user = serializers.RelatedField(read_only=True)
 
     class Meta:
         model = Machine
-        fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user', )
+        fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user', 'powered', )

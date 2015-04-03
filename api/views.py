@@ -32,7 +32,7 @@ from rest_framework_extensions.cache.decorators import cache_response
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .permissions import IsAPIRequesterOrReadOnlyPermission, UserBalancePermission, UserRFIDPermission, UserEmailPermission
+from .permissions import IsAPIRequesterOrReadOnlyPermission, UserBalancePermission, UserRFIDPermission, UserEmailPermission, IsTooltronOrReadOnlyPermission
 from django.db import IntegrityError
 from rest_framework.generics import GenericAPIView, CreateAPIView
 from django.shortcuts import redirect
@@ -425,14 +425,20 @@ class PosterViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = PosterSerializer
   filter_fields = ('id', 'name', 'year', )
 
-
-class MachineViewSet(viewsets.ReadOnlyModelViewSet):
+# MachineViewSet is a ModelViewSet without create and destroy abilities
+class MachineViewSet(
+                    #mixins.CreateModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    #mixins.DestroyModelMixin,
+                    mixins.ListModelMixin,
+                    GenericViewSet):
   queryset = Machine.objects.all()
   serializer_class = MachineSerializer
   filter_class = MachineFilter
 
   # Channels have anonymous read only access
-  permission_classes = (IsAuthenticatedOrReadOnly, )
+  permission_classes = (IsTooltronOrReadOnlyPermission, )
 
 
 class UPCItemViewSet(viewsets.ReadOnlyModelViewSet):

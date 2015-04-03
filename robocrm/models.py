@@ -29,7 +29,12 @@ class Machine(models.Model):
   Whose RFID is present.  None if no RFID present or unknown User.
   """
   user = models.ForeignKey('robocrm.RoboUser', null=True)
-    
+
+  """
+  If the tool is powered on, detected via current sensing.
+  """
+  powered = models.BooleanField(default=False)
+
   def __str__(self):
     return self.type
 
