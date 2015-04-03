@@ -207,7 +207,14 @@ class MachineSerializer(serializers.ModelSerializer):
     type = serializers.ReadOnlyField()
     toolbox_id = serializers.ReadOnlyField()
     rfid_present = serializers.ReadOnlyField()
-    user = serializers.ReadOnlyField()
+
+    def getUserID(self, machine):
+        if machine.user:
+            return machine.user.id
+        else:
+            return None
+
+    user = serializers.SerializerMethodField('getUserID')
 
     class Meta:
         model = Machine
