@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import RoboUser, Machine
+from robocrm.models import RoboUser, Machine
 from projects.models import Project
 from api.models import APIRequest
 from django.test.client import Client
