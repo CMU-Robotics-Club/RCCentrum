@@ -239,11 +239,11 @@ class UserCreationForm(ModelForm):
 
 class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   inlines = (RoboUserInline, )
-  list_display = ('username', 'email', 'first_name', 'last_name', 'is_superuser', 'roles', 'last_login', 'date_joined', 'dues_paid', 'dues_paid_year', 'membership_valid', 'is_magnetic_set', 'is_rfid_set', 'rfid_card', 'class_level', 'major', 'grad_year', 'balance', )
+  list_display = ('username', 'email', 'first_name', 'last_name', 'roles', 'last_login', 'date_joined', 'dues_paid', 'dues_paid_year', 'membership_valid', 'is_magnetic_set', 'is_rfid_set', 'rfid_card', 'class_level', 'major', 'grad_year', 'balance', )
   search_fields = ['username', 'email', 'first_name', 'last_name', ]
-  exclude = ['password', 'user_permissions', 'is_active', 'is_staff', ]
+  exclude = ['password', 'user_permissions', 'is_active', 'is_staff', 'is_superuser', ]
   filter_horizontal = ('groups',)
-  list_filter = ('is_superuser', 'robouser__dues_paid_year', IsMembershipValidListFilter, IsMagneticSetListFilter, IsRFIDSetListFilter, 'robouser__rfid_card', 'robouser__class_level', 'robouser__major', 'robouser__grad_year', 'robouser__machines')
+  list_filter = ('robouser__dues_paid_year', IsMembershipValidListFilter, IsMagneticSetListFilter, IsRFIDSetListFilter, 'robouser__rfid_card', 'robouser__class_level', 'robouser__major', 'robouser__grad_year', 'robouser__machines')
 
   def create_robouser_label(self, request, obj):
     response = HttpResponse(content_type="image/png")
