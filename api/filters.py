@@ -85,4 +85,4 @@ class MachineFilter(django_filters.FilterSet):
 
   class Meta:
     model = Machine
-    filter_fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user', 'powered', )
+    filter_fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user', 'powered', 'updated_datetime', )

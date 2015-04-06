@@ -359,9 +359,9 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
 
 
 class MachineAdmin(admin.ModelAdmin):
-  list_display = ('id', 'type', 'toolbox_id', 'rfid_present', 'user_link', 'powered', )
-  fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user_link', 'powered', )
-  readonly_fields = ('rfid_present', 'user_link', 'powered', )
+  list_display = ('id', 'type', 'toolbox_id', 'rfid_present', 'user_link', 'powered', 'updated_datetime', )
+  fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user_link', 'powered', 'updated_datetime', )
+  readonly_fields = ('rfid_present', 'user_link', 'powered', 'updated_datetime', )
 
   def get_readonly_fields(self, request, obj=None):
     user = request.user

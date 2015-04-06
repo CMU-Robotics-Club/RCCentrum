@@ -218,4 +218,4 @@ class MachineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Machine
-        fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user', 'powered', )
+        fields = ('id', 'type', 'toolbox_id', 'rfid_present', 'user', 'powered', 'updated_datetime', )

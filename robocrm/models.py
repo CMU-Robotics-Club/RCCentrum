@@ -8,9 +8,9 @@ from dateutil.relativedelta import relativedelta
 from django.core.validators import RegexValidator
 from .fields import CharNullField
 from api.models import APIRequest
+from crm.models import TimeStampedModel
 
-
-class Machine(models.Model):
+class Machine(TimeStampedModel):
   type = models.CharField(max_length=20)
 
   # TODO: figure out how to make a migration
