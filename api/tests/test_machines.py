@@ -32,7 +32,7 @@ class MachineTests(AuthenticatedAPITestCase):
         response = self.client.get("/api/machines/{}/".format(self.tooltron_machine.id), {}, {})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(sorted(response.data.keys()), sorted(['id', 'type', 'toolbox_id', 'rfid_present', 'user', 'powered']))
+        self.assertEqual(sorted(response.data.keys()), sorted(['id', 'type', 'toolbox_id', 'rfid_present', 'user', 'powered', 'updated_datetime', ]))
         self.assertEqual(response.data['id'], self.tooltron_machine.id)
         self.assertEqual(response.data['type'], self.tooltron_machine.type)
         self.assertEqual(response.data['rfid_present'], False)
@@ -48,7 +48,7 @@ class MachineTests(AuthenticatedAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
-        self.assertEqual(sorted(response.data[0].keys()), sorted(['id', 'type', 'toolbox_id', 'rfid_present', 'user', 'powered', ]))
+        self.assertEqual(sorted(response.data[0].keys()), sorted(['id', 'type', 'toolbox_id', 'rfid_present', 'user', 'powered', 'updated_datetime', ]))
         self.assertEqual(response.data[0]['id'], self.tooltron_machine.id)
         self.assertEqual(response.data[0]['type'], self.tooltron_machine.type)
 
@@ -77,7 +77,7 @@ class MachineTests(AuthenticatedAPITestCase):
         response = self.client.put("/api/machines/{}/".format(self.tooltron_machine.id), {'powered': True}, **headers)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(sorted(response.data.keys()), sorted(['id', 'type', 'toolbox_id', 'rfid_present', 'user', 'powered']))
+        self.assertEqual(sorted(response.data.keys()), sorted(['id', 'type', 'toolbox_id', 'rfid_present', 'user', 'powered', 'updated_datetime', ]))
         self.assertEqual(response.data['id'], self.tooltron_machine.id)
         self.assertEqual(response.data['type'], self.tooltron_machine.type)
         self.assertEqual(response.data['rfid_present'], False)
