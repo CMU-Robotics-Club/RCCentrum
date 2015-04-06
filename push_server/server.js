@@ -1,10 +1,26 @@
+/*
+ * Listens for POST requests on private API from Django application
+ * for model changes and broadcasts that data to connected clients subscribed to 
+ * the specific model and ID.  Check __init__.py for the list of model hooks
+ * that POST to this server.  A websocket client can also connect to all requests originating
+ * from a specific model or all requests regardless of which model it is coming from.
+ * 
+ * ex.)
+ * ws://roboticsclub.org:1984/ -> all model updates
+ * ws://roboticsclub.org:1984/channels/ -> all Channel model updates
+ * ws://roboticsclub.org:1984/channels/1/ -> all Channel 1 model updates
+ *
+ */
+
 var express = require('express');
 var http = require('http');
 
 var bodyParser = require("body-parser");
 var ws = require('ws');
 
+
 var WebSocketServer = ws.Server;
+
 
 var app = express();
 app.use(bodyParser.json());
@@ -20,69 +36,70 @@ var wss = new WebSocketServer({
   server: server,
 });
 
-app.post('/api_requests/', function(req, res) {
+/*
+ * Listen for POST requests and broadcast model and ID
+ * to websocket clients.
+ */
+app.post('*', function(req, res){
+  var model = req.path.split('/')[1];
+
   var data = req.body;
+  var id = data['id'];
 
-  console.log("POST request for APIRequest | data: %s", JSON.stringify(data));
+  console.log("POST request | model: %s | id: %s | data: %s", model, id, JSON.stringify(data));
 
-  if(typeof(data) == 'undefined') {
-    res.send("No value provided");
-    return;
-  }
-
-  wss.broadcast("api_requests", null, data);
+  wss.broadcast(model, id, data);
 
   res.send("Success");
 });
 
-app.post('/channels/:id/', function(req, res) {
-  var id = req.params.id;
-  var data = req.body;
-
-  var value = data.value;
-
-  console.log("POST request for Channel | id: %s, data: %s", id, JSON.stringify(data));
-
-  if(typeof(value) == 'undefined') {
-    res.send("No value provided");
-    return;
-  }
-
-  wss.broadcast("channels", id, value);
-
-  res.send("Success");
-});
-
-
+/*
+ * For a given websocket client returns a dictionary of the 'model' and 'id'
+ * filter the client is interested in receiving.
+ * If 'id' is null the client is interested in receiving all notifications
+ * related to the specified 'model'.  If 'model' is null all notifications should
+ * be sent to the client.
+ */
 function parseWSEndpoint(ws) {
   var path = ws['upgradeReq']['url'];
   var tokens = path.split('/');
 
-  var name = tokens[1];
+  var model = tokens[1];
   var id = tokens[2];
 
+  if(model == ''){
+    model = null;
+  }
+
+  if(id == ''){
+    id = null;
+  }
+
   return {
-    'name': name,
+    'model': model,
     'id': id,
   }
 }
 
-wss.broadcast = function broadcast(name, id, data) {
-  console.log("Broadcasting %s to endpoint | name: %s, id: %s", data, name, id);
-
-  wss.clients.forEach(function each(ws) {
+wss.broadcast = function broadcast(model, id, data) {
+  wss.clients.forEach(function(ws) {
     var endpoint = parseWSEndpoint(ws);
 
-    var client_name = endpoint['name'];
+    var client_model = endpoint['model'];
     var client_id = endpoint['id'];
 
-    console.log("Client endpoint | name: %s, id: %s", client_name, client_id);
+    console.log("Client | model: %s | id: %s", client_model, client_id);
 
-    if(client_name == name) {
-      if(id == null ){
+    if(client_model == null) {
+      // Client receives all model push info
+      ws.send(JSON.stringify(data));
+    } else if(client_model == model) {
+      // Client requests only specific model
+
+      if(client_id == null){
         ws.send(JSON.stringify(data));
       } else if(client_id == id) {
-        ws.send(data);
+        ws.send(JSON.stringify(data));
       }
     }
   });
@@ -90,10 +107,8 @@ wss.broadcast = function broadcast(name, id, data) {
 
 wss.on('connection', function connection(ws) {
   var headers = ws['upgradeReq']['headers'];
-
   var public_key = headers['public_key'];
   var private_key = headers['private_key'];
-
   var host = headers['host'];
 
   console.log("Websocket client connected");

@@ -178,6 +178,7 @@ INSTALLED_APPS = (
     'gallery',
     'announcements',
     'upcs',
+    'push_server',
     'tinymce',
     'rest_framework',
     'ordered_model',
