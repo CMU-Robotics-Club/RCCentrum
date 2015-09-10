@@ -111,6 +111,8 @@ class RoboUser(models.Model):
   dues_paid = models.DateField()
   dues_paid_year = models.BooleanField(default=True, help_text="Unchecked if only Semester membership was paid")
 
+  tshirt_picked_up = models.BooleanField(default=False, help_text="Checked if student received a tshirt")
+
   color = models.CharField(max_length=60, default="FF0000", help_text="Color (pattern, up to 10 colors,) that can be used by Projects(up to 60 hexadecimal characters)", validators=[
     RegexValidator(
       regex = '^(?:[0-9A-F]{6})+$',
