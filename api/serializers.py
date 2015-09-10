@@ -27,7 +27,7 @@ class EmailSerializer(serializers.Serializer):
     """
     To validate /users/:id/email/ endpoint.
     """
-    
+
     subject = serializers.CharField()
     content = serializers.CharField()
     meta = serializers.CharField(required=False, allow_blank=True)
@@ -59,7 +59,7 @@ class APIRequestSerializer(serializers.ModelSerializer):
 
 
 class WebcamSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Webcam
         fields = ('id', 'name', 'url', )
@@ -107,7 +107,7 @@ class ChannelSerializer(serializers.ModelSerializer):
 
         if 'context' in kwargs:
             request = kwargs['context']['request']
-            params = request.QUERY_PARAMS
+            params = request.query_params
             fields = params.get('fields')
             exclude = params.get('exclude')
 
