@@ -56,7 +56,7 @@ class IsRFIDSetListFilter(IsSetListFilter):
 class IsMembershipValidListFilter(admin.SimpleListFilter):
   title = ('Is Membership Valid')
   parameter_name = 'robouser__membership_valid'
-  
+
   def lookups(self, request, model_admin):
     return (
       ('true', "True"),
@@ -68,7 +68,7 @@ class IsMembershipValidListFilter(admin.SimpleListFilter):
       v = (self.value() == "true")
 
       exclude_ids = []
-      
+
       for user in queryset:
         if user.robouser.membership_valid != v:
           exclude_ids.append(user.id)
@@ -104,7 +104,7 @@ class RoboUserInline(admin.StackedInline):
       return fields
     else:
       # New User
-      return ('class_level', 'grad_year', 'major', 'dues_paid_year', )
+      return ('class_level', 'grad_year', 'major', 'dues_paid_year', 'magnetic', )
 
   def membership_valid(self, obj):
     return obj.membership_valid
@@ -152,7 +152,7 @@ class RoboUserInline(admin.StackedInline):
       endpoint[:] = (x for x in endpoint if x != "")
       endpoint = endpoint[-1]
       created_datetime = activity.created_datetime
-      
+
       created_datetime_s = created_datetime.strftime("%A %B %d %Y, %I:%M:%S %p")
       s = "{}: {} {}".format(created_datetime_s, activity.updater_object, endpoint)
 
@@ -162,7 +162,7 @@ class RoboUserInline(admin.StackedInline):
       if activity.meta:
         s += " {}".format(activity.meta)
 
-      s += " Granted" if activity.success else " Denied" 
+      s += " Granted" if activity.success else " Denied"
 
       field += "{} | <a href='{}'>Details</a> <br />".format(s, reverse('admin:api_apirequest_change', args=(activity.id,)))
 
@@ -177,7 +177,7 @@ class RoboUserInline(admin.StackedInline):
 
     for color_string in color_strings:
       result += '<div style="float: left;width:20px;height:20px;margin:5px;border-width:1px;border-style:solid;border-color:rgba(0,0,0,.2);background-color:#{};"></div>'.format(color_string)
-  
+
     return mark_safe(result)
   current_color.short_description="Current User Color"
 
@@ -222,7 +222,7 @@ class UserCreationForm(ModelForm):
       user.save()
 
     subscribe_to_list(user.first_name, user.last_name, user.email, settings.GB_LIST)
-    
+
     return user
 
   class Meta:
@@ -318,7 +318,7 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
   def get_fieldsets(self, request, obj=None):
     if obj:
       user = request.user
-  
+
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
         return (
           (None, {'fields':
