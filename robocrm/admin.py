@@ -100,6 +100,7 @@ class RoboUserInline(admin.StackedInline):
       user = request.user
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
         fields.remove('machines')
+        fields.remove('tshirt_picked_up')
 
       return fields
     else:
