@@ -9,6 +9,7 @@ from django.core.validators import RegexValidator
 from .fields import CharNullField
 from api.models import APIRequest
 from crm.models import TimeStampedModel
+import os
 
 class Machine(TimeStampedModel):
   type = models.CharField(max_length=20)
@@ -103,7 +104,14 @@ class RoboUser(models.Model):
   grad_year = models.IntegerField(blank=True, null=True)
 
   major = models.CharField(max_length=50)
-  
+
+  def resume_upload_to(instance, filename):
+    _, extension = os.path.splitext(filename)
+    return "resumes/{}{}".format(instance.user.username, extension)
+
+  resume = models.FileField(upload_to=resume_upload_to, null=True, blank=True,
+             help_text="Upload your resume to be included in the Roboclub resume book (pdf format only)")
+
   # If someone trusts Roboclub with more than $999 we have a problem
   balance = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, help_text="Roboclub balance(currently only being used by Fridgetron)")
 
