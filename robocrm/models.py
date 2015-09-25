@@ -40,7 +40,9 @@ class Machine(TimeStampedModel):
   def __str__(self):
     return self.type
 
-private_storage = FileSystemStorage(location='private')
+private_storage = FileSystemStorage(
+                    location=settings.PRIVATE_ROOT,
+                    base_url=settings.PRIVATE_URL)
 
 class RoboUser(models.Model):
   # Field is required when using profiles 
