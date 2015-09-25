@@ -10,6 +10,7 @@ from .fields import CharNullField
 from api.models import APIRequest
 from crm.models import TimeStampedModel
 import os
+from django.core.files.storage import FileSystemStorage
 
 class Machine(TimeStampedModel):
   type = models.CharField(max_length=20)
@@ -39,6 +40,7 @@ class Machine(TimeStampedModel):
   def __str__(self):
     return self.type
 
+private_storage = FileSystemStorage(location='private')
 
 class RoboUser(models.Model):
   # Field is required when using profiles 
@@ -109,7 +111,8 @@ class RoboUser(models.Model):
     _, extension = os.path.splitext(filename)
     return "resumes/{}{}".format(instance.user.username, extension)
 
-  resume = models.FileField(upload_to=resume_upload_to, null=True, blank=True,
+  resume = models.FileField(upload_to=resume_upload_to,
+             storage=private_storage, null=True, blank=True,
              help_text="Upload your resume to be included in the Roboclub resume book (pdf format only)")
 
   # If someone trusts Roboclub with more than $999 we have a problem
