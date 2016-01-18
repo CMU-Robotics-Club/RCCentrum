@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth import authenticate, login
 from api.models import APIRequest
@@ -7,6 +7,7 @@ from projects.models import Project
 from django.utils import timezone
 from .models import RoboUser, Machine
 import dateutil.parser
+import requests
 
 def roboauth(request, rfid_tag, mach_num):
   machine = None
@@ -75,7 +76,7 @@ def add_card_event(request):
   # does not matter because Tooltron pushes
   # card events every 70ms which a lower resolution
   # that what tend even provides so update_datetime
-  # being the value when this save() is called is okay 
+  # being the value when this save() is called is okay
   api_request.created_datetime = tstart
   api_request.save()
 
@@ -86,3 +87,12 @@ def add_card_event(request):
   tooltron.save()
 
   return HttpResponse()
+
+def directory_info(request, andrewid):
+  api_url = ('http://apis.scottylabs.org/directory/v1/andrewID/{}'.
+              format(andrewid))
+  req = requests.get(api_url)
+  if req.status_code == requests.codes.ok:
+    return JsonResponse(req.json());
+  else:
+    raise Http404
