@@ -49,7 +49,7 @@ class RoboUser(models.Model):
   user = models.OneToOneField(User)
 
   # Roboclub Magnetic Card Number
-  magnetic = CharNullField(max_length=9, null=True, blank=True, unique=True, help_text="9 Character Magnetic Card ID(found on Student ID)(Only you can see this ID)", validators=[
+  magnetic = CharNullField(max_length=9, null=True, blank=True, unique=True, help_text="9 Character Magnetic Card ID (found on Student ID). Only you can see this ID.", validators=[
     RegexValidator(
       regex='^[0-9]{9}$',
       message='Magnetic must be 9 numeric characters(0-9)',
@@ -58,7 +58,7 @@ class RoboUser(models.Model):
   ])
 
   # Roboclub RFID Card Number
-  rfid = CharNullField(max_length=10, null=True, blank=True, unique=True, validators=[
+  rfid = CharNullField(max_length=10, null=True, blank=True, unique=True, help_text="8 Hex-digit RFID. Some card readers return decimal number in opposite endianness.", validators=[
     RegexValidator(
       regex='^[A-F0-9]{8}$',
       message='RFID must be 8 hexadecimal characters(0-9, A-F)',
