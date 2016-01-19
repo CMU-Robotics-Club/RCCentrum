@@ -1,4 +1,4 @@
-django==1.8.4
+django>=1.7.6,<1.9
 pymysql
 pyjade
 django-tinymce
