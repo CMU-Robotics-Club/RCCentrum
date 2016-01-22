@@ -25,6 +25,10 @@ USER_BALANCE_PROJECTS_TO_USERS = {}
 # project has permission to send an email to(None all IDs, [] no IDs)
 USER_EMAIL_PROJECTS_TO_USERS = {}
 
+# Debug email backend
+# uncomment to not use an SMTP service or actually send the email
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # ==========================
 
 GB_LIST = "roboclub-gb"

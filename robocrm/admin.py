@@ -93,10 +93,12 @@ class RoboUserInline(admin.StackedInline):
       # Unwrap SimpleLazyObject so type is 'User' or 'Project'
       user = request.user._wrapped if hasattr(request.user,'_wrapped') else request.user
 
+      # hide some fields if the model is loaded by a different user
       if user != obj:
         fields.remove("magnetic")
         fields.remove("color")
 
+      # hide some fields if the model is loaded by a non-officer
       user = request.user
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
         fields.remove('machines')
@@ -105,7 +107,7 @@ class RoboUserInline(admin.StackedInline):
       return fields
     else:
       # New User
-      return ('class_level', 'grad_year', 'major', 'dues_paid_year', 'magnetic', )
+      return ('class_level', 'grad_year', 'major', 'dues_paid_year', 'rfid', )
 
   def membership_valid(self, obj):
     return obj.membership_valid
@@ -187,7 +189,7 @@ class RoboUserInline(admin.StackedInline):
       user = request.user
 
       if not user.is_superuser and not user.groups.filter(name='officers').exists():
-        return super().get_readonly_fields(request, obj) + ('rfid_card', 'rfid', 'dues_paid', 'dues_paid_year', )
+        return super().get_readonly_fields(request, obj) + ('dues_paid', 'dues_paid_year', )
       else:
         return super().get_readonly_fields(request, obj)
     else:
@@ -300,11 +302,7 @@ class RoboUserAdmin(DjangoObjectActions, admin.ModelAdmin):
 
   def get_readonly_fields(self, request, obj=None):
     if obj:
-      fields = ['last_login', 'date_joined', 'username', 'first_name', 'last_name', 'email', ]
-
-      if request.user == obj:
-        fields.remove('first_name')
-        fields.remove('email')
+      fields = ['last_login', 'date_joined',]
 
       return fields
     else:
