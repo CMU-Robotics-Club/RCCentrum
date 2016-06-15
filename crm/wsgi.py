@@ -19,9 +19,18 @@ import sys
 
 sys.path.append('/var/www/env/crm')
 sys.path.append('/var/www/crm')
+sys.path.append('/var/www/crm/crm')
+
 sys.path.append('/var/www/env/crm/lib/python3.4/site-packages/')
+sys.path.append('/var/www/env/crm/lib64/python3.4/site-packages')
+
+site.addsitedir('/var/www/env/crm/lib/python3.4/site-packages/')
+site.addsitedir('/var/www/env/crm/lib64/python3.4/site-packages/')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "crm.settings")
+
+os.environ['HTTPS'] = 'on'
+os.environ['wsgi.url_scheme'] = 'https'
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

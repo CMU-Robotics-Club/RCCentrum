@@ -21,3 +21,4 @@ class AnnouncementAdmin(DjangoObjectActions, UpdatedByAdmin):
   objectactions = ('create_announcement_label', )
 
 admin.site.register(Announcement, AnnouncementAdmin)
+
