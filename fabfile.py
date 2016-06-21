@@ -12,7 +12,6 @@ def deploy():
          prefix('source /usr/local/bin/virtualenvwrapper.sh'), \
          prefix('workon crm'):
 
-        run('git status')
         run('git pull')
         run('pip install -r requirements.txt')
         run('./manage.py migrate')
