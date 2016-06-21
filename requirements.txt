@@ -17,3 +17,4 @@ django-object-actions==0.7.0
 drf-extensions==0.2.8
 django_rest_swagger==0.3.7
 pytz==2016.4
+Fabric3==1.11.1.post1
