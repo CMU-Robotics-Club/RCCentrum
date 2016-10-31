@@ -4,7 +4,7 @@ from ordered_model.admin import OrderedModelAdmin
 from django.utils.safestring import mark_safe
 
 class SponsorAdmin(OrderedModelAdmin):
-  fields = ('name', 'current_logo', 'logo', 'website', 'active', )
+  fields = ('name', 'current_logo', 'logo', 'website', 'active', 'description', )
   readonly_fields = ['current_logo']
   list_display = ('name', 'current_logo', 'active', 'website_safe', 'move_up_down_links', )
   list_filter = ('active', )

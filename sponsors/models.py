@@ -6,6 +6,7 @@ import os
 
 class Sponsor(OrderedModel):
   name = models.CharField(max_length=30, unique=True)
+  description = models.TextField(default="")
 
   def image_upload_to(instance, filename):
     name, extension = os.path.splitext(filename)
