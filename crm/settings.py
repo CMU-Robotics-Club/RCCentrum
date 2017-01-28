@@ -197,6 +197,7 @@ INSTALLED_APPS = (
     'django_object_actions',
     'django.contrib.redirects',
     'rest_framework_swagger',
+    'stock_items',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
@@ -290,6 +291,7 @@ SUIT_CONFIG = {
         'sites': 'icon-info-sign',
         'social_media': 'icon-thumbs-up',
         'sponsors': 'icon-gift',
+        'stock_items': 'icon-list',
         'tshirts': 'icon-tag',
         'upcs': 'icon-list-alt',
         'webcams': 'icon-facetime-video',
@@ -394,6 +396,11 @@ LOGGING = {
             'propagate': True,
         },
         'sponsors': {
+            'handlers': ['apps_file', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'stock_items': {
             'handlers': ['apps_file', ],
             'level': 'DEBUG',
             'propagate': True,

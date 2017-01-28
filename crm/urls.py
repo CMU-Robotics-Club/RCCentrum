@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^webcams/', include('webcams.urls', namespace='webcams')),
     url(r'^posters/', include('posters.urls', namespace='posters')),
     url(r'^tshirts/', include('tshirts.urls', namespace='tshirts')),  
+    url(r'^stock/', include('stock_items.urls', namespace='stock_items')),
     url(r'^api/', include('api.urls')),
 
     url(r'^calendar/', TemplateView.as_view(template_name='calendar.jade'), name='calendar'),

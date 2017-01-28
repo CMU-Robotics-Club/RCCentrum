@@ -1,0 +1,37 @@
+extends 'base.jade'
+{% load static %}
+
+mixin stock_item_row(item)
+  tr
+    td {{ item.name }}
+    if item.quantity
+        td {{ item.quantity }}
+    else
+        td -
+    if item.reorder_url
+      td: a(href="{{ item.reorder_url }}", target="_blank") {{ item.reorder_url_domain }}
+    else
+      td -
+    if item.datasheet.name    
+      td: a(href="{{ item.datasheet.url }}", target="_blank") Link
+    else
+      td -
+
+block title
+  | Stock Items 
+
+block content
+  .container-fluid
+    .row
+      for stock_group, stock_list in stock_items
+        h4 {{ stock_group }}
+        table.table.table-hover
+          thead
+            tr
+              th Name
+              th Quantity
+              th Reorder URL
+              th Datasheet
+          tbody
+              for stock_item in stock_list
+                +stock_item_row(stock_item)

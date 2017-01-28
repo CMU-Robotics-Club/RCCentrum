@@ -85,6 +85,10 @@ i {
   font-size: 21px;
 }
 
+.jumbotron table {
+    text-align: left;
+}
+
 /* Customize the nav-justified links to be fill the entire space of the .navbar */
 
 .nav-justified {
