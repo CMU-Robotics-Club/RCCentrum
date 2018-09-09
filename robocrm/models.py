@@ -11,6 +11,9 @@ from api.models import APIRequest
 from crm.models import TimeStampedModel
 import os
 from django.core.files.storage import FileSystemStorage
+from .util import subscribe_to_list
+
+from django.contrib import messages
 
 class Machine(TimeStampedModel):
   type = models.CharField(max_length=20)
@@ -164,6 +167,9 @@ class RoboUser(models.Model):
   def save(self, *args, **kwargs):
     if self.dues_paid is None:
       self.dues_paid = date.today()
+
+    if self.dues_paid == date.today():
+      subscribe_to_list(self.user.first_name, self.user.last_name, self.user.email, settings.ACTIVE_LIST)
 
     return super().save(*args, **kwargs)
 

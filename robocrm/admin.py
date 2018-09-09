@@ -225,6 +225,7 @@ class UserCreationForm(ModelForm):
       user.save()
 
     subscribe_to_list(user.first_name, user.last_name, user.email, settings.GB_LIST)
+    subscribe_to_list(user.first_name, user.last_name, user.email, settings.ACTIVE_LIST)
 
     return user
 
