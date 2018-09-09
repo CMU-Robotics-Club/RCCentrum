@@ -32,6 +32,7 @@ USER_EMAIL_PROJECTS_TO_USERS = {}
 # ==========================
 
 GB_LIST = "roboclub-gb"
+ACTIVE_LIST = "roboclub-members-18-19"
 
 PROJECT_PRIVATE_KEY_MIN_LENGTH = 30
 
